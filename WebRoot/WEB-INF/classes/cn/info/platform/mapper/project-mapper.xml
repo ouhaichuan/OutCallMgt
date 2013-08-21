@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- namespace名字必须与Mapper接口名一致 -->
+<mapper namespace="cn.info.platform.mapper.ProjectMapper">
+	<select id="findAllProject" resultMap="projectMap">
+		select * from tab_project
+		where pro_mark='0'
+	</select>
+	<select id="findAllProjectByUserName" resultMap="projectMap"
+		parameterType="string">
+		select * from tab_project
+		where pro_mark='0' and pro_id
+		in (select pro_id from tab_project_user where user_name=#{user_name})
+	</select>
+	<update id="save_pro" parameterType="project" flushCache="true">
+		update tab_project
+		<set>
+			<if test="pro_name != null">
+				pro_name = #{pro_name,jdbcType=VARCHAR},
+			</if>
+			<if test="pro_type != null">
+				pro_type = #{pro_type,jdbcType=VARCHAR},
+			</if>
+			<if test="pro_state != null">
+				pro_state = #{pro_state,jdbcType=VARCHAR},
+			</if>
+			<if test="pro_remark != null">
+				pro_remark = #{pro_remark,jdbcType=VARCHAR},
+			</if>
+			<if test="pro_date != null">
+				pro_date = #{pro_date,jdbcType=VARCHAR},
+			</if>
+		</set>
+		where pro_id = #{pro_id,jdbcType=INTEGER}
+	</update>
+	<insert id="add_pro" parameterType="project">
+		insert into
+		tab_project(pro_name,pro_type,pro_state,pro_remark,pro_mark,pro_date)
+		values
+		(#{pro_name},#{pro_type},#{pro_state},#{pro_remark},'0',#{pro_date})
+	</insert>
+	<delete id="del_pro" parameterType="int">
+		delete from tab_project where
+		pro_id = #{pro_id}
+	</delete>
+</mapper>

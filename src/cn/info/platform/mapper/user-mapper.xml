@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- namespace名字必须与Mapper接口名一致 -->
+<mapper namespace="cn.info.platform.mapper.UserMapper">
+	<select id="getUserByID" resultType="user" resultMap="userMap"
+		parameterType="int">
+		select * from tab_user where user_id = #{userID}
+	</select>
+	<select id="login" resultType="user" resultMap="userMap"
+		parameterType="user">
+		select * from tab_user where user_name =
+		#{userName} and
+		user_pass = #{passWord}
+	</select>
+	<select id="findAllUsers" resultMap="userMap2">
+		select *,case
+		when
+		role_id='1' then '管理员'
+		when role_id='2' then '普通用户'
+		else '普通用户' END
+		role_name
+		from tab_user where
+		mark="0"
+	</select>
+	<update id="save_user" parameterType="user" flushCache="true">
+		update tab_user
+		<set>
+			<if test="userName != null">
+				user_name = #{userName,jdbcType=VARCHAR},
+			</if>
+			<if test="passWord != null">
+				user_pass = #{passWord,jdbcType=VARCHAR},
+			</if>
+			<if test="role_id != null">
+				role_id = #{role_id,jdbcType=VARCHAR},
+			</if>
+			<if test="remark != null">
+				remark = #{remark,jdbcType=VARCHAR},
+			</if>
+			<if test="mark != null">
+				mark = #{mark,jdbcType=VARCHAR},
+			</if>
+			<if test="user_phone != null">
+				user_phone = #{user_phone,jdbcType=VARCHAR},
+			</if>
+			<if test="user_xm != null">
+				user_xm = #{user_xm,jdbcType=VARCHAR},
+			</if>
+		</set>
+		where user_id = #{userID,jdbcType=INTEGER}
+	</update>
+	<delete id="del_user" parameterType="int">
+		delete from tab_user where
+		user_id = #{user_id}
+	</delete>
+	<insert id="add_user" parameterType="user">
+		insert into
+		tab_user(user_name,user_pass,role_id,remark,mark,user_phone,user_xm)
+		values
+		(#{userName},#{passWord},#{role_id},#{remark},'0',#{user_phone},#{user_xm})
+	</insert>
+	<select id="validate_user" resultType="user" resultMap="userMap"
+		parameterType="String">
+		select * from tab_user where user_name = #{user_name}
+	</select>
+</mapper>

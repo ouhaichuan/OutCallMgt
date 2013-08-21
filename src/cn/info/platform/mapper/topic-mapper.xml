@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- namespace名字必须与Mapper接口名一致 -->
+<mapper namespace="cn.info.platform.mapper.TopicMapper">
+	<select id="findTopicByProId" resultMap="topicMap"
+		parameterType="int">
+		select *,(select pro_name from tab_project where
+		pro_id=tab_topic.pro_id) pro_name
+		from
+		tab_topic where
+		topic_mark='0' and
+		pro_id=#{pro_id}
+	</select>
+	<select id="findAllTopic" resultMap="topicMap">
+		select *,(select pro_name
+		from tab_project where pro_id=tab_topic.pro_id) pro_name
+		from
+		tab_topic
+		where
+		topic_mark='0'
+	</select>
+	<insert id="add_topic" parameterType="topic">
+		insert into
+		tab_topic(pro_id,topic_content,topic_type,topic_remark,topic_mark)
+		values
+		(#{pro_id},#{topic_content},#{topic_type},#{topic_remark},'0')
+	</insert>
+	<update id="save_topic" parameterType="topic" flushCache="true">
+		update tab_topic
+		<set>
+			<if test="pro_id != null">
+				pro_id = #{pro_id,jdbcType=INTEGER},
+			</if>
+			<if test="topic_content != null">
+				topic_content = #{topic_content,jdbcType=VARCHAR},
+			</if>
+			<if test="topic_type != null">
+				topic_type = #{topic_type,jdbcType=VARCHAR},
+			</if>
+			<if test="topic_remark != null">
+				topic_remark = #{topic_remark,jdbcType=VARCHAR},
+			</if>
+		</set>
+		where topic_id = #{topic_id,jdbcType=INTEGER}
+	</update>
+	<delete id="del_topic" parameterType="int">
+		delete from tab_topic
+		where
+		topic_id = #{id}
+	</delete>
+</mapper>

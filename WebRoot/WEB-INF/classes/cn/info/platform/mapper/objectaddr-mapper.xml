@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- namespace名字必须与Mapper接口名一致 -->
+<mapper namespace="cn.info.platform.mapper.ObjectAddrMapper">
+	<select id="findAddr" resultMap="objectaddrMap" parameterType="int">
+		select *
+		from
+		tab_object_addr where
+		object_id=#{object_id}
+	</select>
+	<update id="saveAddr" parameterType="objectaddr" flushCache="true">
+		update tab_object_addr
+		<set>
+			<if test="object_pnumber != null">
+				object_pnumber = #{object_pnumber,jdbcType=VARCHAR},
+			</if>
+			<if test="object_addr != null">
+				object_addr = #{object_addr,jdbcType=VARCHAR},
+			</if>
+		</set>
+		where object_id = #{object_id,jdbcType=INTEGER}
+	</update>
+	<insert id="addAddr" parameterType="objectaddr">
+		insert into
+		tab_object_addr(object_id,object_pnumber,object_addr)
+		values
+		(#{object_id},#{object_pnumber},#{object_addr})
+	</insert>
+</mapper>

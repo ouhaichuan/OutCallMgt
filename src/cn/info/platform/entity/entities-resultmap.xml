@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- 数据映射配置 -->
+<mapper namespace="entitiesMap">
+	<resultMap type="cn.info.platform.entity.User" id="userMap">
+		<id property="userID" column="user_id" />
+		<result property="userName" column="user_name" />
+		<result property="passWord" column="user_pass" />
+		<result property="role_id" column="role_id" />
+		<result property="remark" column="remark" />
+		<result property="mark" column="mark" />
+		<result property="user_phone" column="user_phone" />
+		<result property="user_xm" column="user_xm" />
+	</resultMap>
+	<resultMap type="cn.info.platform.entity.User" id="userMap2">
+		<id property="userID" column="user_id" />
+		<result property="userName" column="user_name" />
+		<result property="passWord" column="user_pass" />
+		<result property="role_id" column="role_id" />
+		<result property="role_name" column="role_name" />
+		<result property="remark" column="remark" />
+		<result property="mark" column="mark" />
+		<result property="user_phone" column="user_phone" />
+		<result property="user_xm" column="user_xm" />
+	</resultMap>
+	<resultMap type="cn.info.platform.entity.Project" id="projectMap">
+		<id property="pro_id" column="pro_id" />
+		<result property="pro_name" column="pro_name" />
+		<result property="pro_type" column="pro_type" />
+		<result property="pro_state" column="pro_state" />
+		<result property="pro_remark" column="pro_remark" />
+		<result property="pro_mark" column="pro_mark" />
+		<result property="pro_date" column="pro_date" />
+	</resultMap>
+	<resultMap type="cn.info.platform.entity.CallObject" id="callobjectMap">
+		<id property="object_id" column="object_id" />
+		<result property="object_pnumber" column="object_pnumber" />
+		<result property="object_remark" column="object_remark" />
+		<result property="object_mark" column="object_mark" />
+		<result property="pro_id" column="pro_id" />
+		<result property="column1" column="column1" />
+		<result property="column2" column="column2" />
+		<result property="object_state" column="object_state" />
+		<result property="out_time" column="out_time" />
+		<result property="out_time_length" column="out_time_length" />
+	</resultMap>
+	<resultMap type="cn.info.platform.entity.Topic" id="topicMap">
+		<id property="topic_id" column="topic_id" />
+		<result property="pro_id" column="pro_id" />
+		<result property="topic_content" column="topic_content" />
+		<result property="topic_type" column="topic_type" />
+		<result property="topic_remark" column="topic_remark" />
+		<result property="topic_mark" column="topic_mark" />
+	</resultMap>
+	<resultMap type="cn.info.platform.entity.Answer" id="answerMap">
+		<id property="answer_id" column="answer_id" />
+		<result property="topic_id" column="topic_id" />
+		<result property="object_id" column="object_id" />
+		<result property="answer_content" column="answer_content" />
+		<result property="answer_remark" column="answer_remark" />
+		<result property="answer_mark" column="answer_mark" />
+	</resultMap>
+	<resultMap type="cn.info.platform.entity.Object_Addr" id="objectaddrMap">
+		<id property="object_id" column="object_id" />
+		<result property="object_pnumber" column="object_pnumber" />
+		<result property="object_addr" column="object_addr" />
+	</resultMap>
+	<resultMap type="cn.info.platform.entity.Project_User" id="projectuserMap">
+		<id property="pu_id" column="pu_id" />
+		<result property="pro_id" column="pro_id" />
+		<result property="user_name" column="user_name" />
+	</resultMap>
+	<resultMap type="cn.info.platform.entity.Object_User" id="objectuserMap">
+		<id property="ou_id" column="ou_id" />
+		<result property="object_id" column="object_id" />
+		<result property="user_name" column="user_name" />
+	</resultMap>
+</mapper>

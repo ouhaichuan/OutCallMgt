@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD Config 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+	<typeAliases>
+		<typeAlias type="cn.info.platform.entity.User" alias="user" />
+		<typeAlias type="cn.info.platform.entity.Project" alias="project" />
+		<typeAlias type="cn.info.platform.entity.CallObject" alias="callobject" />
+		<typeAlias type="cn.info.platform.entity.Topic" alias="topic" />
+		<typeAlias type="cn.info.platform.entity.Answer" alias="answer" />
+		<typeAlias type="cn.info.platform.entity.Object_Addr" alias="objectaddr" />
+		<typeAlias type="cn.info.platform.entity.Project_User"
+			alias="projectuser" />
+		<typeAlias type="cn.info.platform.entity.Object_User" alias="objectuser" />
+	</typeAliases>
+</configuration>

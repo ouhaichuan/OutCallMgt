@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- namespace名字必须与Mapper接口名一致 -->
+<mapper namespace="cn.info.platform.mapper.AnswerMapper">
+	<select id="findAllAnswer" resultMap="answerMap">
+		select *,(select
+		topic_content from tab_topic where topic_id=tab_answer.topic_id)
+		topic_content,
+		(select
+		object_pnumber from tab_callobject where
+		object_id=tab_answer.object_id)
+		object_pnumber
+		from
+		tab_answer where
+		answer_mark='0'
+	</select>
+	<insert id="addAnswer" parameterType="answer">
+		insert into
+		tab_answer(topic_id,answer_content,answer_remark,answer_mark,object_id)
+		values
+		(#{topic_id},#{answer_content},'0','0',#{object_id})
+	</insert>
+</mapper>
