@@ -3,8 +3,8 @@
 <%
 	String path = request.getContextPath();
 	String basePath = request.getScheme() + "://"
-	+ request.getServerName() + ":" + request.getServerPort()
-	+ path + "/";
+			+ request.getServerName() + ":" + request.getServerPort()
+			+ path + "/";
 %>
 
 <!DOCTYPE html>
@@ -69,14 +69,9 @@
 <body>
 	<input id='basePathIn' type="hidden" value="<%=basePath%>">
 	<div>
-		<div class="header">
-			<h1 class="page-title">人员管理</h1>
-		</div>
-
 		<ul class="breadcrumb">
 			<li><a href="index.jsp" target="_parent">主页</a> <span
-				class="divider">/</span>
-			</li>
+				class="divider">/</span></li>
 			<li class="active">人员管理</li>
 		</ul>
 
@@ -97,41 +92,14 @@
 								<th>电话</th>
 								<th>姓名</th>
 								<th>角色</th>
-								<th style="width: 26px;"></th>
+								<th style="width: 36px;"></th>
 							</tr>
 						</thead>
-						<tbody>
-							<%
-								List<User> list = (List<User>)request.getAttribute("users_list");
-									for(User user:list){
-							%>
-							<tr>
-								<td><%=user.getUserID()%></td>
-								<td><%=user.getUserName()%></td>
-								<td><%=user.getUser_phone()%></td>
-								<td><%=user.getUser_xm()%></td>
-								<td><%=user.getRole_name()%></td>
-								<td><a
-									href="user.jsp?edit_type=2&user_id=<%=user.getUserID()%>&user_name=<%=user.getUserName()%>&user_pass=<%=user.getPassWord()%>&role_id=<%=user.getRole_id()%>&user_remark=<%=user.getRemark()%>&user_phone=<%=user.getUser_phone()%>&user_xm=<%=user.getUser_xm()%>"><i
-										class="icon-pencil"></i> </a> <a href="#myModal" role="button"
-									data-toggle="modal"><i class="icon-remove"></i> </a>
-								</td>
-							</tr>
-							<%
-								}
-							%>
+						<tbody id="list-content">
 						</tbody>
 					</table>
 				</div>
 				<div id="myPaginator"></div>
-				<script type='text/javascript'>
-					var options = {
-						currentPage : 4,
-						totalPages : 10,
-						numberOfPages : 5
-					}
-					$('#myPaginator').bootstrapPaginator(options);
-				</script>
 
 				<div class="modal small hide fade" id="myModal" tabindex="-1"
 					role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
@@ -159,6 +127,77 @@
 		$("[rel=tooltip]").tooltip();
 		$(function() {
 			var basePath = $('#basePathIn').val();
+
+			$.post(basePath + "user/find_all_users.do", function(data) {
+				var dataUser = eval(data);
+				totolP = parseInt(dataUser.length % 5 == 0 ? dataUser.length / 5
+						: dataUser.length / 5 + 1);
+				numP = dataUser.length / 5 < 1 ? dataUser.length % 5 : 5;
+				var options = {
+					currentPage : 1,
+					totalPages : totolP,
+					numberOfPages : numP,
+					itemTexts : function(type, page, current) {
+						switch (type) {
+						case "first":
+							return "首页";
+						case "prev":
+							return "上一页";
+						case "next":
+							return "下一页";
+						case "last":
+							return "尾页";
+						case "page":
+							return page;
+						}
+					},
+					onPageClicked : function(event, originalEvent, type, page) {
+						size = 5;
+						if (type == 'first' && dataUser.length < 5) {
+							size = dataUser.length;
+						}else if(type == 'next' && page==totolP){
+							size = dataUser.length % 5;
+						}else if(page==totolP){
+							size = dataUser.length % 5;
+						}else if (type == 'last' && dataUser.length % 5 != 0) {
+							size = dataUser.length % 5;
+						}
+						$('#list-content').html('');
+						for ( var i = 0; i < size; i++) {
+							$('#list-content').append(
+							'<tr><td>' + dataUser[(page-1)*5+i].userID + '</td><td>'
+									+ dataUser[(page-1)*5+i].userName + '</td><td>'
+									+ dataUser[(page-1)*5+i].user_phone + '</td><td>'
+									+ dataUser[(page-1)*5+i].user_xm + '</td><td>'
+									+ dataUser[(page-1)*5+i].role_name + '</td><td>'+"<a href='user.jsp?edit_type=2&user_id="+dataUser[(page-1)*5+i].userID+'&user_name='+dataUser[(page-1)*5+i].userName+'&user_pass='+dataUser[(page-1)*5+i].passWord+'&role_id='+dataUser[(page-1)*5+i].role_id+'&user_remark='+dataUser[(page-1)*5+i].remark+'&user_phone='+dataUser[(page-1)*5+i].user_phone+'&user_xm='+dataUser[(page-1)*5+i].user_xm+"'><i class='icon-pencil'></i> </a>&nbsp;&nbsp;<a href='#myModal' role='button' data-toggle='modal'><i class='icon-remove'></i> </a></td></tr>");
+						}
+						$("#list-content,tr").click(function() {
+							var user_id = $(this).children("td:eq(0)").text();
+							if (user_id != "") {
+								$('#del_app_id').val(user_id);
+							}
+						});
+					}
+				};
+				bsize = dataUser.length < 5 ? dataUser.length : 5;
+				$('#list-content').html('');
+				for ( var i = 0; i < bsize; i++) {
+					$('#list-content').append(
+							'<tr><td>' + dataUser[i].userID + '</td><td>'
+									+ dataUser[i].userName + '</td><td>'
+									+ dataUser[i].user_phone + '</td><td>'
+									+ dataUser[i].user_xm + '</td><td>'
+									+ dataUser[i].role_name + '</td><td>'+"<a href='user.jsp?edit_type=2&user_id="+dataUser[i].userID+'&user_name='+dataUser[i].userName+'&user_pass='+dataUser[i].passWord+'&role_id='+dataUser[i].role_id+'&user_remark='+dataUser[i].remark+'&user_phone='+dataUser[i].user_phone+'&user_xm='+dataUser[i].user_xm+"'><i class='icon-pencil'></i> </a>&nbsp;&nbsp;<a href='#myModal' role='button' data-toggle='modal'><i class='icon-remove'></i> </a></td></tr>");
+				}
+				$('#myPaginator').bootstrapPaginator(options);
+				$("#list-content,tr").click(function() {
+					var user_id = $(this).children("td:eq(0)").text();
+					if (user_id != "") {
+						$('#del_app_id').val(user_id);
+					}
+				});
+			});
+
 			$('#adduser_btn').click(function() {
 				window.location.href = basePath + "user.jsp?edit_type=1";
 			});
@@ -168,12 +207,6 @@
 								+ "user/del_user.do?id="
 								+ $('#del_app_id').val();
 					});
-			$("#user_info_tab,tr").click(function() {
-				var user_id = $(this).children("td:eq(0)").text();
-				if (user_id != "") {
-					$('#del_app_id').val(user_id);
-				}
-			});
 		});
 	</script>
 </body>

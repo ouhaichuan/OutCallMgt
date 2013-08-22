@@ -109,28 +109,22 @@
 		<%
 			if (edit_type == 2) {
 		%>
-		<div class="header">
-			<h1 class="page-title">编辑项目</h1>
-		</div>
 		<ul class="breadcrumb">
 			<li><a href="index.jsp" target="_parent">主页</a> <span
 				class="divider">/</span>
 			</li>
-			<li><a href="project/find_all_project.do">项目管理</a> <span
+			<li><a href="projects.jsp">项目管理</a> <span
 				class="divider">/</span></li>
 			<li class="active">编辑</li>
 		</ul>
 		<%
 			} else {
 		%>
-		<div class="header">
-			<h1 class="page-title">添加项目</h1>
-		</div>
 		<ul class="breadcrumb">
 			<li><a href="index.jsp" target="_parent">主页</a> <span
 				class="divider">/</span>
 			</li>
-			<li><a href="project/find_all_project.do">项目管理</a> <span
+			<li><a href="projects.jsp">项目管理</a> <span
 				class="divider">/</span></li>
 			<li class="active">添加</li>
 		</ul>

@@ -1,7 +1,10 @@
 package cn.info.platform.controller;
 
+import java.io.IOException;
 import java.util.List;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import net.sf.json.JSONArray;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -26,14 +29,17 @@ public class TopicController {
 	 * @return 要跳转的页面
 	 */
 	@RequestMapping(value = "find_all_topic")
-	public String findAllTopic(HttpServletRequest request) {
-		String target = null;
+	public void findAllTopic(HttpServletRequest request,
+			HttpServletResponse response) {
+		response.setContentType("text/html; charset=utf-8");
+
 		List<Topic> list = topicService.findAllTopic();
-		request.setAttribute("topic_list", list);
-
-		target = "/topics.jsp";
-
-		return target;
+		JSONArray jsonArray = JSONArray.fromObject(list);
+		try {
+			response.getWriter().write(jsonArray.toString());
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 
 	/**
@@ -48,7 +54,7 @@ public class TopicController {
 		String target = null;
 		topicService.add_topic(topic);
 
-		target = "/topic/find_all_topic.do";
+		target = "/topics.jsp";
 		return target;
 	}
 
@@ -68,7 +74,7 @@ public class TopicController {
 		String target = null;
 		topicService.save_topic(topic);
 
-		target = "/topic/find_all_topic.do";
+		target = "/topics.jsp";
 
 		return target;
 	}
@@ -85,7 +91,7 @@ public class TopicController {
 		String target = null;
 		topicService.del_topic(Integer.valueOf(request.getParameter("id")));
 
-		target = "/topic/find_all_topic.do";
+		target = "/topics.jsp";
 		return target;
 	}
 }

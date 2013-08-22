@@ -81,7 +81,7 @@
 				<i class="icon-bullhorn"></i>
 			</p>
 			<p>
-				<a href="outcall/findCallObjectByProId.do?pro_id=<%=pro_id%>"
+				<a href="outcall_callobject.jsp?pro_id=<%=pro_id%>"
 					target="mainFrame">继续外呼</a>
 			</p>
 		</div>

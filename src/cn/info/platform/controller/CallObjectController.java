@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import net.sf.json.JSONArray;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -28,13 +29,17 @@ public class CallObjectController {
 	 * @return 要跳转的页面
 	 */
 	@RequestMapping(value = "find_all_callobject")
-	public String findAllCallObject(HttpServletRequest request) {
-		String target = null;
-		List<CallObject> list = callObjectService.findAllCallObject();
-		request.setAttribute("callobject_list", list);
-		target = "/callobjects.jsp";
+	public void findAllCallObject(HttpServletRequest request,
+			HttpServletResponse response) {
+		response.setContentType("text/html; charset=utf-8");
 
-		return target;
+		List<CallObject> list = callObjectService.findAllCallObject();
+		JSONArray jsonArray = JSONArray.fromObject(list);
+		try {
+			response.getWriter().write(jsonArray.toString());
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 
 	/**
@@ -49,7 +54,7 @@ public class CallObjectController {
 		String target = null;
 		callObjectService.add_obj(obj);
 
-		target = "/callobject/find_all_callobject.do";
+		target = "/callobjects.jsp";
 		return target;
 	}
 
@@ -70,7 +75,7 @@ public class CallObjectController {
 
 		callObjectService.save_obj(obj);
 
-		target = "/callobject/find_all_callobject.do";
+		target = "/callobjects.jsp";
 		return target;
 	}
 
@@ -85,7 +90,7 @@ public class CallObjectController {
 	public String del_obj(HttpServletRequest request) {
 		String target = null;
 		callObjectService.del_obj(Integer.valueOf(request.getParameter("id")));
-		target = "/callobject/find_all_callobject.do";
+		target = "/callobjects.jsp";
 		return target;
 	}
 

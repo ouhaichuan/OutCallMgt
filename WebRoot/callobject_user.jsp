@@ -80,15 +80,12 @@
 <body>
 	<input id='basePathIn' type="hidden" value="<%=basePath%>">
 	<div>
-		<div class="header">
-			<h1 class="page-title">绑定工号</h1>
-		</div>
 		<ul class="breadcrumb">
 			<li><a href="index.jsp" target="_parent">主页</a> <span
 				class="divider">/</span>
 			</li>
-			<li><a href="callobject/find_all_callobject.do">号码管理</a> <span
-				class="divider">/</span></li>
+			<li><a href="callobjects.jsp">号码管理</a> <span class="divider">/</span>
+			</li>
 			<li class="active">绑定工号</li>
 		</ul>
 		<div class="container-fluid">
@@ -96,6 +93,9 @@
 				<div class="btn-toolbar">
 					<button class="btn btn-primary" id="bound_btn">
 						<i class="icon-save"></i>&nbsp;&nbsp;绑定
+					</button>
+					<button class="btn btn-primary" id="cls_btn">
+						<i class="icon-remove"></i>&nbsp;&nbsp;清空
 					</button>
 					<div class="btn-group"></div>
 				</div>
@@ -109,8 +109,8 @@
 							<form id="edit_info" action="project/save_pro.do" method="post">
 								<input type="hidden" name="object_id" id='object_id'
 									value="<%=object_id%>"> <label>外呼号码</label> <input
-									name="pnumber" id="pnumber" value="<%=pnumber%>"
-									class="span3" /> <label>员工</label>
+									name="pnumber" id="pnumber" value="<%=pnumber%>" class="span3" />
+								<label>员工</label>
 								<div style="float: left;">
 									<select name="user_select" id="user_select"
 										style="height:130px;width: 100px" class="span3" size="2">
@@ -156,7 +156,7 @@
 										+ dataUser[i].user_name + "&gt;;";
 								$('#users_txt')
 										.append(
-												"<button ondblclick='$(this).remove();' onclick='return false;' style='background-color:transparent;border:0;' text="
+												"<button rel='tooltip' title='双击删除' ondblclick='$(this).remove();' onclick='return false;' style='background-color:transparent;border:0;' text="
 														+ newstr
 														+ ">"
 														+ newstr
@@ -188,7 +188,7 @@
 
 								$('#users_txt')
 										.append(
-												"<button ondblclick='$(this).remove();' onclick='return false;' style='background-color:transparent;border:0;' text="
+												"<button rel='tooltip' title='双击删除' ondblclick='$(this).remove();' onclick='return false;' style='background-color:transparent;border:0;' text="
 														+ newstr
 														+ ">"
 														+ newstr
@@ -231,6 +231,36 @@
 						}
 					});
 				}
+			});
+			$("#cls_btn").click(function() {
+				dialog = art.dialog({
+					content : '确定清空已绑定的工号吗？',
+					lock : true,
+					drag : false,
+					resize : false,
+					icon : 'warning',
+					ok : function() {
+						$.ajax({
+							url : basePath + "objectuser/cls_user.do",
+							type : "post",
+							data : {
+								object_id : $("#object_id").val()
+							},
+							success : function(data) {
+								$("#users_txt").html('');
+								dialog = art.dialog({
+									content : data,
+									lock : true,
+									drag : false,
+									resize : false,
+									icon : 'succeed'
+								});
+							}
+						});
+					},
+					cancel : function() {
+					}
+				});
 			});
 		});
 	</script>

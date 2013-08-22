@@ -75,8 +75,8 @@
 			<ul class="nav pull-right">
 
 			</ul>
-			<a class="brand" href="login.jsp"><span class="first">重庆</span> <span
-				class="second">移动</span> </a>
+			<a class="brand" href="login.jsp"><span class="first">移动</span> <span class="second">外呼</span>
+			</a>
 		</div>
 	</div>
 	<div class="row-fluid">

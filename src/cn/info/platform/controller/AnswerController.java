@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import net.sf.json.JSONArray;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -51,7 +52,7 @@ public class AnswerController {
 		// 更新号码状态
 		CallObject object = new CallObject();
 		object.setObject_id(object_id);
-		object.setObject_state("3");
+		object.setObject_state("2");
 
 		callObjectService.commitError(object);// 提交状态
 		try {
@@ -69,12 +70,16 @@ public class AnswerController {
 	 * @return 要跳转的页面
 	 */
 	@RequestMapping(value = "find_all_answer")
-	public String findAllAnswer(HttpServletRequest request) {
-		String target = null;
-		List<Answer> list = answerService.findAllAnswer();
-		request.setAttribute("answers_list", list);
-		target = "/answers.jsp";
+	public void findAllAnswer(HttpServletRequest request,
+			HttpServletResponse response) {
+		response.setContentType("text/html; charset=utf-8");
 
-		return target;
+		List<Answer> list = answerService.findAllAnswer();
+		JSONArray jsonArray = JSONArray.fromObject(list);
+		try {
+			response.getWriter().write(jsonArray.toString());
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 }

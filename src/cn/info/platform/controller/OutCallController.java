@@ -81,15 +81,19 @@ public class OutCallController {
 	 * @return 要跳转的页面
 	 */
 	@RequestMapping(value = "find_all_project")
-	public String findAllProject(HttpServletRequest request) {
-		String target = null;
+	public void findAllProject(HttpServletRequest request,
+			HttpServletResponse response) {
 		String user_name = ((User) request.getSession().getAttribute("user"))
 				.getUserName();
-		List<Project> list = projectService.findAllProjectByUserName(user_name);
-		request.setAttribute("project_list", list);
-		target = "/outcall_start.jsp";
+		response.setContentType("text/html; charset=utf-8");
 
-		return target;
+		List<Project> list = projectService.findAllProjectByUserName(user_name);
+		JSONArray jsonArray = JSONArray.fromObject(list);
+		try {
+			response.getWriter().write(jsonArray.toString());
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 
 	/**
@@ -100,27 +104,30 @@ public class OutCallController {
 	 * @return 要跳转的页面
 	 */
 	@RequestMapping(value = "findTopicByProId")
-	public String findTopicByProId(HttpServletRequest request) {
-		String target = null;
+	public void findTopicByProId(HttpServletRequest request,
+			HttpServletResponse response) {
+		response.setContentType("text/html; charset=utf-8");
+
 		List<Topic> list = topicService.findTopicByProId(Integer
 				.valueOf(request.getParameter("pro_id")));
-		request.setAttribute("topic_list", list);
-
-		target = "/outcall_topic.jsp";
-
-		return target;
+		JSONArray jsonArray = JSONArray.fromObject(list);
+		try {
+			response.getWriter().write(jsonArray.toString());
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 
 	/**
-	 * 查找相关项目的号码
+	 * 查找相关项目的号码Ajax
 	 * 
 	 * @param request
 	 *            请求的对象
 	 * @return 要跳转的页面
 	 */
 	@RequestMapping(value = "findCallObjectByProId")
-	public String findCallObjectByProId(HttpServletRequest request) {
-		String target = null;
+	public void findCallObjectByProIdAjax(HttpServletRequest request,
+			HttpServletResponse response) {
 		String user_name = ((User) request.getSession().getAttribute("user"))
 				.getUserName();
 		int pro_id = Integer.valueOf(request.getParameter("pro_id"));
@@ -130,11 +137,12 @@ public class OutCallController {
 		map.put("user_name", user_name);
 
 		List<CallObject> list = callObjectService.findCallObjectByProId(map);
-		request.setAttribute("callobject_list", list);
-		request.setAttribute("pro_id", request.getParameter("pro_id"));
-
-		target = "/outcall_callobject.jsp";
-
-		return target;
+		response.setContentType("text/html; charset=utf-8");
+		JSONArray jsonArray = JSONArray.fromObject(list);
+		try {
+			response.getWriter().write(jsonArray.toString());
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 }

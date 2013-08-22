@@ -22,7 +22,7 @@ public class ObjectUserController {
 	ObjectUserService objectUserService;
 
 	/**
-	 * 醒目绑定用户
+	 * 项目绑定用户
 	 * 
 	 * @param request
 	 *            请求的对象
@@ -45,6 +45,27 @@ public class ObjectUserController {
 		}
 		try {
 			response.getWriter().write("绑定成功");
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
+	/**
+	 * 清空绑定用户
+	 * 
+	 * @param request
+	 *            请求的对象
+	 * @return 要跳转的页面
+	 */
+	@RequestMapping(value = "cls_user", method = RequestMethod.POST)
+	public void cls_user(HttpServletRequest request,
+			HttpServletResponse response) {
+		response.setContentType("text/html; charset=utf-8");
+		int object_id = Integer.valueOf(request.getParameter("object_id"));
+
+		objectUserService.del_user(object_id);
+		try {
+			response.getWriter().write("清空成功");
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

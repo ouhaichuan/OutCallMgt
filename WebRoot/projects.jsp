@@ -4,8 +4,8 @@
 <%
 	String path = request.getContextPath();
 	String basePath = request.getScheme() + "://"
-	+ request.getServerName() + ":" + request.getServerPort()
-	+ path + "/";
+			+ request.getServerName() + ":" + request.getServerPort()
+			+ path + "/";
 %>
 
 <!DOCTYPE html>
@@ -70,14 +70,9 @@
 <body>
 	<input id='basePathIn' type="hidden" value="<%=basePath%>">
 	<div>
-		<div class="header">
-			<h1 class="page-title">项目管理</h1>
-		</div>
-
 		<ul class="breadcrumb">
 			<li><a href="index.jsp" target="_parent">主页</a> <span
-				class="divider">/</span>
-			</li>
+				class="divider">/</span></li>
 			<li class="active">项目管理</li>
 		</ul>
 
@@ -102,42 +97,11 @@
 								<th style="width: 56px;"></th>
 							</tr>
 						</thead>
-						<tbody>
-							<%
-								List<Project> list = (List<Project>)request.getAttribute("project_list");
-																										for(Project project:list){
-							%>
-							<tr>
-								<td><%=project.getPro_id()%></td>
-								<td><%=project.getPro_name()%></td>
-								<td><%=project.getPro_type()%></td>
-								<td><%=project.getPro_state()%></td>
-								<td><%=project.getPro_date()%></td>
-								<td><%=project.getPro_remark()%></td>
-								<td><a
-									href="project_user.jsp?pro_id=<%=project.getPro_id()%>&pro_name=<%=project.getPro_name()%>"
-									rel="tooltip" title="绑定工号"> <i class="icon-user"></i> </a>&nbsp;&nbsp;<a
-									href="project.jsp?edit_type=2&pro_id=<%=project.getPro_id()%>&pro_name=<%=project.getPro_name()%>&pro_type=<%=project.getPro_type()%>&pro_state=<%=project.getPro_state()%>&pro_date=<%=project.getPro_date()%>&pro_remark=<%=project.getPro_remark()%>"><i
-										class="icon-pencil"></i> </a>&nbsp;&nbsp;<a href="#myModal"
-									role="button" data-toggle="modal"><i class="icon-remove"></i>
-								</a>
-								</td>
-							</tr>
-							<%
-								}
-							%>
+						<tbody id="list-content">
 						</tbody>
 					</table>
 				</div>
 				<div id="myPaginator"></div>
-				<script type='text/javascript'>
-					var options = {
-						currentPage : 4,
-						totalPages : 10,
-						numberOfPages : 5
-					}
-					$('#myPaginator').bootstrapPaginator(options);
-				</script>
 
 				<div class="modal small hide fade" id="myModal" tabindex="-1"
 					role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
@@ -165,6 +129,81 @@
 		$("[rel=tooltip]").tooltip();
 		$(function() {
 			var basePath = $('#basePathIn').val();
+			
+			$.post(basePath + "project/find_projects_pg.do", function(data) {
+				var dataPro = eval(data);
+				totolP = parseInt(dataPro.length % 5 == 0 ? dataPro.length / 5
+						: dataPro.length / 5 + 1);
+				numP = dataPro.length / 5 < 1 ? dataPro.length % 5 : 5;
+				var options = {
+					currentPage : 1,
+					totalPages : totolP,
+					numberOfPages : numP,
+					itemTexts : function(type, page, current) {
+						switch (type) {
+						case "first":
+							return "首页";
+						case "prev":
+							return "上一页";
+						case "next":
+							return "下一页";
+						case "last":
+							return "尾页";
+						case "page":
+							return page;
+						}
+					},
+					onPageClicked : function(event, originalEvent, type, page) {
+						size = 5;
+						if (type == 'first' && dataPro.length < 5) {
+							size = dataPro.length;
+						}else if(type == 'next' && page==totolP){
+							size = dataPro.length % 5;
+						}else if(page==totolP){
+							size = dataPro.length % 5;
+						}else if (type == 'last' && dataPro.length % 5 != 0) {
+							size = dataPro.length % 5;
+						}
+						$('#list-content').html('');
+						for ( var i = 0; i < size; i++) {
+							$('#list-content').append(
+							'<tr><td>' + dataPro[(page-1)*5+i].pro_id + '</td><td>'
+									+ dataPro[(page-1)*5+i].pro_name + '</td><td>'
+									+ dataPro[(page-1)*5+i].pro_type + '</td><td>'
+									+ dataPro[(page-1)*5+i].pro_state + '</td><td>'
+									+ dataPro[(page-1)*5+i].pro_date + '</td><td>'
+									+ dataPro[(page-1)*5+i].pro_remark + '</td><td>'+"<a href='project_user.jsp?pro_id="+dataPro[(page-1)*5+i].pro_id+"&pro_name="+dataPro[(page-1)*5+i].pro_name+"' rel='tooltip' title='绑定工号'><i class='icon-user'></i> </a>&nbsp;&nbsp;"
+									+ "<a href='project.jsp?edit_type=2&pro_id="+dataPro[(page-1)*5+i].pro_id+'&pro_name='+dataPro[(page-1)*5+i].pro_name+'&pro_type='+dataPro[(page-1)*5+i].pro_type+'&pro_state='+dataPro[(page-1)*5+i].pro_state+'&pro_date='+dataPro[(page-1)*5+i].pro_date+'&pro_remark='+dataPro[(page-1)*5+i].pro_remark+"'><i class='icon-pencil'></i></a>&nbsp;&nbsp;<a href='#myModal' role='button' data-toggle='modal'><i class='icon-remove'></i> </a></td></tr>");
+						}
+						$("#pro_info_tab,tr").click(function() {
+							var pro_id = $(this).children("td:eq(0)").text();
+							if (pro_id != "") {
+								$('#del_app_id').val(pro_id);
+							}
+						});
+					}
+				};
+				bsize = dataPro.length < 5 ? dataPro.length : 5;
+				$('#list-content').html('');
+				for ( var i = 0; i < bsize; i++) {
+					$('#list-content').append(
+							'<tr><td>' + dataPro[i].pro_id + '</td><td>'
+									+ dataPro[i].pro_name + '</td><td>'
+									+ dataPro[i].pro_type + '</td><td>'
+									+ dataPro[i].pro_state + '</td><td>'
+									+ dataPro[i].pro_date + '</td><td>'
+									+ dataPro[i].pro_remark + '</td><td>'+"<a href='project_user.jsp?pro_id="+dataPro[i].pro_id+"&pro_name="+dataPro[i].pro_name+"' rel='tooltip' title='绑定工号'><i class='icon-user'></i> </a>&nbsp;&nbsp;"
+									+ "<a href='project.jsp?edit_type=2&pro_id="+dataPro[i].pro_id+'&pro_name='+dataPro[i].pro_name+'&pro_type='+dataPro[i].pro_type+'&pro_state='+dataPro[i].pro_state+'&pro_date='+dataPro[i].pro_date+'&pro_remark='+dataPro[i].pro_remark+"'><i class='icon-pencil'></i> </a>&nbsp;&nbsp;<a href='#myModal' role='button' data-toggle='modal'><i class='icon-remove'></i> </a></td></tr>");
+				}
+				$('#myPaginator').bootstrapPaginator(options);
+				$("#pro_info_tab,tr").click(function() {
+					var pro_id = $(this).children("td:eq(0)").text();
+					if (pro_id != "") {
+						$('#del_app_id').val(pro_id);
+					}
+				});
+			});
+			
 			$('#addpro_btn').click(function() {
 				window.location.href = basePath + "project.jsp?edit_type=1";
 			});
@@ -174,12 +213,6 @@
 								+ "project/del_pro.do?id="
 								+ $('#del_app_id').val();
 					});
-			$("#pro_info_tab,tr").click(function() {
-				var pro_id = $(this).children("td:eq(0)").text();
-				if (pro_id != "") {
-					$('#del_app_id').val(pro_id);
-				}
-			});
 		});
 	</script>
 </body>

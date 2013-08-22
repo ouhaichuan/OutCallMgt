@@ -78,13 +78,17 @@ public class UserController {
 	 * @return 要跳转的页面
 	 */
 	@RequestMapping(value = "find_all_users")
-	public String findAllUsers(HttpServletRequest request) {
-		String target = null;
-		List<User> list = userService.findAllUsers();
-		request.setAttribute("users_list", list);
-		target = "/users.jsp";
+	public void findAllUsers(HttpServletRequest request,
+			HttpServletResponse response) {
+		response.setContentType("text/html; charset=utf-8");
 
-		return target;
+		List<User> list = userService.findAllUsers();
+		JSONArray jsonArray = JSONArray.fromObject(list);
+		try {
+			response.getWriter().write(jsonArray.toString());
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 
 	/**
@@ -122,7 +126,7 @@ public class UserController {
 	public String save_user(ModelMap map, User user, HttpServletRequest request) {
 		String target = null;
 		userService.save_user(user);
-		target = "/user/find_all_users.do";
+		target = "/users.jsp";
 		return target;
 	}
 
@@ -137,7 +141,7 @@ public class UserController {
 	public String del_user(HttpServletRequest request) {
 		String target = null;
 		userService.del_user(Integer.valueOf(request.getParameter("id")));
-		target = "/user/find_all_users.do";
+		target = "/users.jsp";
 		return target;
 	}
 
@@ -152,7 +156,7 @@ public class UserController {
 	public String add_user(ModelMap map, User user, HttpServletRequest request) {
 		String target = null;
 		userService.add_user(user);
-		target = "/user/find_all_users.do";
+		target = "/users.jsp";
 		return target;
 	}
 

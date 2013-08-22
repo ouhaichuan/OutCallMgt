@@ -85,7 +85,7 @@
 		<ul class="breadcrumb">
 			<li><a href="index.jsp" target="_parent">主页</a> <span
 				class="divider">/</span></li>
-			<li><a href="outcall/find_all_project.do" target="mainFrame">外呼</a>
+			<li><a href="outcall_start.jsp" target="mainFrame">外呼</a>
 				<span class="divider">/</span></li>
 			<li><a
 				href="outcall/findCallObjectByProId.do?pro_id=<%=pro_id%>"

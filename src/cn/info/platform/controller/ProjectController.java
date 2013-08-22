@@ -1,7 +1,10 @@
 package cn.info.platform.controller;
 
+import java.io.IOException;
 import java.util.List;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import net.sf.json.JSONArray;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -25,14 +28,18 @@ public class ProjectController {
 	 *            请求的对象
 	 * @return 要跳转的页面
 	 */
-	@RequestMapping(value = "find_all_project")
-	public String findAllProject(HttpServletRequest request) {
-		String target = null;
-		List<Project> list = projectService.findAllProject();
-		request.setAttribute("project_list", list);
-		target = "/projects.jsp";
+	@RequestMapping(value = "find_projects_pg")
+	public void find_projects_pg(HttpServletRequest request,
+			HttpServletResponse response) {
+		response.setContentType("text/html; charset=utf-8");
 
-		return target;
+		List<Project> list = projectService.findAllProject();
+		JSONArray jsonArray = JSONArray.fromObject(list);
+		try {
+			response.getWriter().write(jsonArray.toString());
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 
 	/**
@@ -52,7 +59,7 @@ public class ProjectController {
 
 		projectService.save_pro(project);
 
-		target = "/project/find_all_project.do";
+		target = "/projects.jsp";
 		return target;
 	}
 
@@ -68,7 +75,7 @@ public class ProjectController {
 		String target = null;
 		projectService.add_pro(project);
 
-		target = "/project/find_all_project.do";
+		target = "/projects.jsp";
 		return target;
 	}
 
@@ -83,7 +90,7 @@ public class ProjectController {
 	public String del_pro(HttpServletRequest request) {
 		String target = null;
 		projectService.del_pro(Integer.valueOf(request.getParameter("id")));
-		target = "/project/find_all_project.do";
+		target = "/projects.jsp";
 		return target;
 	}
 }

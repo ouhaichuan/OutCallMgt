@@ -109,26 +109,20 @@
 		<%
 			if (edit_type == 2) {
 		%>
-		<div class="header">
-			<h1 class="page-title">编辑题目</h1>
-		</div>
 		<ul class="breadcrumb">
 			<li><a href="index.jsp" target="_parent">主页</a> <span
 				class="divider">/</span></li>
-			<li><a href="topic/find_all_topic.do">题目管理</a> <span
+			<li><a href="topics.jsp">题目管理</a> <span
 				class="divider">/</span></li>
 			<li class="active">编辑</li>
 		</ul>
 		<%
 			} else {
 		%>
-		<div class="header">
-			<h1 class="page-title">添加项目</h1>
-		</div>
 		<ul class="breadcrumb">
 			<li><a href="index.jsp" target="_parent">主页</a> <span
 				class="divider">/</span></li>
-			<li><a href="topic/find_all_topic.do">题目管理</a> <span
+			<li><a href="topics.jsp">题目管理</a> <span
 				class="divider">/</span></li>
 			<li class="active">添加</li>
 		</ul>
@@ -177,8 +171,8 @@
 									name="project_select" id="project_select" style="height:30px"
 									class="span3">
 								</select><label>题目内容</label>
-								<textarea name="topic_content" id="topic_content" rows="4"
-									class="span3"><%=topic_content%></textarea>
+								<textarea name="topic_content" id="topic_content" rows="6"
+									class="span3" style="width: 800px;"><%=topic_content%></textarea>
 								<label>项目类型</label><select name="type_select" id="type_select"
 									style="height:30px" class="span3">
 									<option value="简答题">简答题</option>

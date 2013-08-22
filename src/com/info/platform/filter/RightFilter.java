@@ -1,6 +1,8 @@
 package com.info.platform.filter;
 
 import java.io.IOException;
+import java.io.PrintWriter;
+
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
 import javax.servlet.FilterConfig;
@@ -25,8 +27,10 @@ public class RightFilter implements Filter {
 				"user");
 		if (!isExcludePages(httpServletRequest.getRequestURI())) {
 			if (user == null) {
-				httpServletResponse.sendRedirect(httpServletRequest
-						.getContextPath() + "/login.jsp");
+				PrintWriter out = httpServletResponse.getWriter();
+				out.println("<script   language=javascript>");
+				out.println("window.open('login.jsp','_top')");
+				out.println("</script>");
 				return;
 			}
 		}

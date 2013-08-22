@@ -3,8 +3,10 @@
 <%
 	String path = request.getContextPath();
 	String basePath = request.getScheme() + "://"
-	+ request.getServerName() + ":" + request.getServerPort()
-	+ path + "/";
+			+ request.getServerName() + ":" + request.getServerPort()
+			+ path + "/";
+	int pro_id = Integer.valueOf((String) request
+			.getParameter("pro_id"));
 %>
 
 <!DOCTYPE html>
@@ -67,16 +69,15 @@
 
 <body>
 	<input id='basePathIn' type="hidden" value="<%=basePath%>">
+	<input id='pro_id' type="hidden" value="<%=pro_id%>">
 	<div>
-		<div class="header">
-			<h1 class="page-title">题目</h1>
-		</div>
-
 		<ul class="breadcrumb">
 			<li><a href="index.jsp" target="_parent">主页</a> <span
-				class="divider">/</span></li>
-			<li><a href="outcall/find_all_project.do" target="mainFrame">外呼</a>
-				<span class="divider">/</span></li>
+				class="divider">/</span>
+			</li>
+			<li><a href="outcall_start.jsp" target="mainFrame">外呼</a> <span
+				class="divider">/</span>
+			</li>
 			<li class="active">题目</li>
 		</ul>
 
@@ -93,33 +94,11 @@
 								<th>备注</th>
 							</tr>
 						</thead>
-						<tbody>
-							<%
-								List<Topic> list = (List<Topic>)request.getAttribute("topic_list");
-										for(Topic topic:list){
-							%>
-							<tr>
-								<td><%=topic.getTopic_id()%></td>
-								<td><%=topic.getPro_name()%></td>
-								<td><%=topic.getTopic_content()%></td>
-								<td><%=topic.getTopic_type()%></td>
-								<td><%=topic.getTopic_remark()%></td>
-							</tr>
-							<%
-								}
-							%>
+						<tbody id="list-content">
 						</tbody>
 					</table>
 				</div>
 				<div id="myPaginator"></div>
-				<script type='text/javascript'>
-					var options = {
-						currentPage : 4,
-						totalPages : 10,
-						numberOfPages : 5
-					};
-					$('#myPaginator').bootstrapPaginator(options);
-				</script>
 			</div>
 		</div>
 	</div>
@@ -127,6 +106,72 @@
 	<script type="text/javascript">
 		$("[rel=tooltip]").tooltip();
 		$(function() {
+			var basePath = $('#basePathIn').val();
+			
+			$.ajax({
+				url : basePath + "outcall/findTopicByProId.do",
+				type : "post",
+				data : {
+					pro_id : $("#pro_id").val()
+				},
+				success : function(data) {
+					var dataTopic = eval(data);
+					totolP = parseInt(dataTopic.length % 5 == 0 ? dataTopic.length / 5
+							: dataTopic.length / 5 + 1);
+					numP = dataTopic.length / 5 < 1 ? dataTopic.length % 5 : 5;
+					var options = {
+						currentPage : 1,
+						totalPages : totolP,
+						numberOfPages : numP,
+						itemTexts : function(type, page, current) {
+							switch (type) {
+							case "first":
+								return "首页";
+							case "prev":
+								return "上一页";
+							case "next":
+								return "下一页";
+							case "last":
+								return "尾页";
+							case "page":
+								return page;
+							}
+						},
+						onPageClicked : function(event, originalEvent, type, page) {
+							size = 5;
+							if (type == 'first' && dataTopic.length < 5) {
+								size = dataTopic.length;
+							}else if(type == 'next' && page==totolP){
+								size = dataTopic.length % 5;
+							}else if(page==totolP){
+								size = dataTopic.length % 5;
+							}else if (type == 'last' && dataTopic.length % 5 != 0) {
+								size = dataTopic.length % 5;
+							}
+							$('#list-content').html('');
+							for ( var i = 0; i < size; i++) {
+								$('#list-content').append(
+								'<tr><td>' + dataTopic[(page-1)*5+i].topic_id + '</td><td>'
+										+ dataTopic[(page-1)*5+i].pro_name + '</td><td>'
+										+ dataTopic[(page-1)*5+i].topic_content + '</td><td>'
+										+ dataTopic[(page-1)*5+i].topic_type + '</td><td>'
+										+ dataTopic[(page-1)*5+i].topic_remark + '</td></tr>');
+							}
+						}
+					};
+					bsize = dataTopic.length < 5 ? dataTopic.length : 5;
+					$('#list-content').html('');
+					for ( var i = 0; i < bsize; i++) {
+						$('#list-content').append(
+								'<tr><td>' + dataTopic[i].topic_id + '</td><td>'
+										+ dataTopic[i].pro_name + '</td><td>'
+										+ dataTopic[i].topic_content + '</td><td>'
+										+ dataTopic[i].topic_type + '</td><td>'
+										+ dataTopic[i].topic_remark + '</td></tr>');
+					}
+					$('#myPaginator').bootstrapPaginator(options);
+				}
+			});
 		});
 	</script>
 </body>

@@ -79,13 +79,10 @@
 <body>
 	<input id='basePathIn' type="hidden" value="<%=basePath%>">
 	<div>
-		<div class="header">
-			<h1 class="page-title">绑定工号</h1>
-		</div>
 		<ul class="breadcrumb">
 			<li><a href="index.jsp" target="_parent">主页</a> <span
 				class="divider">/</span></li>
-			<li><a href="project/find_all_project.do">项目管理</a> <span
+			<li><a href="projects.jsp">项目管理</a> <span
 				class="divider">/</span>
 			</li>
 			<li class="active">绑定工号</li>
@@ -95,6 +92,9 @@
 				<div class="btn-toolbar">
 					<button class="btn btn-primary" id="bound_btn">
 						<i class="icon-save"></i>&nbsp;&nbsp;绑定
+					</button>
+					<button class="btn btn-primary" id="cls_btn">
+						<i class="icon-remove"></i>&nbsp;&nbsp;清空
 					</button>
 					<div class="btn-group"></div>
 				</div>
@@ -155,7 +155,7 @@
 										+ dataUser[i].user_name + "&gt;;";
 								$('#users_txt')
 										.append(
-												"<button ondblclick='$(this).remove();' onclick='return false;' style='background-color:transparent;border:0;' text="
+												"<button rel='tooltip' title='双击删除' ondblclick='$(this).remove();' onclick='return false;' style='background-color:transparent;border:0;' text="
 														+ newstr
 														+ ">"
 														+ newstr
@@ -187,7 +187,7 @@
 
 								$('#users_txt')
 										.append(
-												"<button ondblclick='$(this).remove();' onclick='return false;' style='background-color:transparent;border:0;' text="
+												"<button rel='tooltip' title='双击删除' ondblclick='$(this).remove();' onclick='return false;' style='background-color:transparent;border:0;' text="
 														+ newstr
 														+ ">"
 														+ newstr
@@ -230,6 +230,37 @@
 						}
 					});
 				}
+			});
+			
+			$("#cls_btn").click(function() {
+				dialog = art.dialog({
+					content : '确定清空已绑定的工号吗？',
+					lock : true,
+					drag : false,
+					resize : false,
+					icon : 'warning',
+					ok : function() {
+						$.ajax({
+							url : basePath + "projectuser/cls_user.do",
+							type : "post",
+							data : {
+								pro_id : $("#pro_id").val()
+							},
+							success : function(data) {
+								$("#users_txt").html('');
+								dialog = art.dialog({
+									content : data,
+									lock : true,
+									drag : false,
+									resize : false,
+									icon : 'succeed'
+								});
+							}
+						});
+					},
+					cancel : function() {
+					}
+				});
 			});
 		});
 	</script>

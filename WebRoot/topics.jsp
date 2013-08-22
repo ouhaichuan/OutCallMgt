@@ -3,8 +3,8 @@
 <%
 	String path = request.getContextPath();
 	String basePath = request.getScheme() + "://"
-	+ request.getServerName() + ":" + request.getServerPort()
-	+ path + "/";
+			+ request.getServerName() + ":" + request.getServerPort()
+			+ path + "/";
 %>
 
 <!DOCTYPE html>
@@ -68,14 +68,9 @@
 <body>
 	<input id='basePathIn' type="hidden" value="<%=basePath%>">
 	<div>
-		<div class="header">
-			<h1 class="page-title">题目管理</h1>
-		</div>
-
 		<ul class="breadcrumb">
 			<li><a href="index.jsp" target="_parent">主页</a> <span
-				class="divider">/</span>
-			</li>
+				class="divider">/</span></li>
 			<li class="active">题目管理</li>
 		</ul>
 
@@ -96,40 +91,14 @@
 								<th style="width: 600px;">题目内容</th>
 								<th>题目类型</th>
 								<th>备注</th>
-								<th style="width: 26px;"></th>
+								<th style="width: 36px;"></th>
 							</tr>
 						</thead>
-						<tbody>
-							<%
-								List<Topic> list = (List<Topic>)request.getAttribute("topic_list");
-										for(Topic topic:list){
-							%>
-							<tr>
-								<td><%=topic.getTopic_id()%></td>
-								<td><%=topic.getPro_name()%></td>
-								<td><%=topic.getTopic_content()%></td>
-								<td><%=topic.getTopic_type()%></td>
-								<td><%=topic.getTopic_remark()%></td>
-								<td><a
-									href="topic.jsp?edit_type=2&topic_id=<%=topic.getTopic_id()%>&pro_id=<%=topic.getPro_id()%>&pro_name=<%=topic.getPro_name()%>&topic_content=<%=topic.getTopic_content()%>&topic_type=<%=topic.getTopic_type()%>&topic_remark=<%=topic.getTopic_remark()%>"><i
-										class="icon-pencil"></i> </a> <a href="#myModal" role="button"
-									data-toggle="modal"><i class="icon-remove"></i> </a></td>
-							</tr>
-							<%
-								}
-							%>
+						<tbody id="list-content">
 						</tbody>
 					</table>
 				</div>
 				<div id="myPaginator"></div>
-				<script type='text/javascript'>
-					var options = {
-						currentPage : 4,
-						totalPages : 10,
-						numberOfPages : 5
-					}
-					$('#myPaginator').bootstrapPaginator(options);
-				</script>
 
 				<div class="modal small hide fade" id="myModal" tabindex="-1"
 					role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
@@ -157,6 +126,77 @@
 		$("[rel=tooltip]").tooltip();
 		$(function() {
 			var basePath = $('#basePathIn').val();
+			
+			$.post(basePath + "topic/find_all_topic.do", function(data) {
+				var dataTopic = eval(data);
+				totolP = parseInt(dataTopic.length % 5 == 0 ? dataTopic.length / 5
+						: dataTopic.length / 5 + 1);
+				numP = dataTopic.length / 5 < 1 ? dataTopic.length % 5 : 5;
+				var options = {
+					currentPage : 1,
+					totalPages : totolP,
+					numberOfPages : numP,
+					itemTexts : function(type, page, current) {
+						switch (type) {
+						case "first":
+							return "首页";
+						case "prev":
+							return "上一页";
+						case "next":
+							return "下一页";
+						case "last":
+							return "尾页";
+						case "page":
+							return page;
+						}
+					},
+					onPageClicked : function(event, originalEvent, type, page) {
+						size = 5;
+						if (type == 'first' && dataTopic.length < 5) {
+							size = dataTopic.length;
+						}else if(type == 'next' && page==totolP){
+							size = dataTopic.length % 5;
+						}else if(page==totolP){
+							size = dataTopic.length % 5;
+						}else if (type == 'last' && dataTopic.length % 5 != 0) {
+							size = dataTopic.length % 5;
+						}
+						$('#list-content').html('');
+						for ( var i = 0; i < size; i++) {
+							$('#list-content').append(
+							'<tr><td>' + dataTopic[(page-1)*5+i].topic_id + '</td><td>'
+									+ dataTopic[(page-1)*5+i].pro_name + '</td><td>'
+									+ dataTopic[(page-1)*5+i].topic_content + '</td><td>'
+									+ dataTopic[(page-1)*5+i].topic_type + '</td><td>'
+									+ dataTopic[(page-1)*5+i].topic_remark + '</td><td>'+"<a href='topic.jsp?edit_type=2&topic_id="+dataTopic[(page-1)*5+i].topic_id+'&pro_id='+dataTopic[(page-1)*5+i].pro_id+'&pro_name='+dataTopic[(page-1)*5+i].pro_name+'&topic_content='+dataTopic[(page-1)*5+i].topic_content+'&topic_type='+dataTopic[(page-1)*5+i].topic_type+'&topic_remark='+dataTopic[(page-1)*5+i].topic_remark+"'><i class='icon-pencil'></i> </a>&nbsp;&nbsp;<a href='#myModal' role='button' data-toggle='modal'><i class='icon-remove'></i> </a></td></tr>");
+						}
+						$("#list-content,tr").click(function() {
+							var topic_id = $(this).children("td:eq(0)").text();
+							if (topic_id != "") {
+								$('#del_app_id').val(topic_id);
+							}
+						});
+					}
+				};
+				bsize = dataTopic.length < 5 ? dataTopic.length : 5;
+				$('#list-content').html('');
+				for ( var i = 0; i < bsize; i++) {
+					$('#list-content').append(
+							'<tr><td>' + dataTopic[i].topic_id + '</td><td>'
+									+ dataTopic[i].pro_name + '</td><td>'
+									+ dataTopic[i].topic_content + '</td><td>'
+									+ dataTopic[i].topic_type + '</td><td>'
+									+ dataTopic[i].topic_remark + '</td><td>'+"<a href='topic.jsp?edit_type=2&topic_id="+dataTopic[i].topic_id+'&pro_id='+dataTopic[i].pro_id+'&pro_name='+dataTopic[i].pro_name+'&topic_content='+dataTopic[i].topic_content+'&topic_type='+dataTopic[i].topic_type+'&topic_remark='+dataTopic[i].topic_remark+"'><i class='icon-pencil'></i> </a>&nbsp;&nbsp;<a href='#myModal' role='button' data-toggle='modal'><i class='icon-remove'></i> </a></td></tr>");
+				}
+				$('#myPaginator').bootstrapPaginator(options);
+				$("#list-content,tr").click(function() {
+					var topic_id = $(this).children("td:eq(0)").text();
+					if (topic_id != "") {
+						$('#del_app_id').val(topic_id);
+					}
+				});
+			});
+			
 			$('#addtopic_btn').click(function() {
 				window.location.href = basePath + "topic.jsp?edit_type=1";
 			});

@@ -6,8 +6,7 @@
 	String basePath = request.getScheme() + "://"
 	+ request.getServerName() + ":" + request.getServerPort()
 	+ path + "/";
-	String pro_id = (String)(request.getAttribute("pro_id") != null ? request
-	.getAttribute("pro_id") : "");
+	int pro_id = Integer.valueOf((String)request.getParameter("pro_id"));
 %>
 
 <!DOCTYPE html>
@@ -71,18 +70,13 @@
 
 <body>
 	<input id='basePathIn' type="hidden" value="<%=basePath%>">
+	<input id='pro_id' type="hidden" value="<%=pro_id%>">
 	<div>
-		<div class="header">
-			<h1 class="page-title">外呼号码</h1>
-		</div>
-
 		<ul class="breadcrumb">
 			<li><a href="index.jsp" target="_parent">主页</a> <span
-				class="divider">/</span>
-			</li>
-			<li><a href="outcall/find_all_project.do" target="mainFrame">外呼</a>
-				<span class="divider">/</span>
-			</li>
+				class="divider">/</span></li>
+			<li><a href="outcall_start.jsp" target="mainFrame">外呼</a> <span
+				class="divider">/</span></li>
 			<li class="active">号码</li>
 		</ul>
 
@@ -101,52 +95,11 @@
 								<th style="width: 75px;"></th>
 							</tr>
 						</thead>
-						<tbody>
-							<%
-								List<CallObject> list = (List<CallObject>)request.getAttribute("callobject_list");
-															for(CallObject callobject:list){
-							%>
-							<tr>
-								<td><%=callobject.getObject_id()%></td>
-								<td><%=callobject.getObject_pnumber()%></td>
-								<td><%=callobject.getPro_name()%></td>
-								<td><%=callobject.getState_name()%></td>
-								<td><%=callobject.getOut_time()%></td>
-								<td><%=callobject.getOut_time_length()%></td>
-								<td>
-									<%
-										if(callobject.getState_name().equals("初始状态")){
-									%> <a
-									href="outcall/outcall.do?pro_id=<%=pro_id%>&object_id=<%=callobject.getObject_id()%>&pnumber=<%=callobject.getObject_pnumber()%>"
-									target="mainFrame"><button class="btn btn-primary"
-											type="button">
-											<i class="icon-bullhorn"></i>&nbsp;外呼
-										</button> </a> <%
- 	}else{
- %>
-									<button class="btn active" type="button" rel="tooltip"
-										title="号码状态不允许外呼">
-										<i class="icon-bullhorn"></i>&nbsp;外呼
-									</button> </i> <%
- 	}
- %>
-								</td>
-							</tr>
-							<%
-								}
-							%>
+						<tbody id="list-content">
 						</tbody>
 					</table>
 				</div>
 				<div id="myPaginator"></div>
-				<script type='text/javascript'>
-					var options = {
-						currentPage : 4,
-						totalPages : 10,
-						numberOfPages : 5
-					};
-					$('#myPaginator').bootstrapPaginator(options);
-				</script>
 			</div>
 		</div>
 	</div>
@@ -154,6 +107,84 @@
 	<script type="text/javascript">
 		$("[rel=tooltip]").tooltip();
 		$(function() {
+			var basePath = $('#basePathIn').val();
+			
+			$.ajax({
+				url : basePath + "outcall/findCallObjectByProId.do",
+				type : "post",
+				data : {
+					pro_id : $("#pro_id").val()
+				},
+				success : function(data) {
+					var dataObject = eval(data);
+					totolP = parseInt(dataObject.length % 5 == 0 ? dataObject.length / 5
+							: dataObject.length / 5 + 1);
+					numP = dataObject.length / 5 < 1 ? dataObject.length % 5 : 5;
+					var options = {
+						currentPage : 1,
+						totalPages : totolP,
+						numberOfPages : numP,
+						itemTexts : function(type, page, current) {
+							switch (type) {
+							case "first":
+								return "首页";
+							case "prev":
+								return "上一页";
+							case "next":
+								return "下一页";
+							case "last":
+								return "尾页";
+							case "page":
+								return page;
+							}
+						},
+						onPageClicked : function(event, originalEvent, type, page) {
+							size = 5;
+							if (type == 'first' && dataObject.length < 5) {
+								size = dataObject.length;
+							}else if(type == 'next' && page==totolP){
+								size = dataObject.length % 5;
+							}else if(page==totolP){
+								size = dataObject.length % 5;
+							}else if (type == 'last' && dataObject.length % 5 != 0) {
+								size = dataObject.length % 5;
+							}
+							$('#list-content').html('');
+							for ( var i = 0; i < size; i++) {
+								var td_str = '<tr><td>' + dataObject[(page-1)*5+i].object_id + '</td><td>'
+										+ dataObject[(page-1)*5+i].object_pnumber + '</td><td>'
+										+ dataObject[(page-1)*5+i].pro_name + '</td><td>'
+										+ dataObject[(page-1)*5+i].state_name + '</td><td>'
+										+ dataObject[(page-1)*5+i].out_time + '</td><td>'
+										+ dataObject[(page-1)*5+i].out_time_length + '</td>';
+								if(dataObject[(page-1)*5+i].state_name=='初始状态'){
+									td_str +="<td><a href='outcall/outcall.do?pro_id="+dataObject[(page-1)*5+i].pro_id+"&object_id="+dataObject[(page-1)*5+i].object_id+"&pnumber="+dataObject[(page-1)*5+i].object_pnumber+"' target='mainFrame'><button class='btn btn-primary' type='button'><i class='icon-bullhorn'></i>&nbsp;外呼</button></a></td></tr>";
+								}else{
+									td_str += "<td><button class='btn active' type='button' rel='tooltip' title='号码状态不允许外呼'> <i class='icon-bullhorn'></i>&nbsp;外呼 </button> </i></td></tr>";
+								}
+								$('#list-content').append(td_str);
+							}
+						}
+					};
+					bsize = dataObject.length < 5 ? dataObject.length : 5;
+					$('#list-content').html('');
+					for ( var i = 0; i < bsize; i++) {
+								var td_str = '<tr><td>' + dataObject[i].object_id + '</td><td>'
+												+ dataObject[i].object_pnumber + '</td><td>'
+												+ dataObject[i].pro_name + '</td><td>'
+												+ dataObject[i].state_name + '</td><td>'
+												+ dataObject[i].out_time + '</td><td>'
+												+ dataObject[i].out_time_length + '</td>';
+								if(dataObject[i].state_name=='初始状态'){
+									td_str +="<td><a href='outcall/outcall.do?pro_id="+dataObject[i].pro_id+"&object_id="+dataObject[i].object_id+"&pnumber="+dataObject[i].object_pnumber+"' target='mainFrame'><button class='btn btn-primary' type='button'><i class='icon-bullhorn'></i>&nbsp;外呼</button></a></td></tr>";
+								}else{
+									td_str += "<td><button class='btn active' type='button' rel='tooltip' title='号码状态不允许外呼'> <i class='icon-bullhorn'></i>&nbsp;外呼 </button> </i></td></tr>";
+								}
+								$('#list-content').append(td_str);
+					}
+					$('#myPaginator').bootstrapPaginator(options);
+				}
+			});
 		});
 	</script>
 </body>

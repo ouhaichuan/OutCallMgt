@@ -103,28 +103,22 @@
 		<%
 			if (edit_type == 2) {
 		%>
-		<div class="header">
-			<h1 class="page-title">编辑号码</h1>
-		</div>
 		<ul class="breadcrumb">
 			<li><a href="index.jsp" target="_parent">主页</a> <span
 				class="divider">/</span>
 			</li>
-			<li><a href="callobject/find_all_callobject.do">号码管理</a> <span
+			<li><a href="callobjects.jsp">号码管理</a> <span
 				class="divider">/</span></li>
 			<li class="active">编辑</li>
 		</ul>
 		<%
 			} else {
 		%>
-		<div class="header">
-			<h1 class="page-title">添加号码</h1>
-		</div>
 		<ul class="breadcrumb">
 			<li><a href="index.jsp" target="_parent">主页</a> <span
 				class="divider">/</span>
 			</li>
-			<li><a href="callobject/find_all_callobject.do">号码管理</a> <span
+			<li><a href="callobjects.jsp">号码管理</a> <span
 				class="divider">/</span></li>
 			<li class="active">添加</li>
 		</ul>

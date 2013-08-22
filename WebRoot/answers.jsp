@@ -70,10 +70,6 @@
 <body>
 	<input id='basePathIn' type="hidden" value="<%=basePath%>">
 	<div>
-		<div class="header">
-			<h1 class="page-title">答案查询</h1>
-		</div>
-
 		<ul class="breadcrumb">
 			<li><a href="index.jsp" target="_parent">主页</a> <span
 				class="divider">/</span>
@@ -93,32 +89,11 @@
 								<th>答案</th>
 							</tr>
 						</thead>
-						<tbody>
-							<%
-								List<Answer> list = (List<Answer>)request.getAttribute("answers_list");
-															for(Answer answer:list){
-							%>
-							<tr>
-								<td><%=answer.getAnswer_id()%></td>
-								<td><%=answer.getObject_pnumber()%></td>
-								<td><%=answer.getTopic_content()%></td>
-								<td><%=answer.getAnswer_content()%></td>
-							</tr>
-							<%
-								}
-							%>
+						<tbody id="list-content">
 						</tbody>
 					</table>
 				</div>
 				<div id="myPaginator"></div>
-				<script type='text/javascript'>
-					var options = {
-						currentPage : 4,
-						totalPages : 10,
-						numberOfPages : 5
-					}
-					$('#myPaginator').bootstrapPaginator(options);
-				</script>
 
 				<div class="modal small hide fade" id="myModal" tabindex="-1"
 					role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
@@ -145,6 +120,75 @@
 	<script type="text/javascript">
 		$("[rel=tooltip]").tooltip();
 		$(function() {
+			var basePath = $('#basePathIn').val();
+		
+			$.post(basePath + "answer/find_all_answer.do", function(data) {
+				var dataAnswer = eval(data);
+				totolP = parseInt(dataAnswer.length % 5 == 0 ? dataAnswer.length / 5
+						: dataAnswer.length / 5 + 1);
+				numP = dataAnswer.length / 5 < 1 ? dataAnswer.length % 5 : 5;
+				var options = {
+					currentPage : 1,
+					totalPages : totolP,
+					numberOfPages : numP,
+					itemTexts : function(type, page, current) {
+						switch (type) {
+						case "first":
+							return "首页";
+						case "prev":
+							return "上一页";
+						case "next":
+							return "下一页";
+						case "last":
+							return "尾页";
+						case "page":
+							return page;
+						}
+					},
+					onPageClicked : function(event, originalEvent, type, page) {
+						size = 5;
+						if (type == 'first' && dataAnswer.length < 5) {
+							size = dataAnswer.length;
+						}else if(type == 'next' && page==totolP){
+							size = dataAnswer.length % 5;
+						}else if(page==totolP){
+							size = dataAnswer.length % 5;
+						}else if (type == 'last' && dataAnswer.length % 5 != 0) {
+							size = dataAnswer.length % 5;
+						}
+						$('#list-content').html('');
+						for ( var i = 0; i < size; i++) {
+							$('#list-content').append(
+							'<tr><td>' + dataAnswer[(page-1)*5+i].answer_id + '</td><td>'
+									+ dataAnswer[(page-1)*5+i].object_pnumber + '</td><td>'
+									+ dataAnswer[(page-1)*5+i].topic_content + '</td><td>'
+									+ dataAnswer[(page-1)*5+i].answer_content + '</td></tr>');
+						}
+						$("#list-content,tr").click(function() {
+							var answer_id = $(this).children("td:eq(0)").text();
+							if (answer_id != "") {
+								$('#del_app_id').val(answer_id);
+							}
+						});
+					}
+				};
+				bsize = dataAnswer.length < 5 ? dataAnswer.length : 5;
+				$('#list-content').html('');
+				for ( var i = 0; i < bsize; i++) {
+					$('#list-content').append(
+							'<tr><td>' + dataAnswer[i].answer_id + '</td><td>'
+									+ dataAnswer[i].object_pnumber + '</td><td>'
+									+ dataAnswer[i].topic_content + '</td><td>'
+									+ dataAnswer[i].answer_content + '</td></tr>');
+				}
+				$('#myPaginator').bootstrapPaginator(options);
+				$("#list-content,tr").click(function() {
+					var answer_id = $(this).children("td:eq(0)").text();
+					if (answer_id != "") {
+						$('#del_app_id').val(answer_id);
+					}
+				});
+			});
 		});
 	</script>
 </body>
