@@ -4,8 +4,8 @@
 <%
 	String path = request.getContextPath();
 	String basePath = request.getScheme() + "://"
-	+ request.getServerName() + ":" + request.getServerPort()
-	+ path + "/";
+			+ request.getServerName() + ":" + request.getServerPort()
+			+ path + "/";
 %>
 
 <!DOCTYPE html>
@@ -79,6 +79,13 @@
 
 		<div class="container-fluid">
 			<div class="row-fluid">
+				<div class="btn-toolbar" style="padding-bottom: 30px;">
+					<div style="float: right;">
+						<input type="text" placeholder='外呼号码/答案'
+							class="input-medium search-query">
+						<button id='search_bnt' class="btn btn-primary">搜索</button>
+					</div>
+				</div>
 				<div class="well">
 					<table class="table table-striped" id='answer_info_tab'>
 						<thead>
@@ -121,74 +128,114 @@
 		$("[rel=tooltip]").tooltip();
 		$(function() {
 			var basePath = $('#basePathIn').val();
-		
-			$.post(basePath + "answer/find_all_answer.do", function(data) {
-				var dataAnswer = eval(data);
-				totolP = parseInt(dataAnswer.length % 5 == 0 ? dataAnswer.length / 5
-						: dataAnswer.length / 5 + 1);
-				numP = dataAnswer.length / 5 < 1 ? dataAnswer.length % 5 : 5;
-				var options = {
-					currentPage : 1,
-					totalPages : totolP,
-					numberOfPages : numP,
-					itemTexts : function(type, page, current) {
-						switch (type) {
-						case "first":
-							return "首页";
-						case "prev":
-							return "上一页";
-						case "next":
-							return "下一页";
-						case "last":
-							return "尾页";
-						case "page":
-							return page;
-						}
-					},
-					onPageClicked : function(event, originalEvent, type, page) {
-						size = 5;
-						if (type == 'first' && dataAnswer.length < 5) {
-							size = dataAnswer.length;
-						}else if(type == 'next' && page==totolP){
-							size = dataAnswer.length % 5;
-						}else if(page==totolP){
-							size = dataAnswer.length % 5;
-						}else if (type == 'last' && dataAnswer.length % 5 != 0) {
-							size = dataAnswer.length % 5;
-						}
-						$('#list-content').html('');
-						for ( var i = 0; i < size; i++) {
-							$('#list-content').append(
-							'<tr><td>' + dataAnswer[(page-1)*5+i].answer_id + '</td><td>'
-									+ dataAnswer[(page-1)*5+i].object_pnumber + '</td><td>'
-									+ dataAnswer[(page-1)*5+i].topic_content + '</td><td>'
-									+ dataAnswer[(page-1)*5+i].answer_content + '</td></tr>');
-						}
-						$("#list-content,tr").click(function() {
-							var answer_id = $(this).children("td:eq(0)").text();
-							if (answer_id != "") {
-								$('#del_app_id').val(answer_id);
-							}
-						});
-					}
-				};
-				bsize = dataAnswer.length < 5 ? dataAnswer.length : 5;
-				$('#list-content').html('');
-				for ( var i = 0; i < bsize; i++) {
-					$('#list-content').append(
-							'<tr><td>' + dataAnswer[i].answer_id + '</td><td>'
-									+ dataAnswer[i].object_pnumber + '</td><td>'
-									+ dataAnswer[i].topic_content + '</td><td>'
-									+ dataAnswer[i].answer_content + '</td></tr>');
-				}
-				$('#myPaginator').bootstrapPaginator(options);
-				$("#list-content,tr").click(function() {
-					var answer_id = $(this).children("td:eq(0)").text();
-					if (answer_id != "") {
-						$('#del_app_id').val(answer_id);
-					}
-				});
-			});
+
+			$
+					.post(
+							basePath + "answer/find_all_answer.do",
+							function(data) {
+								var dataAnswer = eval(data);
+								totolP = parseInt(dataAnswer.length % 5 == 0 ? dataAnswer.length / 5
+										: dataAnswer.length / 5 + 1);
+								numP = dataAnswer.length / 5 < 1 ? dataAnswer.length % 5
+										: 5;
+								var options = {
+									currentPage : 1,
+									totalPages : totolP,
+									numberOfPages : numP,
+									itemTexts : function(type, page, current) {
+										switch (type) {
+										case "first":
+											return "首页";
+										case "prev":
+											return "上一页";
+										case "next":
+											return "下一页";
+										case "last":
+											return "尾页";
+										case "page":
+											return page;
+										}
+									},
+									onPageClicked : function(event,
+											originalEvent, type, page) {
+										size = 5;
+										if (type == 'first'
+												&& dataAnswer.length < 5) {
+											size = dataAnswer.length;
+										} else if (type == 'next'
+												&& page == totolP) {
+											size = dataAnswer.length % 5;
+										} else if (page == totolP) {
+											size = dataAnswer.length % 5;
+										} else if (type == 'last'
+												&& dataAnswer.length % 5 != 0) {
+											size = dataAnswer.length % 5;
+										}
+										$('#list-content').html('');
+										for ( var i = 0; i < size; i++) {
+											$('#list-content')
+													.append(
+															'<tr><td>'
+																	+ dataAnswer[(page - 1)
+																			* 5
+																			+ i].answer_id
+																	+ '</td><td>'
+																	+ dataAnswer[(page - 1)
+																			* 5
+																			+ i].object_pnumber
+																	+ '</td><td>'
+																	+ dataAnswer[(page - 1)
+																			* 5
+																			+ i].topic_content
+																	+ '</td><td>'
+																	+ dataAnswer[(page - 1)
+																			* 5
+																			+ i].answer_content
+																	+ '</td></tr>');
+										}
+										$("#list-content,tr").click(
+												function() {
+													var answer_id = $(this)
+															.children(
+																	"td:eq(0)")
+															.text();
+													if (answer_id != "") {
+														$('#del_app_id').val(
+																answer_id);
+													}
+												});
+									}
+								};
+								bsize = dataAnswer.length < 5 ? dataAnswer.length
+										: 5;
+								$('#list-content').html('');
+								for ( var i = 0; i < bsize; i++) {
+									$('#list-content')
+											.append(
+													'<tr><td>'
+															+ dataAnswer[i].answer_id
+															+ '</td><td>'
+															+ dataAnswer[i].object_pnumber
+															+ '</td><td>'
+															+ dataAnswer[i].topic_content
+															+ '</td><td>'
+															+ dataAnswer[i].answer_content
+															+ '</td></tr>');
+								}
+								$('#myPaginator').bootstrapPaginator(options);
+								$("#list-content,tr")
+										.click(
+												function() {
+													var answer_id = $(this)
+															.children(
+																	"td:eq(0)")
+															.text();
+													if (answer_id != "") {
+														$('#del_app_id').val(
+																answer_id);
+													}
+												});
+							});
 		});
 	</script>
 </body>

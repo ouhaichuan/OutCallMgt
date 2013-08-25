@@ -190,8 +190,8 @@
 									name="project_select" id="project_select" style="height:30px"
 									class="span3">
 								</select><label>题目内容</label>
-								<textarea name="topic_content" id="topic_content" rows="4"
-									class="span3"></textarea>
+								<textarea name="topic_content" id="topic_content" rows="6"
+									class="span3" style="width: 800px;"></textarea>
 								<label>项目类型</label><select name="type_select" id="type_select"
 									style="height:30px" class="span3">
 									<option value="简答题">简答题</option>

@@ -1,3 +1,16 @@
+<%@ page language="java"
+	import="java.util.*,cn.info.platform.entity.User" pageEncoding="UTF-8"%>
+<%
+	String path = request.getContextPath();
+	String basePath = request.getScheme() + "://"
+			+ request.getServerName() + ":" + request.getServerPort()
+			+ path + "/";
+	String role_name = "";
+	if (null != request.getSession().getAttribute("user")) {
+		User user = (User) request.getSession().getAttribute("user");
+		role_name = user.getRole_name();
+	}
+%>
 <!DOCTYPE html>
 <html lang="CN">
 <head>
@@ -51,14 +64,17 @@
 		<a href="#dashboard-menu" class="nav-header" data-toggle="collapse"><i
 			class="icon-dashboard"></i>外呼系统</a>
 		<ul id="dashboard-menu" class="nav nav-list collapse in">
+			<%
+				if (role_name.equals("管理员")) {
+			%>
 			<li><a href="users.jsp" target="mainFrame"><i
 					class="icon-user"></i>人员管理</a>
 			</li>
 			<li><a href="projects.jsp" target="mainFrame"><i
 					class="icon-th"></i>项目管理</a>
 			</li>
-			<li><a href="callobjects.jsp"
-				target="mainFrame"><i class="icon-book"></i>号码管理</a>
+			<li><a href="callobjects.jsp" target="mainFrame"><i
+					class="icon-book"></i>号码管理</a>
 			</li>
 			<li><a href="topics.jsp" target="mainFrame"><i
 					class="icon-file"></i>题目管理</a>
@@ -72,6 +88,18 @@
 			<li><a href="mycharts.jsp" target="mainFrame"><i
 					class="icon-align-left"></i>统计</a>
 			</li>
+			<%
+				} else {
+			%>
+			<li><a href="outcall_start.jsp" target="mainFrame"><i
+					class="icon-bullhorn"></i>外呼</a>
+			</li>
+			<li><a href="mycharts.jsp" target="mainFrame"><i
+					class="icon-align-left"></i>统计</a>
+			</li>
+			<%
+				}
+			%>
 		</ul>
 		<a href="help.html" class="nav-header" target="mainFrame"><i
 			class="icon-question-sign"></i>帮助</a> <a href="faq.html"

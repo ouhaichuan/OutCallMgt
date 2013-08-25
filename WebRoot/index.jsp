@@ -64,12 +64,12 @@
 		noresize="noresize" id="topFrame" title="topFrame" />
 	<frameset name="myFrame" cols="187,5,*" frameborder="no" border="0"
 		framespacing="0">
-		<frame src="menu.html" name="leftFrame" frameborder="no"
+		<frame src="menu.jsp" name="leftFrame" frameborder="no"
 			scrolling="yes" noresize="noresize" id="leftFrame" title="leftFrame" />
 		<frame src="midbar.html" name="midFrame" frameborder="no"
 			scrolling="no" noresize="noresize" id="midFrame" title="midFrame" />
-		<frame src="" name="mainFrame" scrolling="auto" frameborder="no"
-			id="mainFrame" title="mainFrame" />
+		<frame src="mycharts.jsp" name="mainFrame" scrolling="auto"
+			frameborder="no" id="mainFrame" title="mainFrame" />
 	</frameset>
 </frameset>
 <body>

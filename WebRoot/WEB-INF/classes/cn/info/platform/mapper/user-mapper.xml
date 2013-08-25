@@ -9,7 +9,13 @@
 	</select>
 	<select id="login" resultType="user" resultMap="userMap"
 		parameterType="user">
-		select * from tab_user where user_name =
+		select *,case
+		when
+		role_id='1' then '管理员'
+		when role_id='2'
+		then '普通用户'
+		else '普通用户' END
+		role_name from tab_user where user_name =
 		#{userName} and
 		user_pass = #{passWord}
 	</select>

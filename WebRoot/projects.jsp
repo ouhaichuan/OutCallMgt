@@ -82,6 +82,11 @@
 					<button class="btn btn-primary" id='addpro_btn'>
 						<i class="icon-plus"></i> 添加项目
 					</button>
+					<div style="float: right;">
+						<input type="text" placeholder='项目名称/类型'
+							class="input-medium search-query">
+						<button id='search_bnt' class="btn btn-primary">搜索</button>
+					</div>
 					<div class="btn-group"></div>
 				</div>
 				<div class="well">
@@ -129,81 +134,174 @@
 		$("[rel=tooltip]").tooltip();
 		$(function() {
 			var basePath = $('#basePathIn').val();
-			
-			$.post(basePath + "project/find_projects_pg.do", function(data) {
-				var dataPro = eval(data);
-				totolP = parseInt(dataPro.length % 5 == 0 ? dataPro.length / 5
-						: dataPro.length / 5 + 1);
-				numP = dataPro.length / 5 < 1 ? dataPro.length % 5 : 5;
-				var options = {
-					currentPage : 1,
-					totalPages : totolP,
-					numberOfPages : numP,
-					itemTexts : function(type, page, current) {
-						switch (type) {
-						case "first":
-							return "首页";
-						case "prev":
-							return "上一页";
-						case "next":
-							return "下一页";
-						case "last":
-							return "尾页";
-						case "page":
-							return page;
-						}
-					},
-					onPageClicked : function(event, originalEvent, type, page) {
-						size = 5;
-						if (type == 'first' && dataPro.length < 5) {
-							size = dataPro.length;
-						}else if(type == 'next' && page==totolP){
-							size = dataPro.length % 5;
-						}else if(page==totolP){
-							size = dataPro.length % 5;
-						}else if (type == 'last' && dataPro.length % 5 != 0) {
-							size = dataPro.length % 5;
-						}
-						$('#list-content').html('');
-						for ( var i = 0; i < size; i++) {
-							$('#list-content').append(
-							'<tr><td>' + dataPro[(page-1)*5+i].pro_id + '</td><td>'
-									+ dataPro[(page-1)*5+i].pro_name + '</td><td>'
-									+ dataPro[(page-1)*5+i].pro_type + '</td><td>'
-									+ dataPro[(page-1)*5+i].pro_state + '</td><td>'
-									+ dataPro[(page-1)*5+i].pro_date + '</td><td>'
-									+ dataPro[(page-1)*5+i].pro_remark + '</td><td>'+"<a href='project_user.jsp?pro_id="+dataPro[(page-1)*5+i].pro_id+"&pro_name="+dataPro[(page-1)*5+i].pro_name+"' rel='tooltip' title='绑定工号'><i class='icon-user'></i> </a>&nbsp;&nbsp;"
-									+ "<a href='project.jsp?edit_type=2&pro_id="+dataPro[(page-1)*5+i].pro_id+'&pro_name='+dataPro[(page-1)*5+i].pro_name+'&pro_type='+dataPro[(page-1)*5+i].pro_type+'&pro_state='+dataPro[(page-1)*5+i].pro_state+'&pro_date='+dataPro[(page-1)*5+i].pro_date+'&pro_remark='+dataPro[(page-1)*5+i].pro_remark+"'><i class='icon-pencil'></i></a>&nbsp;&nbsp;<a href='#myModal' role='button' data-toggle='modal'><i class='icon-remove'></i> </a></td></tr>");
-						}
-						$("#pro_info_tab,tr").click(function() {
-							var pro_id = $(this).children("td:eq(0)").text();
-							if (pro_id != "") {
-								$('#del_app_id').val(pro_id);
-							}
-						});
-					}
-				};
-				bsize = dataPro.length < 5 ? dataPro.length : 5;
-				$('#list-content').html('');
-				for ( var i = 0; i < bsize; i++) {
-					$('#list-content').append(
-							'<tr><td>' + dataPro[i].pro_id + '</td><td>'
-									+ dataPro[i].pro_name + '</td><td>'
-									+ dataPro[i].pro_type + '</td><td>'
-									+ dataPro[i].pro_state + '</td><td>'
-									+ dataPro[i].pro_date + '</td><td>'
-									+ dataPro[i].pro_remark + '</td><td>'+"<a href='project_user.jsp?pro_id="+dataPro[i].pro_id+"&pro_name="+dataPro[i].pro_name+"' rel='tooltip' title='绑定工号'><i class='icon-user'></i> </a>&nbsp;&nbsp;"
-									+ "<a href='project.jsp?edit_type=2&pro_id="+dataPro[i].pro_id+'&pro_name='+dataPro[i].pro_name+'&pro_type='+dataPro[i].pro_type+'&pro_state='+dataPro[i].pro_state+'&pro_date='+dataPro[i].pro_date+'&pro_remark='+dataPro[i].pro_remark+"'><i class='icon-pencil'></i> </a>&nbsp;&nbsp;<a href='#myModal' role='button' data-toggle='modal'><i class='icon-remove'></i> </a></td></tr>");
-				}
-				$('#myPaginator').bootstrapPaginator(options);
-				$("#pro_info_tab,tr").click(function() {
-					var pro_id = $(this).children("td:eq(0)").text();
-					if (pro_id != "") {
-						$('#del_app_id').val(pro_id);
-					}
-				});
-			});
-			
+
+			$
+					.post(
+							basePath + "project/find_projects_pg.do",
+							function(data) {
+								var dataPro = eval(data);
+								totolP = parseInt(dataPro.length % 5 == 0 ? dataPro.length / 5
+										: dataPro.length / 5 + 1);
+								numP = dataPro.length / 5 < 1 ? dataPro.length % 5
+										: 5;
+								var options = {
+									currentPage : 1,
+									totalPages : totolP,
+									numberOfPages : numP,
+									itemTexts : function(type, page, current) {
+										switch (type) {
+										case "first":
+											return "首页";
+										case "prev":
+											return "上一页";
+										case "next":
+											return "下一页";
+										case "last":
+											return "尾页";
+										case "page":
+											return page;
+										}
+									},
+									onPageClicked : function(event,
+											originalEvent, type, page) {
+										size = 5;
+										if (type == 'first'
+												&& dataPro.length < 5) {
+											size = dataPro.length;
+										} else if (type == 'next'
+												&& page == totolP) {
+											size = dataPro.length % 5;
+										} else if (page == totolP) {
+											size = dataPro.length % 5;
+										} else if (type == 'last'
+												&& dataPro.length % 5 != 0) {
+											size = dataPro.length % 5;
+										}
+										$('#list-content').html('');
+										for ( var i = 0; i < size; i++) {
+											$('#list-content')
+													.append(
+															'<tr><td>'
+																	+ dataPro[(page - 1)
+																			* 5
+																			+ i].pro_id
+																	+ '</td><td>'
+																	+ dataPro[(page - 1)
+																			* 5
+																			+ i].pro_name
+																	+ '</td><td>'
+																	+ dataPro[(page - 1)
+																			* 5
+																			+ i].pro_type
+																	+ '</td><td>'
+																	+ dataPro[(page - 1)
+																			* 5
+																			+ i].pro_state
+																	+ '</td><td>'
+																	+ dataPro[(page - 1)
+																			* 5
+																			+ i].pro_date
+																	+ '</td><td>'
+																	+ dataPro[(page - 1)
+																			* 5
+																			+ i].pro_remark
+																	+ '</td><td>'
+																	+ "<a href='project_user.jsp?pro_id="
+																	+ dataPro[(page - 1)
+																			* 5
+																			+ i].pro_id
+																	+ "&pro_name="
+																	+ dataPro[(page - 1)
+																			* 5
+																			+ i].pro_name
+																	+ "' rel='tooltip' title='绑定工号'><i class='icon-user'></i> </a>&nbsp;&nbsp;"
+																	+ "<a href='project.jsp?edit_type=2&pro_id="
+																	+ dataPro[(page - 1)
+																			* 5
+																			+ i].pro_id
+																	+ '&pro_name='
+																	+ dataPro[(page - 1)
+																			* 5
+																			+ i].pro_name
+																	+ '&pro_type='
+																	+ dataPro[(page - 1)
+																			* 5
+																			+ i].pro_type
+																	+ '&pro_state='
+																	+ dataPro[(page - 1)
+																			* 5
+																			+ i].pro_state
+																	+ '&pro_date='
+																	+ dataPro[(page - 1)
+																			* 5
+																			+ i].pro_date
+																	+ '&pro_remark='
+																	+ dataPro[(page - 1)
+																			* 5
+																			+ i].pro_remark
+																	+ "'><i class='icon-pencil'></i></a>&nbsp;&nbsp;<a href='#myModal' role='button' data-toggle='modal'><i class='icon-remove'></i> </a></td></tr>");
+										}
+										$("#pro_info_tab,tr").click(
+												function() {
+													var pro_id = $(this)
+															.children(
+																	"td:eq(0)")
+															.text();
+													if (pro_id != "") {
+														$('#del_app_id').val(
+																pro_id);
+													}
+												});
+									}
+								};
+								bsize = dataPro.length < 5 ? dataPro.length : 5;
+								$('#list-content').html('');
+								for ( var i = 0; i < bsize; i++) {
+									$('#list-content')
+											.append(
+													'<tr><td>'
+															+ dataPro[i].pro_id
+															+ '</td><td>'
+															+ dataPro[i].pro_name
+															+ '</td><td>'
+															+ dataPro[i].pro_type
+															+ '</td><td>'
+															+ dataPro[i].pro_state
+															+ '</td><td>'
+															+ dataPro[i].pro_date
+															+ '</td><td>'
+															+ dataPro[i].pro_remark
+															+ '</td><td>'
+															+ "<a href='project_user.jsp?pro_id="
+															+ dataPro[i].pro_id
+															+ "&pro_name="
+															+ dataPro[i].pro_name
+															+ "' rel='tooltip' title='绑定工号'><i class='icon-user'></i> </a>&nbsp;&nbsp;"
+															+ "<a href='project.jsp?edit_type=2&pro_id="
+															+ dataPro[i].pro_id
+															+ '&pro_name='
+															+ dataPro[i].pro_name
+															+ '&pro_type='
+															+ dataPro[i].pro_type
+															+ '&pro_state='
+															+ dataPro[i].pro_state
+															+ '&pro_date='
+															+ dataPro[i].pro_date
+															+ '&pro_remark='
+															+ dataPro[i].pro_remark
+															+ "'><i class='icon-pencil'></i> </a>&nbsp;&nbsp;<a href='#myModal' role='button' data-toggle='modal'><i class='icon-remove'></i> </a></td></tr>");
+								}
+								$('#myPaginator').bootstrapPaginator(options);
+								$("#pro_info_tab,tr").click(
+										function() {
+											var pro_id = $(this).children(
+													"td:eq(0)").text();
+											if (pro_id != "") {
+												$('#del_app_id').val(pro_id);
+											}
+										});
+							});
+
 			$('#addpro_btn').click(function() {
 				window.location.href = basePath + "project.jsp?edit_type=1";
 			});

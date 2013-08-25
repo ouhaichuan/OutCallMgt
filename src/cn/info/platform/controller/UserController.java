@@ -45,7 +45,8 @@ public class UserController {
 	public String login(ModelMap map, User user, HttpServletRequest request) {
 		String target = null;
 		if (null != userService.login(user)) {
-			request.getSession().setAttribute("user", user);
+			User newUser = userService.login(user);
+			request.getSession().setAttribute("user", newUser);
 			target = "/index.jsp";
 			// µÇÂ½³É¹¦
 		} else {

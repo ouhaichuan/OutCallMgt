@@ -72,14 +72,19 @@
 	<div>
 		<ul class="breadcrumb">
 			<li><a href="index.jsp" target="_parent">主页</a> <span
-				class="divider">/</span>
-			</li>
+				class="divider">/</span></li>
 			<li class="active">外呼</li>
 		</ul>
 
 		<div class="container-fluid">
 			<div class="row-fluid">
-				<div class="btn-toolbar"></div>
+				<div class="btn-toolbar" style="padding-bottom: 30px;">
+					<div style="float: right;">
+						<input type="text" placeholder='项目名称'
+							class="input-medium search-query">
+						<button id='search_bnt' class="btn btn-primary">搜索</button>
+					</div>
+				</div>
 				<div class="well">
 					<table class="table table-striped" id='pro_info_tab'>
 						<thead>
@@ -90,7 +95,7 @@
 								<th>项目状态</th>
 								<th>启动日期</th>
 								<th>项目备注</th>
-								<th style="width: 36px;"></th>
+								<th style="width: 207px;"></th>
 							</tr>
 						</thead>
 						<tbody id="list-content">
@@ -106,66 +111,116 @@
 		$("[rel=tooltip]").tooltip();
 		$(function() {
 			var basePath = $('#basePathIn').val();
-			
-			$.post(basePath + "outcall/find_all_project.do", function(data) {
-				var dataPro = eval(data);
-				totolP = parseInt(dataPro.length % 5 == 0 ? dataPro.length / 5
-						: dataPro.length / 5 + 1);
-				numP = dataPro.length / 5 < 1 ? dataPro.length % 5 : 5;
-				var options = {
-					currentPage : 1,
-					totalPages : totolP,
-					numberOfPages : numP,
-					itemTexts : function(type, page, current) {
-						switch (type) {
-						case "first":
-							return "首页";
-						case "prev":
-							return "上一页";
-						case "next":
-							return "下一页";
-						case "last":
-							return "尾页";
-						case "page":
-							return page;
-						}
-					},
-					onPageClicked : function(event, originalEvent, type, page) {
-						size = 5;
-						if (type == 'first' && dataPro.length < 5) {
-							size = dataPro.length;
-						}else if(type == 'next' && page==totolP){
-							size = dataPro.length % 5;
-						}else if(page==totolP){
-							size = dataPro.length % 5;
-						}else if (type == 'last' && dataPro.length % 5 != 0) {
-							size = dataPro.length % 5;
-						}
-						$('#list-content').html('');
-						for ( var i = 0; i < size; i++) {
-							$('#list-content').append(
-							'<tr><td>' + dataPro[(page-1)*5+i].pro_id + '</td><td>'
-									+ dataPro[(page-1)*5+i].pro_name + '</td><td>'
-									+ dataPro[(page-1)*5+i].pro_type + '</td><td>'
-									+ dataPro[(page-1)*5+i].pro_state + '</td><td>'
-									+ dataPro[(page-1)*5+i].pro_date + '</td><td>'
-									+ dataPro[(page-1)*5+i].pro_remark + '</td><td>'+"<a href='outcall_topic.jsp?pro_id="+dataPro[(page-1)*5+i].pro_id+"' target='mainFrame' rel='tooltip' title='相关题目'><i class='icon-file'></i> </a>&nbsp;&nbsp;<a href='outcall_callobject.jsp?pro_id="+dataPro[(page-1)*5+i].pro_id+"' target='mainFrame' rel='tooltip' title='开始外呼'><i class='icon-circle-arrow-right'></i> </a></td></tr>");
-						}
-					}
-				};
-				bsize = dataPro.length < 5 ? dataPro.length : 5;
-				$('#list-content').html('');
-				for ( var i = 0; i < bsize; i++) {
-					$('#list-content').append(
-							'<tr><td>' + dataPro[i].pro_id + '</td><td>'
-									+ dataPro[i].pro_name + '</td><td>'
-									+ dataPro[i].pro_type + '</td><td>'
-									+ dataPro[i].pro_state + '</td><td>'
-									+ dataPro[i].pro_date + '</td><td>'
-									+ dataPro[i].pro_remark + '</td><td>'+"<a href='outcall_topic.jsp?pro_id="+dataPro[i].pro_id+"' target='mainFrame' rel='tooltip' title='相关题目'><i class='icon-file'></i> </a>&nbsp;&nbsp;<a href='outcall_callobject.jsp?pro_id="+dataPro[i].pro_id+"' target='mainFrame' rel='tooltip' title='开始外呼'><i class='icon-circle-arrow-right'></i> </a></td></tr>");
-				}
-				$('#myPaginator').bootstrapPaginator(options);
-			});		
+
+			$
+					.post(
+							basePath + "outcall/find_all_project.do",
+							function(data) {
+								var dataPro = eval(data);
+								totolP = parseInt(dataPro.length % 5 == 0 ? dataPro.length / 5
+										: dataPro.length / 5 + 1);
+								numP = dataPro.length / 5 < 1 ? dataPro.length % 5
+										: 5;
+								var options = {
+									currentPage : 1,
+									totalPages : totolP,
+									numberOfPages : numP,
+									itemTexts : function(type, page, current) {
+										switch (type) {
+										case "first":
+											return "首页";
+										case "prev":
+											return "上一页";
+										case "next":
+											return "下一页";
+										case "last":
+											return "尾页";
+										case "page":
+											return page;
+										}
+									},
+									onPageClicked : function(event,
+											originalEvent, type, page) {
+										size = 5;
+										if (type == 'first'
+												&& dataPro.length < 5) {
+											size = dataPro.length;
+										} else if (type == 'next'
+												&& page == totolP) {
+											size = dataPro.length % 5;
+										} else if (page == totolP) {
+											size = dataPro.length % 5;
+										} else if (type == 'last'
+												&& dataPro.length % 5 != 0) {
+											size = dataPro.length % 5;
+										}
+										$('#list-content').html('');
+										for ( var i = 0; i < size; i++) {
+											$('#list-content')
+													.append(
+															'<tr><td>'
+																	+ dataPro[(page - 1)
+																			* 5
+																			+ i].pro_id
+																	+ '</td><td>'
+																	+ dataPro[(page - 1)
+																			* 5
+																			+ i].pro_name
+																	+ '</td><td>'
+																	+ dataPro[(page - 1)
+																			* 5
+																			+ i].pro_type
+																	+ '</td><td>'
+																	+ dataPro[(page - 1)
+																			* 5
+																			+ i].pro_state
+																	+ '</td><td>'
+																	+ dataPro[(page - 1)
+																			* 5
+																			+ i].pro_date
+																	+ '</td><td>'
+																	+ dataPro[(page - 1)
+																			* 5
+																			+ i].pro_remark
+																	+ '</td><td>'
+																	+ "<a href='outcall_topic.jsp?pro_id="
+																	+ dataPro[(page - 1)
+																			* 5
+																			+ i].pro_id
+																	+ "' target='mainFrame'><button class='btn btn-info' type='button'><i class='icon-file'></i>&nbsp;相关题目</button></a>&nbsp;&nbsp;<a href='outcall_callobject.jsp?pro_id="
+																	+ dataPro[(page - 1)
+																			* 5
+																			+ i].pro_id
+																	+ "' target='mainFrame'><button class='btn btn-primary' type='button'><i class='icon-circle-arrow-right'></i>&nbsp;开始外呼</button> </a></td></tr>");
+										}
+									}
+								};
+								bsize = dataPro.length < 5 ? dataPro.length : 5;
+								$('#list-content').html('');
+								for ( var i = 0; i < bsize; i++) {
+									$('#list-content')
+											.append(
+													'<tr><td>'
+															+ dataPro[i].pro_id
+															+ '</td><td>'
+															+ dataPro[i].pro_name
+															+ '</td><td>'
+															+ dataPro[i].pro_type
+															+ '</td><td>'
+															+ dataPro[i].pro_state
+															+ '</td><td>'
+															+ dataPro[i].pro_date
+															+ '</td><td>'
+															+ dataPro[i].pro_remark
+															+ '</td><td>'
+															+ "<a href='outcall_topic.jsp?pro_id="
+															+ dataPro[i].pro_id
+															+ "' target='mainFrame'><button class='btn btn-info' type='button'><i class='icon-file'></i>&nbsp;相关题目</button></a>&nbsp;&nbsp;<a href='outcall_callobject.jsp?pro_id="
+															+ dataPro[i].pro_id
+															+ "' target='mainFrame'><button class='btn btn-primary' type='button'><i class='icon-circle-arrow-right'></i>&nbsp;开始外呼</button></a></td></tr>");
+								}
+								$('#myPaginator').bootstrapPaginator(options);
+							});
 		});
 	</script>
 </body>

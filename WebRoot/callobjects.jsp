@@ -83,6 +83,11 @@
 					<button class="btn btn-primary" id='addobj_btn'>
 						<i class="icon-plus"></i> 添加号码
 					</button>
+					<div style="float: right;">
+						<input type="text" placeholder='号码/所属项目'
+							class="input-medium search-query">
+						<button id='search_bnt' class="btn btn-primary">搜索</button>
+					</div>
 					<div class="btn-group"></div>
 				</div>
 				<div class="well">
@@ -130,81 +135,173 @@
 		$("[rel=tooltip]").tooltip();
 		$(function() {
 			var basePath = $('#basePathIn').val();
-			
-			$.post(basePath + "callobject/find_all_callobject.do", function(data) {
-				var dataObject = eval(data);
-				totolP = parseInt(dataObject.length % 5 == 0 ? dataObject.length / 5
-						: dataObject.length / 5 + 1);
-				numP = dataObject.length / 5 < 1 ? dataObject.length % 5 : 5;
-				var options = {
-					currentPage : 1,
-					totalPages : totolP,
-					numberOfPages : numP,
-					itemTexts : function(type, page, current) {
-						switch (type) {
-						case "first":
-							return "首页";
-						case "prev":
-							return "上一页";
-						case "next":
-							return "下一页";
-						case "last":
-							return "尾页";
-						case "page":
-							return page;
-						}
-					},
-					onPageClicked : function(event, originalEvent, type, page) {
-						size = 5;
-						if (type == 'first' && dataObject.length < 5) {
-							size = dataObject.length;
-						}else if(type == 'next' && page==totolP){
-							size = dataObject.length % 5;
-						}else if(page==totolP){
-							size = dataObject.length % 5;
-						}else if (type == 'last' && dataObject.length % 5 != 0) {
-							size = dataObject.length % 5;
-						}
-						$('#list-content').html('');
-						for ( var i = 0; i < size; i++) {
-							$('#list-content').append(
-							'<tr><td>' + dataObject[(page-1)*5+i].object_id + '</td><td>'
-									+ dataObject[(page-1)*5+i].object_pnumber + '</td><td>'
-									+ dataObject[(page-1)*5+i].pro_name + '</td><td>'
-									+ dataObject[(page-1)*5+i].state_name + '</td><td>'
-									+ dataObject[(page-1)*5+i].out_time + '</td><td>'
-									+ dataObject[(page-1)*5+i].out_time_length + '</td><td>'+"<a href='callobject_user.jsp?object_id="+dataObject[(page-1)*5+i].object_id+"&pnumber="+dataObject[(page-1)*5+i].object_pnumber+"' rel='tooltip' title='绑定工号'><i class='icon-user'></i> </a>&nbsp;&nbsp;"
-									+ "<a href='callobject.jsp?edit_type=2&object_id="+dataObject[(page-1)*5+i].object_id+'&object_pnumber='+dataObject[(page-1)*5+i].object_pnumber+'&object_remark='+dataObject[(page-1)*5+i].object_remark+'&pro_id='+dataObject[(page-1)*5+i].pro_id+'&pro_name='+dataObject[(page-1)*5+i].pro_name+"'><i class='icon-pencil'></i></a>&nbsp;&nbsp;<a href='#myModal' role='button' data-toggle='modal'><i class='icon-remove'></i> </a></td></tr>");
-						}
-						$("#obj_info_tab,tr").click(function() {
-							var object_id = $(this).children("td:eq(0)").text();
-							if (object_id != "") {
-								$('#del_app_id').val(object_id);
-							}
-						});
-					}
-				};
-				bsize = dataObject.length < 5 ? dataObject.length : 5;
-				$('#list-content').html('');
-				for ( var i = 0; i < bsize; i++) {
-					$('#list-content').append(
-							'<tr><td>' + dataObject[i].object_id + '</td><td>'
-									+ dataObject[i].object_pnumber + '</td><td>'
-									+ dataObject[i].pro_name + '</td><td>'
-									+ dataObject[i].state_name + '</td><td>'
-									+ dataObject[i].out_time + '</td><td>'
-									+ dataObject[i].out_time_length + '</td><td>'+"<a href='callobject_user.jsp?object_id="+dataObject[i].object_id+"&pnumber="+dataObject[i].object_pnumber+"' rel='tooltip' title='绑定工号'><i class='icon-user'></i> </a>&nbsp;&nbsp;"
-									+ "<a href='callobject.jsp?edit_type=2&object_id="+dataObject[i].object_id+'&object_pnumber='+dataObject[i].object_pnumber+'&object_remark='+dataObject[i].object_remark+'&pro_id='+dataObject[i].pro_id+'&pro_name='+dataObject[i].pro_name+"'><i class='icon-pencil'></i></a>&nbsp;&nbsp;<a href='#myModal' role='button' data-toggle='modal'><i class='icon-remove'></i> </a></td></tr>");
-				}
-				$('#myPaginator').bootstrapPaginator(options);
-				$("#obj_info_tab,tr").click(function() {
-					var object_id = $(this).children("td:eq(0)").text();
-					if (object_id != "") {
-						$('#del_app_id').val(object_id);
-					}
-				});
-			});
-			
+
+			$
+					.post(
+							basePath + "callobject/find_all_callobject.do",
+							function(data) {
+								var dataObject = eval(data);
+								totolP = parseInt(dataObject.length % 5 == 0 ? dataObject.length / 5
+										: dataObject.length / 5 + 1);
+								numP = dataObject.length / 5 < 1 ? dataObject.length % 5
+										: 5;
+								var options = {
+									currentPage : 1,
+									totalPages : totolP,
+									numberOfPages : numP,
+									itemTexts : function(type, page, current) {
+										switch (type) {
+										case "first":
+											return "首页";
+										case "prev":
+											return "上一页";
+										case "next":
+											return "下一页";
+										case "last":
+											return "尾页";
+										case "page":
+											return page;
+										}
+									},
+									onPageClicked : function(event,
+											originalEvent, type, page) {
+										size = 5;
+										if (type == 'first'
+												&& dataObject.length < 5) {
+											size = dataObject.length;
+										} else if (type == 'next'
+												&& page == totolP) {
+											size = dataObject.length % 5;
+										} else if (page == totolP) {
+											size = dataObject.length % 5;
+										} else if (type == 'last'
+												&& dataObject.length % 5 != 0) {
+											size = dataObject.length % 5;
+										}
+										$('#list-content').html('');
+										for ( var i = 0; i < size; i++) {
+											$('#list-content')
+													.append(
+															'<tr><td>'
+																	+ dataObject[(page - 1)
+																			* 5
+																			+ i].object_id
+																	+ '</td><td>'
+																	+ dataObject[(page - 1)
+																			* 5
+																			+ i].object_pnumber
+																	+ '</td><td>'
+																	+ dataObject[(page - 1)
+																			* 5
+																			+ i].pro_name
+																	+ '</td><td>'
+																	+ dataObject[(page - 1)
+																			* 5
+																			+ i].state_name
+																	+ '</td><td>'
+																	+ dataObject[(page - 1)
+																			* 5
+																			+ i].out_time
+																	+ '</td><td>'
+																	+ dataObject[(page - 1)
+																			* 5
+																			+ i].out_time_length
+																	+ '</td><td>'
+																	+ "<a href='callobject_user.jsp?object_id="
+																	+ dataObject[(page - 1)
+																			* 5
+																			+ i].object_id
+																	+ "&pnumber="
+																	+ dataObject[(page - 1)
+																			* 5
+																			+ i].object_pnumber
+																	+ "' rel='tooltip' title='绑定工号'><i class='icon-user'></i> </a>&nbsp;&nbsp;"
+																	+ "<a href='callobject.jsp?edit_type=2&object_id="
+																	+ dataObject[(page - 1)
+																			* 5
+																			+ i].object_id
+																	+ '&object_pnumber='
+																	+ dataObject[(page - 1)
+																			* 5
+																			+ i].object_pnumber
+																	+ '&object_remark='
+																	+ dataObject[(page - 1)
+																			* 5
+																			+ i].object_remark
+																	+ '&pro_id='
+																	+ dataObject[(page - 1)
+																			* 5
+																			+ i].pro_id
+																	+ '&pro_name='
+																	+ dataObject[(page - 1)
+																			* 5
+																			+ i].pro_name
+																	+ "'><i class='icon-pencil'></i></a>&nbsp;&nbsp;<a href='#myModal' role='button' data-toggle='modal'><i class='icon-remove'></i> </a></td></tr>");
+										}
+										$("#obj_info_tab,tr").click(
+												function() {
+													var object_id = $(this)
+															.children(
+																	"td:eq(0)")
+															.text();
+													if (object_id != "") {
+														$('#del_app_id').val(
+																object_id);
+													}
+												});
+									}
+								};
+								bsize = dataObject.length < 5 ? dataObject.length
+										: 5;
+								$('#list-content').html('');
+								for ( var i = 0; i < bsize; i++) {
+									$('#list-content')
+											.append(
+													'<tr><td>'
+															+ dataObject[i].object_id
+															+ '</td><td>'
+															+ dataObject[i].object_pnumber
+															+ '</td><td>'
+															+ dataObject[i].pro_name
+															+ '</td><td>'
+															+ dataObject[i].state_name
+															+ '</td><td>'
+															+ dataObject[i].out_time
+															+ '</td><td>'
+															+ dataObject[i].out_time_length
+															+ '</td><td>'
+															+ "<a href='callobject_user.jsp?object_id="
+															+ dataObject[i].object_id
+															+ "&pnumber="
+															+ dataObject[i].object_pnumber
+															+ "' rel='tooltip' title='绑定工号'><i class='icon-user'></i> </a>&nbsp;&nbsp;"
+															+ "<a href='callobject.jsp?edit_type=2&object_id="
+															+ dataObject[i].object_id
+															+ '&object_pnumber='
+															+ dataObject[i].object_pnumber
+															+ '&object_remark='
+															+ dataObject[i].object_remark
+															+ '&pro_id='
+															+ dataObject[i].pro_id
+															+ '&pro_name='
+															+ dataObject[i].pro_name
+															+ "'><i class='icon-pencil'></i></a>&nbsp;&nbsp;<a href='#myModal' role='button' data-toggle='modal'><i class='icon-remove'></i> </a></td></tr>");
+								}
+								$('#myPaginator').bootstrapPaginator(options);
+								$("#obj_info_tab,tr")
+										.click(
+												function() {
+													var object_id = $(this)
+															.children(
+																	"td:eq(0)")
+															.text();
+													if (object_id != "") {
+														$('#del_app_id').val(
+																object_id);
+													}
+												});
+							});
+
 			$('#addobj_btn').click(function() {
 				window.location.href = basePath + "callobject.jsp?edit_type=1";
 			});

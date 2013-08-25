@@ -70,7 +70,8 @@
 	<div>
 		<ul class="breadcrumb">
 			<li><a href="index.jsp" target="_parent">主页</a> <span
-				class="divider">/</span></li>
+				class="divider">/</span>
+			</li>
 			<li class="active">题目管理</li>
 		</ul>
 
@@ -80,6 +81,11 @@
 					<button class="btn btn-primary" id='addtopic_btn'>
 						<i class="icon-plus"></i> 添加题目
 					</button>
+					<div style="float: right;">
+						<input type="text" placeholder='所属项目'
+							class="input-medium search-query">
+						<button id='search_bnt' class="btn btn-primary">搜索</button>
+					</div>
 					<div class="btn-group"></div>
 				</div>
 				<div class="well">
@@ -126,77 +132,155 @@
 		$("[rel=tooltip]").tooltip();
 		$(function() {
 			var basePath = $('#basePathIn').val();
-			
-			$.post(basePath + "topic/find_all_topic.do", function(data) {
-				var dataTopic = eval(data);
-				totolP = parseInt(dataTopic.length % 5 == 0 ? dataTopic.length / 5
-						: dataTopic.length / 5 + 1);
-				numP = dataTopic.length / 5 < 1 ? dataTopic.length % 5 : 5;
-				var options = {
-					currentPage : 1,
-					totalPages : totolP,
-					numberOfPages : numP,
-					itemTexts : function(type, page, current) {
-						switch (type) {
-						case "first":
-							return "首页";
-						case "prev":
-							return "上一页";
-						case "next":
-							return "下一页";
-						case "last":
-							return "尾页";
-						case "page":
-							return page;
-						}
-					},
-					onPageClicked : function(event, originalEvent, type, page) {
-						size = 5;
-						if (type == 'first' && dataTopic.length < 5) {
-							size = dataTopic.length;
-						}else if(type == 'next' && page==totolP){
-							size = dataTopic.length % 5;
-						}else if(page==totolP){
-							size = dataTopic.length % 5;
-						}else if (type == 'last' && dataTopic.length % 5 != 0) {
-							size = dataTopic.length % 5;
-						}
-						$('#list-content').html('');
-						for ( var i = 0; i < size; i++) {
-							$('#list-content').append(
-							'<tr><td>' + dataTopic[(page-1)*5+i].topic_id + '</td><td>'
-									+ dataTopic[(page-1)*5+i].pro_name + '</td><td>'
-									+ dataTopic[(page-1)*5+i].topic_content + '</td><td>'
-									+ dataTopic[(page-1)*5+i].topic_type + '</td><td>'
-									+ dataTopic[(page-1)*5+i].topic_remark + '</td><td>'+"<a href='topic.jsp?edit_type=2&topic_id="+dataTopic[(page-1)*5+i].topic_id+'&pro_id='+dataTopic[(page-1)*5+i].pro_id+'&pro_name='+dataTopic[(page-1)*5+i].pro_name+'&topic_content='+dataTopic[(page-1)*5+i].topic_content+'&topic_type='+dataTopic[(page-1)*5+i].topic_type+'&topic_remark='+dataTopic[(page-1)*5+i].topic_remark+"'><i class='icon-pencil'></i> </a>&nbsp;&nbsp;<a href='#myModal' role='button' data-toggle='modal'><i class='icon-remove'></i> </a></td></tr>");
-						}
-						$("#list-content,tr").click(function() {
-							var topic_id = $(this).children("td:eq(0)").text();
-							if (topic_id != "") {
-								$('#del_app_id').val(topic_id);
-							}
-						});
-					}
-				};
-				bsize = dataTopic.length < 5 ? dataTopic.length : 5;
-				$('#list-content').html('');
-				for ( var i = 0; i < bsize; i++) {
-					$('#list-content').append(
-							'<tr><td>' + dataTopic[i].topic_id + '</td><td>'
-									+ dataTopic[i].pro_name + '</td><td>'
-									+ dataTopic[i].topic_content + '</td><td>'
-									+ dataTopic[i].topic_type + '</td><td>'
-									+ dataTopic[i].topic_remark + '</td><td>'+"<a href='topic.jsp?edit_type=2&topic_id="+dataTopic[i].topic_id+'&pro_id='+dataTopic[i].pro_id+'&pro_name='+dataTopic[i].pro_name+'&topic_content='+dataTopic[i].topic_content+'&topic_type='+dataTopic[i].topic_type+'&topic_remark='+dataTopic[i].topic_remark+"'><i class='icon-pencil'></i> </a>&nbsp;&nbsp;<a href='#myModal' role='button' data-toggle='modal'><i class='icon-remove'></i> </a></td></tr>");
-				}
-				$('#myPaginator').bootstrapPaginator(options);
-				$("#list-content,tr").click(function() {
-					var topic_id = $(this).children("td:eq(0)").text();
-					if (topic_id != "") {
-						$('#del_app_id').val(topic_id);
-					}
-				});
-			});
-			
+
+			$
+					.post(
+							basePath + "topic/find_all_topic.do",
+							function(data) {
+								var dataTopic = eval(data);
+								totolP = parseInt(dataTopic.length % 5 == 0 ? dataTopic.length / 5
+										: dataTopic.length / 5 + 1);
+								numP = dataTopic.length / 5 < 1 ? dataTopic.length % 5
+										: 5;
+								var options = {
+									currentPage : 1,
+									totalPages : totolP,
+									numberOfPages : numP,
+									itemTexts : function(type, page, current) {
+										switch (type) {
+										case "first":
+											return "首页";
+										case "prev":
+											return "上一页";
+										case "next":
+											return "下一页";
+										case "last":
+											return "尾页";
+										case "page":
+											return page;
+										}
+									},
+									onPageClicked : function(event,
+											originalEvent, type, page) {
+										size = 5;
+										if (type == 'first'
+												&& dataTopic.length < 5) {
+											size = dataTopic.length;
+										} else if (type == 'next'
+												&& page == totolP) {
+											size = dataTopic.length % 5;
+										} else if (page == totolP) {
+											size = dataTopic.length % 5;
+										} else if (type == 'last'
+												&& dataTopic.length % 5 != 0) {
+											size = dataTopic.length % 5;
+										}
+										$('#list-content').html('');
+										for ( var i = 0; i < size; i++) {
+											$('#list-content')
+													.append(
+															'<tr><td>'
+																	+ dataTopic[(page - 1)
+																			* 5
+																			+ i].topic_id
+																	+ '</td><td>'
+																	+ dataTopic[(page - 1)
+																			* 5
+																			+ i].pro_name
+																	+ '</td><td>'
+																	+ dataTopic[(page - 1)
+																			* 5
+																			+ i].topic_content
+																	+ '</td><td>'
+																	+ dataTopic[(page - 1)
+																			* 5
+																			+ i].topic_type
+																	+ '</td><td>'
+																	+ dataTopic[(page - 1)
+																			* 5
+																			+ i].topic_remark
+																	+ '</td><td>'
+																	+ "<a href='topic.jsp?edit_type=2&topic_id="
+																	+ dataTopic[(page - 1)
+																			* 5
+																			+ i].topic_id
+																	+ '&pro_id='
+																	+ dataTopic[(page - 1)
+																			* 5
+																			+ i].pro_id
+																	+ '&pro_name='
+																	+ dataTopic[(page - 1)
+																			* 5
+																			+ i].pro_name
+																	+ '&topic_content='
+																	+ dataTopic[(page - 1)
+																			* 5
+																			+ i].topic_content
+																	+ '&topic_type='
+																	+ dataTopic[(page - 1)
+																			* 5
+																			+ i].topic_type
+																	+ '&topic_remark='
+																	+ dataTopic[(page - 1)
+																			* 5
+																			+ i].topic_remark
+																	+ "'><i class='icon-pencil'></i> </a>&nbsp;&nbsp;<a href='#myModal' role='button' data-toggle='modal'><i class='icon-remove'></i> </a></td></tr>");
+										}
+										$("#list-content,tr").click(
+												function() {
+													var topic_id = $(this)
+															.children(
+																	"td:eq(0)")
+															.text();
+													if (topic_id != "") {
+														$('#del_app_id').val(
+																topic_id);
+													}
+												});
+									}
+								};
+								bsize = dataTopic.length < 5 ? dataTopic.length
+										: 5;
+								$('#list-content').html('');
+								for ( var i = 0; i < bsize; i++) {
+									$('#list-content')
+											.append(
+													'<tr><td>'
+															+ dataTopic[i].topic_id
+															+ '</td><td>'
+															+ dataTopic[i].pro_name
+															+ '</td><td>'
+															+ dataTopic[i].topic_content
+															+ '</td><td>'
+															+ dataTopic[i].topic_type
+															+ '</td><td>'
+															+ dataTopic[i].topic_remark
+															+ '</td><td>'
+															+ "<a href='topic.jsp?edit_type=2&topic_id="
+															+ dataTopic[i].topic_id
+															+ '&pro_id='
+															+ dataTopic[i].pro_id
+															+ '&pro_name='
+															+ dataTopic[i].pro_name
+															+ '&topic_content='
+															+ dataTopic[i].topic_content
+															+ '&topic_type='
+															+ dataTopic[i].topic_type
+															+ '&topic_remark='
+															+ dataTopic[i].topic_remark
+															+ "'><i class='icon-pencil'></i> </a>&nbsp;&nbsp;<a href='#myModal' role='button' data-toggle='modal'><i class='icon-remove'></i> </a></td></tr>");
+								}
+								$('#myPaginator').bootstrapPaginator(options);
+								$("#list-content,tr").click(
+										function() {
+											var topic_id = $(this).children(
+													"td:eq(0)").text();
+											if (topic_id != "") {
+												$('#del_app_id').val(topic_id);
+											}
+										});
+							});
+
 			$('#addtopic_btn').click(function() {
 				window.location.href = basePath + "topic.jsp?edit_type=1";
 			});
