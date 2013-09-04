@@ -71,15 +71,16 @@
 	<div>
 		<ul class="breadcrumb">
 			<li><a href="index.jsp" target="_parent">主页</a> <span
-				class="divider">/</span></li>
-			<li class="active">人员管理</li>
+				class="divider">/</span>
+			</li>
+			<li class="active">员工管理</li>
 		</ul>
 
 		<div class="container-fluid">
 			<div class="row-fluid">
 				<div class="btn-toolbar">
 					<button class="btn btn-primary" id='adduser_btn'>
-						<i class="icon-plus"></i> 添加人员
+						<i class="icon-plus"></i> 添加员工
 					</button>
 					<div style="float: right;">
 						<input type="text" placeholder='工号/姓名'
@@ -95,6 +96,7 @@
 								<th>编号</th>
 								<th>工号</th>
 								<th>电话</th>
+								<th>通道号</th>
 								<th>姓名</th>
 								<th>角色</th>
 								<th style="width: 36px;"></th>
@@ -167,13 +169,25 @@
 												&& dataUser.length < 5) {
 											size = dataUser.length;
 										} else if (type == 'next'
-												&& page == totolP) {
+												&& page == totolP
+												&& dataUser.length % 5 != 0) {
 											size = dataUser.length % 5;
-										} else if (page == totolP) {
+										} else if (type == 'next'
+												&& page == totolP
+												&& dataUser.length % 5 == 0) {
+											size = 5;
+										} else if (page == totolP
+												&& dataUser.length % 5 != 0) {
 											size = dataUser.length % 5;
+										} else if (page == totolP
+												&& dataUser.length % 5 == 0) {
+											size = 5;
 										} else if (type == 'last'
 												&& dataUser.length % 5 != 0) {
 											size = dataUser.length % 5;
+										} else if (type == 'last'
+												&& dataUser.length % 5 == 0) {
+											size = 5;
 										}
 										$('#list-content').html('');
 										for ( var i = 0; i < size; i++) {
@@ -191,6 +205,10 @@
 																	+ dataUser[(page - 1)
 																			* 5
 																			+ i].user_phone
+																	+ '</td><td>'
+																	+ dataUser[(page - 1)
+																			* 5
+																			+ i].user_channel
 																	+ '</td><td>'
 																	+ dataUser[(page - 1)
 																			* 5
@@ -224,6 +242,10 @@
 																	+ dataUser[(page - 1)
 																			* 5
 																			+ i].user_phone
+																	+ '&user_channel='
+																	+ dataUser[(page - 1)
+																			* 5
+																			+ i].user_channel
 																	+ '&user_xm='
 																	+ dataUser[(page - 1)
 																			* 5
@@ -256,6 +278,8 @@
 															+ '</td><td>'
 															+ dataUser[i].user_phone
 															+ '</td><td>'
+															+ dataUser[i].user_channel
+															+ '</td><td>'
 															+ dataUser[i].user_xm
 															+ '</td><td>'
 															+ dataUser[i].role_name
@@ -270,6 +294,8 @@
 															+ dataUser[i].role_id
 															+ '&user_remark='
 															+ dataUser[i].remark
+															+ '&user_channel='
+															+ dataUser[i].user_channel
 															+ '&user_phone='
 															+ dataUser[i].user_phone
 															+ '&user_xm='

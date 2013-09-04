@@ -1,6 +1,8 @@
 package cn.info.platform.dao.impl;
 
 import java.util.List;
+import java.util.Map;
+
 import org.springframework.stereotype.Repository;
 import cn.info.platform.dao.ProjectDao;
 import cn.info.platform.entity.Project;
@@ -49,5 +51,19 @@ public class ProjectDaoImpl extends BaseDaoImpl<Project, ProjectMapper>
 	 */
 	public List<Project> findAllProjectByUserName(String user_name) {
 		return this.getMapper().findAllProjectByUserName(user_name);
+	}
+
+	/**
+	 * 根据项目统计
+	 */
+	public List<Project> staticsData() {
+		return this.getMapper().staticsData();
+	}
+
+	/**
+	 * 更改项目状态
+	 */
+	public void changestatepro(Map<String, Object> map) {
+		this.getMapper().changestatepro(map);
 	}
 }

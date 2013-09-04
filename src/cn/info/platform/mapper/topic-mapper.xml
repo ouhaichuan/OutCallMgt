@@ -10,7 +10,8 @@
 		from
 		tab_topic where
 		topic_mark='0' and
-		pro_id=#{pro_id}
+		pro_id=#{pro_id} order
+		by pro_id
 	</select>
 	<select id="findAllTopic" resultMap="topicMap">
 		select *,(select pro_name
@@ -18,13 +19,20 @@
 		from
 		tab_topic
 		where
-		topic_mark='0'
+		topic_mark='0' order
+		by pro_id
 	</select>
 	<insert id="add_topic" parameterType="topic">
 		insert into
 		tab_topic(pro_id,topic_content,topic_type,topic_remark,topic_mark)
 		values
 		(#{pro_id},#{topic_content},#{topic_type},#{topic_remark},'0')
+	</insert>
+	<insert id="import_topic" parameterType="topic">
+		insert into
+		tab_topic(pro_id,topic_content,topic_type,topic_remark,topic_mark)
+		values
+		(#{pro_id},#{topic_content},'','','0')
 	</insert>
 	<update id="save_topic" parameterType="topic" flushCache="true">
 		update tab_topic
@@ -48,5 +56,11 @@
 		delete from tab_topic
 		where
 		topic_id = #{id}
+	</delete>
+	<delete id="del_topicByProId" parameterType="int">
+		delete from
+		tab_topic
+		where
+		pro_id = #{pro_id}
 	</delete>
 </mapper>

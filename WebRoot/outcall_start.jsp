@@ -72,7 +72,8 @@
 	<div>
 		<ul class="breadcrumb">
 			<li><a href="index.jsp" target="_parent">主页</a> <span
-				class="divider">/</span></li>
+				class="divider">/</span>
+			</li>
 			<li class="active">外呼</li>
 		</ul>
 
@@ -94,6 +95,7 @@
 								<th>项目类型</th>
 								<th>项目状态</th>
 								<th>启动日期</th>
+								<th>项目指派人</th>
 								<th>项目备注</th>
 								<th style="width: 207px;"></th>
 							</tr>
@@ -146,13 +148,25 @@
 												&& dataPro.length < 5) {
 											size = dataPro.length;
 										} else if (type == 'next'
-												&& page == totolP) {
+												&& page == totolP
+												&& dataPro.length % 5 != 0) {
 											size = dataPro.length % 5;
-										} else if (page == totolP) {
+										} else if (type == 'next'
+												&& page == totolP
+												&& dataPro.length % 5 == 0) {
+											size = 5;
+										} else if (page == totolP
+												&& dataPro.length % 5 != 0) {
 											size = dataPro.length % 5;
+										} else if (page == totolP
+												&& dataPro.length % 5 == 0) {
+											size = 5;
 										} else if (type == 'last'
 												&& dataPro.length % 5 != 0) {
 											size = dataPro.length % 5;
+										} else if (type == 'last'
+												&& dataPro.length % 5 == 0) {
+											size = 5;
 										}
 										$('#list-content').html('');
 										for ( var i = 0; i < size; i++) {
@@ -178,6 +192,10 @@
 																	+ dataPro[(page - 1)
 																			* 5
 																			+ i].pro_date
+																	+ '</td><td>'
+																	+ dataPro[(page - 1)
+																			* 5
+																			+ i].pro_zpr
 																	+ '</td><td>'
 																	+ dataPro[(page - 1)
 																			* 5
@@ -210,6 +228,8 @@
 															+ dataPro[i].pro_state
 															+ '</td><td>'
 															+ dataPro[i].pro_date
+															+ '</td><td>'
+															+ dataPro[i].pro_zpr
 															+ '</td><td>'
 															+ dataPro[i].pro_remark
 															+ '</td><td>'

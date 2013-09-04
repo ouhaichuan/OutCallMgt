@@ -46,4 +46,18 @@ public interface TopicDao extends BaseDao<Topic, TopicMapper> {
 	 * @return
 	 */
 	List<Topic> findTopicByProId(int pro_id);
+
+	/**
+	 * 导入
+	 * 
+	 * @param topic
+	 */
+	void import_topic(Topic topic);
+
+	/**
+	 * 清除关联的题目
+	 * 
+	 * @param pro_id
+	 */
+	void del_topicByProId(int pro_id);
 }

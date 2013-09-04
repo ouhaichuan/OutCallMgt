@@ -19,15 +19,6 @@ public class CallObjectDaoImpl extends
 	}
 
 	/**
-	 * 得到所有的外呼对象
-	 * 
-	 * @return 对象列表
-	 */
-	public List<CallObject> findAllCallObject() {
-		return this.getMapper().findAllCallObject();
-	}
-
-	/**
 	 * 添加号码
 	 */
 	public void add_obj(CallObject obj) {
@@ -49,7 +40,7 @@ public class CallObjectDaoImpl extends
 	}
 
 	/**
-	 * 查询所属项目的号码
+	 * 查询所属项目和姓名的号码
 	 */
 	public List<CallObject> findCallObjectByProId(Map<String, Object> map) {
 		return this.getMapper().findCallObjectByProId(map);
@@ -60,5 +51,26 @@ public class CallObjectDaoImpl extends
 	 */
 	public void commitError(CallObject object) {
 		this.getMapper().commitError(object);
+	}
+
+	/**
+	 * 导入
+	 */
+	public void import_obj(CallObject obj) {
+		this.getMapper().import_obj(obj);
+	}
+
+	/**
+	 * 查询所属项目的号码
+	 */
+	public List<CallObject> findCallObjectByProIdNoUser(Map<String, Object> map) {
+		return this.getMapper().findCallObjectByProIdNoUser(map);
+	}
+
+	/**
+	 * 根据项目ID删除号码
+	 */
+	public void del_objByProId(int pro_id) {
+		this.getMapper().del_objByProId(pro_id);
 	}
 }

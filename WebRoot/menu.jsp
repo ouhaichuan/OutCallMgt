@@ -68,25 +68,22 @@
 				if (role_name.equals("管理员")) {
 			%>
 			<li><a href="users.jsp" target="mainFrame"><i
-					class="icon-user"></i>人员管理</a>
+					class="icon-user"></i>员工管理</a>
 			</li>
 			<li><a href="projects.jsp" target="mainFrame"><i
 					class="icon-th"></i>项目管理</a>
 			</li>
-			<li><a href="callobjects.jsp" target="mainFrame"><i
-					class="icon-book"></i>号码管理</a>
-			</li>
-			<li><a href="topics.jsp" target="mainFrame"><i
-					class="icon-file"></i>题目管理</a>
-			</li>
-			<li><a href="answers.jsp" target="mainFrame"><i
-					class="icon-leaf"></i>答案查询</a>
-			</li>
 			<li><a href="outcall_start.jsp" target="mainFrame"><i
 					class="icon-bullhorn"></i>外呼</a>
 			</li>
-			<li><a href="mycharts.jsp" target="mainFrame"><i
+			<li><a href="answers.jsp" target="mainFrame"><i
+					class="icon-leaf"></i>外呼回答情况</a>
+			</li>
+			<li><a href="staticsData.jsp" target="mainFrame"><i
 					class="icon-align-left"></i>统计</a>
+			</li>
+			<li><a href="mycharts.jsp" target="mainFrame"><i
+					class="icon-adjust"></i>分析对比</a>
 			</li>
 			<%
 				} else {
@@ -94,7 +91,7 @@
 			<li><a href="outcall_start.jsp" target="mainFrame"><i
 					class="icon-bullhorn"></i>外呼</a>
 			</li>
-			<li><a href="mycharts.jsp" target="mainFrame"><i
+			<li><a href="staticsData.jsp" target="mainFrame"><i
 					class="icon-align-left"></i>统计</a>
 			</li>
 			<%

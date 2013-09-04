@@ -21,15 +21,6 @@ public class CallObjectServiceImpl extends BaseServiceImpl<CallObject>
 	}
 
 	/**
-	 * 得到所有的外呼对象
-	 * 
-	 * @return 对象列表
-	 */
-	public List<CallObject> findAllCallObject() {
-		return callObjectDao.findAllCallObject();
-	}
-
-	/**
 	 * 添加号码
 	 */
 	public void add_obj(CallObject obj) {
@@ -51,7 +42,7 @@ public class CallObjectServiceImpl extends BaseServiceImpl<CallObject>
 	}
 
 	/**
-	 * 查询相关项目的号码
+	 * 查询相关项目和用户名的号码
 	 */
 	public List<CallObject> findCallObjectByProId(Map<String, Object> map) {
 		return callObjectDao.findCallObjectByProId(map);
@@ -62,5 +53,26 @@ public class CallObjectServiceImpl extends BaseServiceImpl<CallObject>
 	 */
 	public void commitError(CallObject object) {
 		callObjectDao.commitError(object);
+	}
+
+	/**
+	 * 导入
+	 */
+	public void import_obj(CallObject obj) {
+		callObjectDao.import_obj(obj);
+	}
+
+	/**
+	 * 查询相关项目的号码
+	 */
+	public List<CallObject> findCallObjectByProIdNoUser(Map<String, Object> map) {
+		return callObjectDao.findCallObjectByProIdNoUser(map);
+	}
+
+	/**
+	 * 根据项目ID删除号码
+	 */
+	public void del_objByProId(int pro_id) {
+		callObjectDao.del_objByProId(pro_id);
 	}
 }

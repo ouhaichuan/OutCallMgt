@@ -28,12 +28,13 @@ public class TopicController {
 	 *            请求的对象
 	 * @return 要跳转的页面
 	 */
-	@RequestMapping(value = "find_all_topic")
-	public void findAllTopic(HttpServletRequest request,
+	@RequestMapping(value = "findTopicByProId")
+	public void findalltopicByproId(HttpServletRequest request,
 			HttpServletResponse response) {
 		response.setContentType("text/html; charset=utf-8");
 
-		List<Topic> list = topicService.findAllTopic();
+		List<Topic> list = topicService.findTopicByProId(Integer
+				.valueOf(request.getParameter("pro_id")));
 		JSONArray jsonArray = JSONArray.fromObject(list);
 		try {
 			response.getWriter().write(jsonArray.toString());
@@ -54,7 +55,15 @@ public class TopicController {
 		String target = null;
 		topicService.add_topic(topic);
 
-		target = "/topics.jsp";
+		try {
+			target = "/topics.jsp?pro_id="
+					+ topic.getPro_id()
+					+ "&pro_name="
+					+ new String(topic.getPro_name().getBytes("utf-8"),
+							"iso-8859-1");
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 		return target;
 	}
 
@@ -74,7 +83,15 @@ public class TopicController {
 		String target = null;
 		topicService.save_topic(topic);
 
-		target = "/topics.jsp";
+		try {
+			target = "/topics.jsp?pro_id="
+					+ topic.getPro_id()
+					+ "&pro_name="
+					+ new String(topic.getPro_name().getBytes("utf-8"),
+							"iso-8859-1");
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 
 		return target;
 	}
@@ -87,11 +104,17 @@ public class TopicController {
 	 * @return 要跳转的页面
 	 */
 	@RequestMapping(value = "del_topic", method = RequestMethod.GET)
-	public String del_pro(HttpServletRequest request) {
+	public String del_topic(HttpServletRequest request) {
 		String target = null;
 		topicService.del_topic(Integer.valueOf(request.getParameter("id")));
+		String pro_id = request.getParameter("pro_id");
+		String pro_name = request.getParameter("pro_name");
 
-		target = "/topics.jsp";
+		try {
+			target = "/topics.jsp?pro_id=" + pro_id + "&pro_name=" + pro_name;
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 		return target;
 	}
 }

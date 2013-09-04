@@ -12,6 +12,7 @@
 		<result property="mark" column="mark" />
 		<result property="user_phone" column="user_phone" />
 		<result property="user_xm" column="user_xm" />
+		<result property="user_channel" column="user_channel" />
 	</resultMap>
 	<resultMap type="cn.info.platform.entity.User" id="userMap2">
 		<id property="userID" column="user_id" />
@@ -23,6 +24,7 @@
 		<result property="mark" column="mark" />
 		<result property="user_phone" column="user_phone" />
 		<result property="user_xm" column="user_xm" />
+		<result property="user_channel" column="user_channel" />
 	</resultMap>
 	<resultMap type="cn.info.platform.entity.Project" id="projectMap">
 		<id property="pro_id" column="pro_id" />
@@ -32,6 +34,7 @@
 		<result property="pro_remark" column="pro_remark" />
 		<result property="pro_mark" column="pro_mark" />
 		<result property="pro_date" column="pro_date" />
+		<result property="pro_zpr" column="pro_zpr" />
 	</resultMap>
 	<resultMap type="cn.info.platform.entity.CallObject" id="callobjectMap">
 		<id property="object_id" column="object_id" />
@@ -70,10 +73,19 @@
 		<id property="pu_id" column="pu_id" />
 		<result property="pro_id" column="pro_id" />
 		<result property="user_name" column="user_name" />
+		<result property="object_num" column="object_num" />
 	</resultMap>
 	<resultMap type="cn.info.platform.entity.Object_User" id="objectuserMap">
 		<id property="ou_id" column="ou_id" />
 		<result property="object_id" column="object_id" />
+		<result property="user_name" column="user_name" />
+	</resultMap>
+	<resultMap type="cn.info.platform.entity.SaleTelNumber" id="saletelnumberMap">
+		<id property="num_id" column="num_id" />
+		<result property="telnumber" column="telnumber" />
+		<result property="num_state" column="num_state" />
+		<result property="sale_time" column="sale_time" />
+		<result property="pro_id" column="pro_id" />
 		<result property="user_name" column="user_name" />
 	</resultMap>
 </mapper>

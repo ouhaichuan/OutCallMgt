@@ -54,4 +54,20 @@ public class TopicServiceImpl extends BaseServiceImpl<Topic> implements
 	public List<Topic> findTopicByProId(int pro_id) {
 		return topicDao.findTopicByProId(pro_id);
 	}
+
+	/**
+	 * 导入
+	 * 
+	 * @param topic
+	 */
+	public void import_topic(Topic topic) {
+		topicDao.import_topic(topic);
+	}
+
+	/**
+	 * 清除关联的题目
+	 */
+	public void del_topicByProId(int pro_id) {
+		topicDao.del_topicByProId(pro_id);
+	}
 }

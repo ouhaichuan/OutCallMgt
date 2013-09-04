@@ -1,6 +1,8 @@
 package cn.info.platform.dao;
 
 import java.util.List;
+import java.util.Map;
+
 import cn.info.platform.entity.Project;
 import cn.info.platform.mapper.ProjectMapper;
 
@@ -46,4 +48,18 @@ public interface ProjectDao extends BaseDao<Project, ProjectMapper> {
 	 * @return
 	 */
 	List<Project> findAllProjectByUserName(String user_name);
+
+	/**
+	 * 根据项目统计
+	 * 
+	 * @return
+	 */
+	List<Project> staticsData();
+
+	/**
+	 * 更改项目状态
+	 * 
+	 * @param map
+	 */
+	void changestatepro(Map<String, Object> map);
 }

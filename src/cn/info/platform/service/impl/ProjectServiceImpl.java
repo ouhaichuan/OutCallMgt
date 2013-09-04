@@ -1,6 +1,8 @@
 package cn.info.platform.service.impl;
 
 import java.util.List;
+import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -56,5 +58,19 @@ public class ProjectServiceImpl extends BaseServiceImpl<Project> implements
 	 */
 	public List<Project> findAllProjectByUserName(String user_name) {
 		return projectDao.findAllProjectByUserName(user_name);
+	}
+
+	/**
+	 * 根据项目统计
+	 */
+	public List<Project> staticsData() {
+		return projectDao.staticsData();
+	}
+
+	/**
+	 * 更改项目状态
+	 */
+	public void changestatepro(Map<String, Object> map) {
+		projectDao.changestatepro(map);
 	}
 }

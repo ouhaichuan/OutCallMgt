@@ -163,13 +163,25 @@
 												&& dataAnswer.length < 5) {
 											size = dataAnswer.length;
 										} else if (type == 'next'
-												&& page == totolP) {
+												&& page == totolP
+												&& dataAnswer.length % 5 != 0) {
 											size = dataAnswer.length % 5;
-										} else if (page == totolP) {
+										} else if (type == 'next'
+												&& page == totolP
+												&& dataAnswer.length % 5 == 0) {
+											size = 5;
+										} else if (page == totolP
+												&& dataAnswer.length % 5 != 0) {
 											size = dataAnswer.length % 5;
+										} else if (page == totolP
+												&& dataAnswer.length % 5 == 0) {
+											size = 5;
 										} else if (type == 'last'
 												&& dataAnswer.length % 5 != 0) {
 											size = dataAnswer.length % 5;
+										} else if (type == 'last'
+												&& dataAnswer.length % 5 == 0) {
+											size = 5;
 										}
 										$('#list-content').html('');
 										for ( var i = 0; i < size; i++) {

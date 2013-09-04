@@ -19,6 +19,12 @@
 				.getBytes("iso-8859-1"), "utf-8");
 	}
 
+	String pro_zpr = "";
+	if (null != request.getParameter("pro_zpr")) {
+		pro_zpr = new String(request.getParameter("pro_zpr").getBytes(
+				"iso-8859-1"), "utf-8");
+	}
+
 	String pro_type = "";
 	if (null != request.getParameter("pro_type")) {
 		pro_type = new String(request.getParameter("pro_type")
@@ -113,8 +119,8 @@
 			<li><a href="index.jsp" target="_parent">主页</a> <span
 				class="divider">/</span>
 			</li>
-			<li><a href="projects.jsp">项目管理</a> <span
-				class="divider">/</span></li>
+			<li><a href="projects.jsp">项目管理</a> <span class="divider">/</span>
+			</li>
 			<li class="active">编辑</li>
 		</ul>
 		<%
@@ -124,8 +130,8 @@
 			<li><a href="index.jsp" target="_parent">主页</a> <span
 				class="divider">/</span>
 			</li>
-			<li><a href="projects.jsp">项目管理</a> <span
-				class="divider">/</span></li>
+			<li><a href="projects.jsp">项目管理</a> <span class="divider">/</span>
+			</li>
 			<li class="active">添加</li>
 		</ul>
 		<%
@@ -157,10 +163,6 @@
 					}
 				%>
 				<div class="well">
-					<ul class="nav nav-tabs">
-						<li class="active"><a href="#home" data-toggle="tab">详细信息</a>
-						</li>
-					</ul>
 					<div id="myTabContent" class="tab-content">
 						<div class="tab-pane active in" id="home">
 							<%
@@ -179,12 +181,16 @@
 									value="<%=pro_type%>"> <label>项目状态</label> <select
 									name="state_select" id="state_select" style="height:30px"
 									class="span3">
-									<option value="有效">有效</option>
-									<option value="无效">无效</option>
+									<option value="初始化">初始化</option>
+									<option value="进行中">进行中</option>
+									<option value="暂停">暂停</option>
+									<option value="停止">停止</option>
+									<option value="完成">完成</option>
 								</select> <input type="hidden" name="pro_state" id='pro_state'
 									value="<%=pro_state%>"> <label>启动日期</label> <input
 									name="pro_date" id="pro_date" value="<%=pro_date%>"
-									class="span3" onclick="WdatePicker()" /> <label>备注</label>
+									class="span3" onclick="WdatePicker()" /><label>项目指派人</label> <input
+									name="pro_zpr" id="pro_zpr" value="<%=pro_zpr%>" class="span3" /><label>备注</label>
 								<textarea name="pro_remark" rows="3" class="span3"><%=pro_remark%></textarea>
 							</form>
 							<%
@@ -201,11 +207,15 @@
 								</select> <input type="hidden" name="pro_type" id='pro_type' value="普通">
 								<label>项目状态</label> <select name="state_select"
 									id="state_select" style="height:30px" class="span3">
-									<option value="有效">有效</option>
-									<option value="无效">无效</option>
-								</select> <input type="hidden" name="pro_state" id='pro_state' value="有效">
-								<label>启动日期</label><input name="pro_date" id="pro_date"
-									class="span3" onclick="WdatePicker()" /><label>备注</label>
+									<option value="初始化">初始化</option>
+									<option value="进行中">进行中</option>
+									<option value="暂停">暂停</option>
+									<option value="停止">停止</option>
+									<option value="完成">完成</option>
+								</select> <input type="hidden" name="pro_state" id='pro_state'
+									value="初始化"> <label>启动日期</label><input name="pro_date"
+									id="pro_date" class="span3" onclick="WdatePicker()" /><label>项目指派人</label>
+								<input name="pro_zpr" id="pro_zpr" class="span3" /><label>备注</label>
 								<textarea name="pro_remark" rows="3" class="span3"></textarea>
 							</form>
 							<%
@@ -244,9 +254,11 @@
 			var flag = 0;
 			if ($('#pro_name').val() == "" || $('#pro_type').val() == ""
 					|| $('#pro_state').val() == ""
-					|| $('#pro_date').val() == ""
-					|| $('#pro_remark').val() == "") {
+					|| $('#pro_date').val() == "") {
 				flag = 1;
+			} else if ($("#state_select").val() != '初始化'
+					&& new Date(Date.parse($("#pro_date").val())) > new Date()) {
+				flag = 3;
 			} else {
 				flag = 2;
 			}
@@ -275,6 +287,8 @@
 				} else {
 					if (result == 1) {
 						result = '有空值';
+					} else if (result == 3) {
+						result = '启动日期未到';
 					} else {
 						result = '异常';
 					}
@@ -294,6 +308,8 @@
 				} else {
 					if (result == 1) {
 						result = '有空值';
+					} else if (result == 3) {
+						result = '启动日期未到';
 					} else {
 						result = '异常';
 					}

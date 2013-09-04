@@ -14,42 +14,126 @@
 		when object_state='1'
 		then '外呼中'
 		when object_state='2' then '外呼成功'
-		when object_state='3' then
-		'外呼失败'
+		when object_state='3' then '关机'
+		when object_state='4' then '停机'
+		when
+		object_state='5' then '空号'
+		when object_state='6' then '无人接听'
+		when
+		object_state='7' then '中途续约'
+		when object_state='8' then '中途挂机'
+		when
+		object_state='9' then '挂机'
 		else '其他状态' END
-		state_name
+		state_name,(select user_xm
+		from tab_user where user_name=tab_callobject.call_user) object_users,
+		(select user_xm
+		from tab_user where user_name=tab_callobject.call_user)
+		call_user_name
 		from
-		tab_callobject where
+		tab_callobject
+		where
 		object_mark='0' and
-		pro_id=#{pro_id} and object_id
-		in (select object_id from tab_object_user where
-		user_name=#{user_name})
+		object_state =
+		'0' and
+		pro_id=#{pro_id} and
+		object_id
+		in (select object_id
+		from
+		tab_object_user where
+		user_name=#{user_name}) order
+		by pro_id
 	</select>
-	<select id="findAllCallObject" resultMap="callobjectMap">
-		select *,(select
-		pro_name from tab_project where pro_id=tab_callobject.pro_id)
-		pro_name,
+	<select id="findCallObjectByProIdNoUser" resultMap="callobjectMap"
+		parameterType="map">
+		select *,(select pro_name from tab_project where
+		pro_id=tab_callobject.pro_id) pro_name,
 		case
 		when
-		object_state='0' then '初始状态'
+		object_state='0' then
+		'初始状态'
 		when object_state='1'
 		then '外呼中'
 		when object_state='2' then '外呼成功'
-		when object_state='3' then
-		'外呼失败'
+		when object_state='3' then '关机'
+		when object_state='4' then '停机'
+		when
+		object_state='5' then '空号'
+		when object_state='6' then '无人接听'
+		when
+		object_state='7' then '中途续约'
+		when object_state='8' then '中途挂机'
+		when
+		object_state='9' then '挂机'
 		else '其他状态' END
-		state_name
+		state_name,(select user_xm
+		from tab_user where user_name=tab_callobject.call_user) object_users,
+		(select user_xm
+		from tab_user where user_name=tab_callobject.call_user)
+		call_user_name
 		from
-		tab_callobject where
-		object_mark='0'
+		tab_callobject
+		where
+		object_mark='0' and
+		pro_id=#{pro_id}
 		order
 		by pro_id
+	</select>
+	<select id="findAllCallObject" resultMap="callobjectMap">
+		select *,(select
+		GROUP_CONCAT(user_xm separator ',')
+		from tab_user where user_name
+		in
+		(select user_name
+		from
+		tab_object_user where
+		object_id=tab_callobject.object_id)
+		group by tab_callobject.object_id)
+		object_users,(select
+		pro_name from
+		tab_project where
+		pro_id=tab_callobject.pro_id)
+		pro_name,
+		case
+		when
+		object_state='0' then
+		'初始状态'
+		when object_state='1'
+		then '外呼中'
+		when
+		object_state='2' then '外呼成功'
+		when object_state='3' then '关机'
+		when object_state='4' then '停机'
+		when
+		object_state='5' then '空号'
+		when object_state='6' then '无人接听'
+		when
+		object_state='7' then '中途续约'
+		when object_state='8' then '中途挂机'
+		when
+		object_state='9' then '挂机'
+		else
+		'其他状态' END
+		state_name
+		from
+		tab_callobject
+		where
+		object_mark='0'
+		order
+		by
+		pro_id
 	</select>
 	<insert id="add_obj" parameterType="callobject">
 		insert into
 		tab_callobject(object_pnumber,object_remark,object_mark,object_state,pro_id,column1,column2)
 		values
-		(#{object_pnumber},#{object_remark},'0','0',#{pro_id},' ',' ')
+		(#{object_pnumber},#{object_remark},'0','0',#{pro_id},#{column1},#{column2})
+	</insert>
+	<insert id="import_obj" parameterType="callobject">
+		insert into
+		tab_callobject(object_pnumber,object_remark,object_mark,object_state,pro_id,column1,column2)
+		values
+		(#{object_pnumber},#{object_remark},'0','0',#{pro_id},#{column1},#{column2})
 	</insert>
 	<update id="save_obj" parameterType="callobject" flushCache="true">
 		update tab_callobject
@@ -77,11 +161,23 @@
 		where
 		object_id = #{id}
 	</delete>
+	<delete id="del_objByProId" parameterType="int">
+		delete from
+		tab_callobject
+		where
+		pro_id = #{pro_id}
+	</delete>
 	<update id="commitError" parameterType="callobject" flushCache="true">
 		update tab_callobject
 		<set>
 			<if test="object_state != null">
 				object_state = #{object_state,jdbcType=VARCHAR},
+			</if>
+			<if test="out_time != null">
+				out_time = #{out_time,jdbcType=VARCHAR},
+			</if>
+			<if test="call_user != null">
+				call_user = #{call_user,jdbcType=VARCHAR},
 			</if>
 		</set>
 		where object_id = #{object_id,jdbcType=INTEGER}

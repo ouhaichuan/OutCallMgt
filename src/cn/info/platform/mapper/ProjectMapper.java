@@ -1,6 +1,8 @@
 package cn.info.platform.mapper;
 
 import java.util.List;
+import java.util.Map;
+
 import cn.info.platform.entity.Project;
 
 /**
@@ -44,4 +46,18 @@ public interface ProjectMapper extends BaseMapper<Project> {
 	 * @return
 	 */
 	List<Project> findAllProjectByUserName(String user_name);
+
+	/**
+	 * 根据项目统计
+	 * 
+	 * @return
+	 */
+	List<Project> staticsData();
+
+	/**
+	 * 更改项目状态
+	 * 
+	 * @param map
+	 */
+	void changestatepro(Map<String, Object> map);
 }

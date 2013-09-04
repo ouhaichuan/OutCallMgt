@@ -11,6 +11,15 @@ public class Project_User {
 	private int pro_id;
 	private String user_name;
 	private String user_xm;
+	private String object_num;
+
+	public String getObject_num() {
+		return object_num;
+	}
+
+	public void setObject_num(String object_num) {
+		this.object_num = object_num;
+	}
 
 	public int getPu_id() {
 		return pu_id;

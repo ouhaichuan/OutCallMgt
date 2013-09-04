@@ -10,7 +10,6 @@ import net.sf.json.JSONArray;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import cn.info.platform.entity.CallObject;
 import cn.info.platform.entity.Project;
 import cn.info.platform.entity.Topic;
@@ -31,26 +30,6 @@ public class OutCallController {
 	private ProjectService projectService;
 	@Autowired
 	private TopicService topicService;
-
-	/**
-	 * 查询地址
-	 * 
-	 * @param request
-	 *            请求的对象
-	 */
-	@RequestMapping(value = "getProList", method = RequestMethod.POST)
-	public void findAddr(HttpServletRequest request,
-			HttpServletResponse response) {
-		response.setContentType("text/html; charset=utf-8");
-
-		List<Project> list = projectService.findAllProject();
-		JSONArray jsonArray = JSONArray.fromObject(list);
-		try {
-			response.getWriter().write(jsonArray.toString());
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	}
 
 	/**
 	 * 开始外呼答题

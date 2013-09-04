@@ -16,6 +16,15 @@ public class User {
 	private String mark;
 	private String user_phone;
 	private String user_xm;
+	private String user_channel;// Í¨µÀºÅ
+
+	public String getUser_channel() {
+		return user_channel;
+	}
+
+	public void setUser_channel(String user_channel) {
+		this.user_channel = user_channel;
+	}
 
 	public String getUser_phone() {
 		return user_phone;

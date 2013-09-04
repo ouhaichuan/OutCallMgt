@@ -4,14 +4,35 @@
 <!-- namespace名字必须与Mapper接口名一致 -->
 <mapper namespace="cn.info.platform.mapper.ProjectMapper">
 	<select id="findAllProject" resultMap="projectMap">
-		select * from tab_project
-		where pro_mark='0'
+		select *,(select
+		GROUP_CONCAT(user_xm separator ',')
+		from tab_user where user_name
+		in
+		(select user_name
+		from
+		tab_project_user where
+		pro_id=tab_project.pro_id)
+		group by tab_project.pro_id) pro_users from
+		tab_project
+		where
+		pro_mark='0'
+	</select>
+	<select id="staticsData" resultMap="projectMap">
+		SELECT *,(select count(*)
+		from tab_callobject where pro_id=t.pro_id and object_state!='0')
+		calltotal,(select count(*) from tab_callobject where pro_id=t.pro_id
+		and object_state='2') callcomplete,(select count(*) from
+		tab_callobject where pro_id=t.pro_id and object_state not in
+		('0','2')) callnotcomplete FROM tab_project t
 	</select>
 	<select id="findAllProjectByUserName" resultMap="projectMap"
 		parameterType="string">
 		select * from tab_project
-		where pro_mark='0' and pro_id
-		in (select pro_id from tab_project_user where user_name=#{user_name})
+		where pro_mark='0' and
+		pro_state='进行中' and pro_id
+		in (select pro_id from tab_project_user
+		where
+		user_name=#{user_name})
 	</select>
 	<update id="save_pro" parameterType="project" flushCache="true">
 		update tab_project
@@ -31,17 +52,29 @@
 			<if test="pro_date != null">
 				pro_date = #{pro_date,jdbcType=VARCHAR},
 			</if>
+			<if test="pro_zpr != null">
+				pro_zpr = #{pro_zpr,jdbcType=VARCHAR},
+			</if>
 		</set>
 		where pro_id = #{pro_id,jdbcType=INTEGER}
 	</update>
 	<insert id="add_pro" parameterType="project">
 		insert into
-		tab_project(pro_name,pro_type,pro_state,pro_remark,pro_mark,pro_date)
+		tab_project(pro_name,pro_type,pro_state,pro_remark,pro_mark,pro_date,pro_zpr)
 		values
-		(#{pro_name},#{pro_type},#{pro_state},#{pro_remark},'0',#{pro_date})
+		(#{pro_name},#{pro_type},#{pro_state},#{pro_remark},'0',#{pro_date},#{pro_zpr})
 	</insert>
 	<delete id="del_pro" parameterType="int">
 		delete from tab_project where
 		pro_id = #{pro_id}
 	</delete>
+	<update id="changestatepro" parameterType="map" flushCache="true">
+		update tab_project
+		<set>
+			<if test="pro_state != null">
+				pro_state = #{pro_state,jdbcType=VARCHAR},
+			</if>
+		</set>
+		where pro_id = #{pro_id,jdbcType=INTEGER}
+	</update>
 </mapper>

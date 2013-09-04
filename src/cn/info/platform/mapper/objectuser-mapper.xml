@@ -12,15 +12,39 @@
 		where
 		object_id=#{object_id}
 	</select>
-	<insert id="add_user" parameterType="objectuser">
+	<select id="getCountsByUserName" resultType="int" parameterType="map">
+		select count(*) from
+		tab_object_user
+		where
+		user_name=#{user_name} and
+		object_id in (select object_id from tab_callobject where
+		pro_id=#{pro_id})
+	</select>
+	<select id="getUserNameByObjectId" resultType="String"
+		parameterType="int">
+		select user_name from tab_object_user where object_id =
+		#{object_id}
+	</select>
+	<insert id="add_user" parameterType="map">
 		insert into
 		tab_object_user(object_id,user_name)
-		values
-		(#{object_id},#{user_name})
+		select object_id,#{user_name}
+		from
+		tab_callobject where pro_id=#{pro_id} and
+		object_state='0' and
+		object_id not in (select object_id from tab_object_user) limit
+		0,#{object_num}
 	</insert>
-	<delete id="del_user" parameterType="int">
+	<delete id="del_user" parameterType="map">
 		delete from tab_object_user
 		where
-		object_id = #{object_id}
+		object_id in (select object_id from tab_callobject where
+		pro_id=#{pro_id})
+	</delete>
+	<delete id="delObjByObjectId" parameterType="map">
+		delete from
+		tab_object_user
+		where
+		object_id=#{obj_id}
 	</delete>
 </mapper>

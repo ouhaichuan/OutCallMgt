@@ -12,15 +12,40 @@
 		where
 		pro_id=#{pro_id}
 	</select>
+	<select id="findObjectNumByProId" resultType="int"
+		parameterType="int">
+		select count(*)
+		from tab_callobject
+		where
+		pro_id=#{pro_id}
+		and
+		object_state='0' and object_id not in (select object_id from
+		tab_object_user)
+	</select>
 	<insert id="add_user" parameterType="projectuser">
 		insert into
-		tab_project_user(pro_id,user_name)
+		tab_project_user(pro_id,user_name,object_num)
 		values
-		(#{pro_id},#{user_name})
+		(#{pro_id},#{user_name},#{object_num})
 	</insert>
 	<delete id="del_user" parameterType="int">
 		delete from tab_project_user
 		where
 		pro_id = #{pro_id}
 	</delete>
+	<delete id="delBindByMap" parameterType="map">
+		delete from
+		tab_project_user
+		where
+		pro_id = #{pro_id} and user_name=#{user_name}
+	</delete>
+	<update id="updateBindByMap" parameterType="map" flushCache="true">
+		update tab_project_user
+		<set>
+			<if test="object_num != null">
+				object_num = #{object_num,jdbcType=VARCHAR},
+			</if>
+		</set>
+		where pro_id = #{pro_id} and user_name=#{user_name}
+	</update>
 </mapper>

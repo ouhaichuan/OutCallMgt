@@ -12,5 +12,7 @@
 		<typeAlias type="cn.info.platform.entity.Project_User"
 			alias="projectuser" />
 		<typeAlias type="cn.info.platform.entity.Object_User" alias="objectuser" />
+		<typeAlias type="cn.info.platform.entity.SaleTelNumber"
+			alias="saletelnumber" />
 	</typeAliases>
 </configuration>

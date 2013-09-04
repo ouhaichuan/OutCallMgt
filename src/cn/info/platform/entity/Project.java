@@ -14,6 +14,44 @@ public class Project {
 	private String pro_remark;
 	private String pro_mark;
 	private String pro_date;
+	private String pro_users;// 项目负责人
+	private String pro_zpr;// 项目指派人
+
+	private String calltotal;// 项目外呼总量
+	private String callcomplete;// 外呼完成量
+	private String callnotcomplete;// 外呼未完成量
+
+	public String getCalltotal() {
+		return calltotal;
+	}
+
+	public void setCalltotal(String calltotal) {
+		this.calltotal = calltotal;
+	}
+
+	public String getCallcomplete() {
+		return callcomplete;
+	}
+
+	public void setCallcomplete(String callcomplete) {
+		this.callcomplete = callcomplete;
+	}
+
+	public String getCallnotcomplete() {
+		return callnotcomplete;
+	}
+
+	public void setCallnotcomplete(String callnotcomplete) {
+		this.callnotcomplete = callnotcomplete;
+	}
+
+	public String getPro_users() {
+		return pro_users;
+	}
+
+	public void setPro_users(String pro_users) {
+		this.pro_users = pro_users;
+	}
 
 	public int getPro_id() {
 		return pro_id;
@@ -69,5 +107,13 @@ public class Project {
 
 	public void setPro_date(String pro_date) {
 		this.pro_date = pro_date;
+	}
+
+	public String getPro_zpr() {
+		return pro_zpr;
+	}
+
+	public void setPro_zpr(String pro_zpr) {
+		this.pro_zpr = pro_zpr;
 	}
 }

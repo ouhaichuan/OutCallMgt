@@ -75,9 +75,11 @@
 	<div>
 		<ul class="breadcrumb">
 			<li><a href="index.jsp" target="_parent">主页</a> <span
-				class="divider">/</span></li>
+				class="divider">/</span>
+			</li>
 			<li><a href="outcall_start.jsp" target="mainFrame">外呼</a> <span
-				class="divider">/</span></li>
+				class="divider">/</span>
+			</li>
 			<li class="active">号码</li>
 		</ul>
 
@@ -99,7 +101,7 @@
 								<th>所属项目</th>
 								<th>号码状态</th>
 								<th>外呼时间</th>
-								<th>外呼时长(分)</th>
+								<th>外呼人</th>
 								<th style="width: 75px;"></th>
 							</tr>
 						</thead>
@@ -108,6 +110,9 @@
 					</table>
 				</div>
 				<div id="myPaginator"></div>
+				<div class="alert-info">
+					<span id="content"></span>
+				</div>
 			</div>
 		</div>
 	</div>
@@ -126,10 +131,11 @@
 						},
 						success : function(data) {
 							var dataObject = eval(data);
-							totolP = parseInt(dataObject.length % 5 == 0 ? dataObject.length / 5
-									: dataObject.length / 5 + 1);
-							numP = dataObject.length / 5 < 1 ? dataObject.length % 5
-									: 5;
+							$('#content').text('号码总数：' + dataObject.length);
+							totolP = parseInt(dataObject.length % 7 == 0 ? dataObject.length / 7
+									: dataObject.length / 7 + 1);
+							numP = dataObject.length / 7 < 1 ? dataObject.length % 7
+									: 7;
 							var options = {
 								currentPage : 1,
 								totalPages : totolP,
@@ -150,42 +156,53 @@
 								},
 								onPageClicked : function(event, originalEvent,
 										type, page) {
-									size = 5;
+									size = 7;
 									if (type == 'first'
-											&& dataObject.length < 5) {
+											&& dataObject.length < 7) {
 										size = dataObject.length;
-									} else if (type == 'next' && page == totolP) {
-										size = dataObject.length % 5;
-									} else if (page == totolP) {
-										size = dataObject.length % 5;
+									} else if (type == 'next' && page == totolP
+											&& dataObject.length % 7 != 0) {
+										size = dataObject.length % 7;
+									} else if (type == 'next' && page == totolP
+											&& dataObject.length % 7 == 0) {
+										size = 7;
+									} else if (page == totolP
+											&& dataObject.length % 7 != 0) {
+										size = dataObject.length % 7;
+									} else if (page == totolP
+											&& dataObject.length % 7 == 0) {
+										size = 7;
 									} else if (type == 'last'
-											&& dataObject.length % 5 != 0) {
-										size = dataObject.length % 5;
+											&& dataObject.length % 7 != 0) {
+										size = dataObject.length % 7;
+									} else if (type == 'last'
+											&& dataObject.length % 7 == 0) {
+										size = 7;
 									}
 									$('#list-content').html('');
 									for ( var i = 0; i < size; i++) {
 										var td_str = '<tr><td>'
-												+ dataObject[(page - 1) * 5 + i].object_id
+												+ dataObject[(page - 1) * 7 + i].object_id
 												+ '</td><td>'
-												+ dataObject[(page - 1) * 5 + i].object_pnumber
+												+ dataObject[(page - 1) * 7 + i].object_pnumber
 												+ '</td><td>'
-												+ dataObject[(page - 1) * 5 + i].pro_name
+												+ dataObject[(page - 1) * 7 + i].pro_name
 												+ '</td><td>'
-												+ dataObject[(page - 1) * 5 + i].state_name
+												+ dataObject[(page - 1) * 7 + i].state_name
 												+ '</td><td>'
-												+ dataObject[(page - 1) * 5 + i].out_time
+												+ dataObject[(page - 1) * 7 + i].out_time
 												+ '</td><td>'
-												+ dataObject[(page - 1) * 5 + i].out_time_length
+												+ dataObject[(page - 1) * 7 + i].call_user_name
 												+ '</td>';
-										if (dataObject[(page - 1) * 5 + i].state_name == '初始状态') {
+										if (dataObject[(page - 1) * 7 + i].state_name == '初始状态') {
 											td_str += "<td><a href='outcall/outcall.do?pro_id="
-													+ dataObject[(page - 1) * 5
+													+ dataObject[(page - 1) * 7
 															+ i].pro_id
 													+ "&object_id="
-													+ dataObject[(page - 1) * 5
+													+ dataObject[(page - 1) * 7
 															+ i].object_id
 													+ "&pnumber="
-													+ dataObject[(page - 1) * 5
+													+ dataObject[(page - 1) * 7
 															+ i].object_pnumber
 													+ "' target='mainFrame'><button class='btn btn-primary' type='button'><i class='icon-bullhorn'></i>&nbsp;外呼</button></a></td></tr>";
 										} else {
@@ -195,8 +212,8 @@
 									}
 								}
 							};
-							bsize = dataObject.length < 5 ? dataObject.length
-									: 5;
+							bsize = dataObject.length < 7 ? dataObject.length
+									: 7;
 							$('#list-content').html('');
 							for ( var i = 0; i < bsize; i++) {
 								var td_str = '<tr><td>'
@@ -206,8 +223,7 @@
 										+ '</td><td>'
 										+ dataObject[i].state_name
 										+ '</td><td>' + dataObject[i].out_time
-										+ '</td><td>'
-										+ dataObject[i].out_time_length
+										+ '</td><td>' + dataObject[i].call_user_name
 										+ '</td>';
 								if (dataObject[i].state_name == '初始状态') {
 									td_str += "<td><a href='outcall/outcall.do?pro_id="

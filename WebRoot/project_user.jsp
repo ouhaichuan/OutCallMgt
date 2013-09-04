@@ -14,6 +14,11 @@
 		pro_name = new String(request.getParameter("pro_name")
 				.getBytes("iso-8859-1"), "utf-8");
 	}
+	String object_num = "";
+	if (null != request.getParameter("object_num")) {
+		object_num = new String(request.getParameter("object_num")
+				.getBytes("iso-8859-1"), "utf-8");
+	}
 %>
 <!DOCTYPE html>
 <html lang="CN">
@@ -82,8 +87,7 @@
 		<ul class="breadcrumb">
 			<li><a href="index.jsp" target="_parent">主页</a> <span
 				class="divider">/</span></li>
-			<li><a href="projects.jsp">项目管理</a> <span
-				class="divider">/</span>
+			<li><a href="projects.jsp">项目管理</a> <span class="divider">/</span>
 			</li>
 			<li class="active">绑定工号</li>
 		</ul>
@@ -99,24 +103,22 @@
 					<div class="btn-group"></div>
 				</div>
 				<div class="well">
-					<ul class="nav nav-tabs">
-						<li class="active"><a href="#home" data-toggle="tab">详细信息</a>
-						</li>
-					</ul>
 					<div id="myTabContent" class="tab-content">
 						<div class="tab-pane active in" id="home">
 							<form id="edit_info" action="project/save_pro.do" method="post">
 								<input type="hidden" name="pro_id" id='pro_id'
 									value="<%=pro_id%>"> <label>项目名称</label> <input
 									name="pro_name" id="pro_name" value="<%=pro_name%>"
-									class="span3" /> <label>员工</label>
+									class="span3" readonly="readonly" /> <label>号码数量</label> <input
+									name="object_num" id="object_num" value="<%=object_num%>"
+									class="span3" readonly="readonly" /> <label>员工</label>
 								<div style="float: left;">
 									<select name="user_select" id="user_select"
-										style="height:130px;width: 100px" class="span3" size="2">
+										style="height:160px;width: 100px" class="span3" size="2">
 									</select>
 								</div>
 								<div id="users_txt" class="span3"
-									style="width: 420px;min-height:130px;border: 1px solid;border-color:#97CBFF;height:auto !important;"></div>
+									style="width: 160px;min-height:160px;border: 1px solid;border-color:#97CBFF;height:auto !important;"></div>
 							</form>
 						</div>
 					</div>
@@ -129,8 +131,44 @@
 	<script type="text/javascript">
 		$("[rel=tooltip]").tooltip();
 
+		function validateNum(object) {
+			if (object.value.substr(0, 1) == '0') {
+				object.value = '';
+			} else {
+				object.value = object.value.replace(/\D/g, '');
+			}
+			if (parseFloat($('#txt_num').val()) > parseFloat($('#object_num')
+					.val())) {
+				$('#txt_num').val($('#object_num').val());
+			}
+			$('#txt_sy')
+					.text(
+							'剩余'
+									+ (parseFloat($('#object_num').val()) - parseFloat($(
+											'#txt_num').val() == '' ? 0 : $(
+											'#txt_num').val())));
+		}
+
+		function removeItem(object) {
+			texts = ($(object).attr("text")).split('>');
+			$('#object_num').val(
+					parseFloat($('#object_num').val()) + parseFloat(texts[1]));
+			$(object).remove();
+		}
+
 		$(function() {
 			var basePath = $('#basePathIn').val();
+
+			$.ajax({
+				url : basePath + "projectuser/findObjectNumByProId.do",
+				type : "post",
+				data : {
+					pro_id : $("#pro_id").val()
+				},
+				success : function(data) {
+					$('#object_num').val(data);
+				}
+			});
 
 			$.post(basePath + "user/findUserForPro.do", function(data) {
 				var dataUser = eval(data);
@@ -152,10 +190,11 @@
 							var dataUser = eval(data);
 							for ( var i = 0; i < dataUser.length; i++) {
 								newstr = dataUser[i].user_xm + "&lt;"
-										+ dataUser[i].user_name + "&gt;;";
+										+ dataUser[i].user_name + "&gt;"
+										+ dataUser[i].object_num;
 								$('#users_txt')
 										.append(
-												"<button rel='tooltip' title='双击删除' ondblclick='$(this).remove();' onclick='return false;' style='background-color:transparent;border:0;' text="
+												"<button rel='tooltip' title='双击删除' ondblclick='removeItem(this);' onclick='return false;' style='background-color:transparent;border:0;' text="
 														+ newstr
 														+ ">"
 														+ newstr
@@ -164,34 +203,70 @@
 						}
 					});
 			$("#user_select")
-					.change(
+					.click(
 							function() {
-								text = $("#user_select")
-										.find("option:selected").text();
-								value = $("#user_select").val();
-								buttons = $("#users_txt :button");
+								dialog = art
+										.dialog({
+											title : '分配数量',
+											content : "数量&nbsp;&nbsp;<input name='txt_num' id='txt_num' value='' onkeyup='validateNum(this);' onafterpaste='validateNum(this);' style='width:80px;' class='span3'/>&nbsp;&nbsp;<span id='txt_sy'>剩余"
+													+ $('#object_num').val()
+													+ "</span>",
+											lock : true,
+											drag : false,
+											resize : false,
+											ok : function() {
+												txt_num = $('#txt_num').val();
+												if (txt_num == '0'
+														|| txt_num == '') {
+													art.dialog({
+														content : '数据异常',
+														lock : true,
+														drag : false,
+														resize : false,
+														icon : 'warning'
+													});
+													return;
+												}
+												$('#object_num').val(
+														$('#object_num').val()
+																- txt_num);
+												text = $("#user_select").find(
+														"option:selected")
+														.text();
+												value = $("#user_select").val();
+												buttons = $("#users_txt :button");
 
-								for ( var i = 0; i < buttons.length; i++) {
-									text = $(buttons[i]).attr("text");
-									begin = text.indexOf("<") + 1;
-									end = text.indexOf(">");
-									if (text.substring(begin, end) == value) {
-										$(buttons[i]).remove();
-									}
-								}
-								newstr = $("#user_select").find(
-										"option:selected").text()
-										+ "&lt;"
-										+ $("#user_select").val()
-										+ "&gt;;";
+												for ( var i = 0; i < buttons.length; i++) {
+													text = $(buttons[i]).attr(
+															"text");
+													begin = text.indexOf("<") + 1;
+													end = text.indexOf(">");
+													if (text.substring(begin,
+															end) == value) {
+														$(buttons[i]).remove();
+													}
+												}
+												newstr = $("#user_select")
+														.find("option:selected")
+														.text()
+														+ "&lt;"
+														+ $("#user_select")
+																.val()
+														+ "&gt;"
+														+ txt_num;
 
-								$('#users_txt')
-										.append(
-												"<button rel='tooltip' title='双击删除' ondblclick='$(this).remove();' onclick='return false;' style='background-color:transparent;border:0;' text="
-														+ newstr
-														+ ">"
-														+ newstr
-														+ "</button>");
+												$('#users_txt')
+														.append(
+																"<button rel='tooltip' title='双击删除' ondblclick='removeItem(this);' onclick='return false;' style='background-color:transparent;border:0;' text="
+																		+ newstr
+																		+ ">"
+																		+ newstr
+																		+ "</button>");
+
+											},
+											cancel : function() {
+											}
+										});
 							});
 			$("#bound_btn").click(function() {
 				if ($("#users_txt :button").length <= 0) {
@@ -204,20 +279,22 @@
 					});
 				} else {
 					buttons = $("#users_txt :button");
-					user_names = new Array();
+					user_infos = new Array();
 					for ( var i = 0; i < buttons.length; i++) {
 						text = $(buttons[i]).attr("text");
 						begin = text.indexOf("<") + 1;
 						end = text.indexOf(">");
 						user_name = text.substring(begin, end);
-						user_names.push(user_name);
+						object_num = text.substring(end + 1, text.length);
+						user_infos.push(user_name);
+						user_infos.push(object_num);
 					}
 					$.ajax({
 						url : basePath + "projectuser/bound_user.do",
 						type : "post",
 						data : {
 							pro_id : $("#pro_id").val(),
-							user_names : user_names.toString()
+							user_infos : user_infos.toString()
 						},
 						success : function(data) {
 							dialog = art.dialog({
@@ -231,7 +308,7 @@
 					});
 				}
 			});
-			
+
 			$("#cls_btn").click(function() {
 				dialog = art.dialog({
 					content : '确定清空已绑定的工号吗？',
@@ -248,13 +325,7 @@
 							},
 							success : function(data) {
 								$("#users_txt").html('');
-								dialog = art.dialog({
-									content : data,
-									lock : true,
-									drag : false,
-									resize : false,
-									icon : 'succeed'
-								});
+								$('#object_num').val(data);
 							}
 						});
 					},

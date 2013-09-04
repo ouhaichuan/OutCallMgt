@@ -105,10 +105,12 @@
 		%>
 		<ul class="breadcrumb">
 			<li><a href="index.jsp" target="_parent">主页</a> <span
-				class="divider">/</span>
-			</li>
-			<li><a href="callobjects.jsp">号码管理</a> <span
 				class="divider">/</span></li>
+			<li><a href="projects.jsp">项目管理</a> <span class="divider">/</span>
+			</li>
+			<li><a
+				href="callobjects.jsp?pro_id=<%=pro_id%>&pro_name=<%=pro_name%>">号码管理</a>
+				<span class="divider">/</span></li>
 			<li class="active">编辑</li>
 		</ul>
 		<%
@@ -116,9 +118,11 @@
 		%>
 		<ul class="breadcrumb">
 			<li><a href="index.jsp" target="_parent">主页</a> <span
-				class="divider">/</span>
+				class="divider">/</span></li>
+			<li><a href="projects.jsp">项目管理</a> <span class="divider">/</span>
 			</li>
-			<li><a href="callobjects.jsp">号码管理</a> <span
+			<li><a
+				href="callobjects.jsp?pro_id=<%=pro_id%>&pro_name=<%=pro_name%>">号码管理</a><span
 				class="divider">/</span></li>
 			<li class="active">添加</li>
 		</ul>
@@ -151,10 +155,6 @@
 					}
 				%>
 				<div class="well">
-					<ul class="nav nav-tabs">
-						<li class="active"><a href="#home" data-toggle="tab">详细信息</a>
-						</li>
-					</ul>
 					<div id="myTabContent" class="tab-content">
 						<div class="tab-pane active in" id="home">
 							<%
@@ -165,11 +165,11 @@
 								<input type="hidden" name="object_id" id='object_id'
 									value="<%=object_id%>"> <label>号码</label> <input
 									name="object_pnumber" id="object_pnumber"
-									value="<%=object_pnumber%>" class="span3" /><label>所属项目</label><select
-									name="project_select" id="project_select" style="height:30px"
-									class="span3">
-								</select> <input name="pro_id" id="pro_id" value="<%=pro_id%>"
-									type="hidden" /> <label>备注</label>
+									value="<%=object_pnumber%>" class="span3" /><label>所属项目</label><input
+									name="pro_name" id="pro_name" class="span3"
+									value="<%=pro_name%>" readonly="readonly" /><input
+									name="pro_id" id="pro_id" value="<%=pro_id%>" type="hidden" />
+								<label>备注</label>
 								<textarea name="object_remark" rows="3" class="span3"><%=object_remark%></textarea>
 							</form>
 							<%
@@ -178,10 +178,10 @@
 							<form id="add_info" action="callobject/add_obj.do" method="post">
 								<input type="hidden" name="object_id" id='object_id' value="0">
 								<label>号码</label> <input name="object_pnumber"
-									id="object_pnumber" class="span3" /><label>所属项目</label><select
-									name="project_select" id="project_select" style="height:30px"
-									class="span3">
-								</select> <input name="pro_id" id="pro_id" type="hidden" /><label>备注</label>
+									id="object_pnumber" class="span3" /><label>所属项目</label><input
+									name="pro_name" id="pro_name" class="span3"
+									value="<%=pro_name%>" readonly="readonly" /><input
+									name="pro_id" id="pro_id" type="hidden" value="<%=pro_id%>" /><label>备注</label>
 								<textarea name="object_remark" rows="3" class="span3"></textarea>
 							</form>
 							<%
@@ -228,25 +228,6 @@
 		$(function() {
 			var basePath = $('#basePathIn').val();
 
-			$.post(basePath + "outcall/getProList.do", function(data) {
-				var dataPro = eval(data);
-				var html = "";
-				for ( var i = 0; i < dataPro.length; i++) {
-					html += "<option value='"+dataPro[i].pro_id+"'>"
-							+ dataPro[i].pro_name + "</option>";
-				}
-				$("#project_select").append(html);
-				var pro_id = $('#pro_id').val();
-				$("#project_select option[value='" + pro_id + "']").attr(
-						"selected", "true");
-				if ($('#pro_id').val() == "") {
-					$('#pro_id').val(dataPro[0].pro_id);
-				}
-			});
-			$("#project_select").change(function() {
-				$('#pro_id').val($("#project_select").val());
-			});
-
 			$('#save_btn').click(function() {
 				result = validate();
 				if (result == 2) {//验证完成
@@ -289,7 +270,9 @@
 					function() {
 						window.location.href = basePath
 								+ "callobject/del_obj.do?id="
-								+ $('#object_id').val();
+								+ $('#object_id').val() + "&pro_id="
+								+ $('#pro_id').val() + "&pro_name="
+								+ $('#pro_name').val();
 					});
 			$('#object_pnumber').focus();
 		});

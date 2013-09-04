@@ -73,11 +73,9 @@
 	<div>
 		<ul class="breadcrumb">
 			<li><a href="index.jsp" target="_parent">主页</a> <span
-				class="divider">/</span>
-			</li>
+				class="divider">/</span></li>
 			<li><a href="outcall_start.jsp" target="mainFrame">外呼</a> <span
-				class="divider">/</span>
-			</li>
+				class="divider">/</span></li>
 			<li class="active">题目</li>
 		</ul>
 
@@ -107,71 +105,104 @@
 		$("[rel=tooltip]").tooltip();
 		$(function() {
 			var basePath = $('#basePathIn').val();
-			
-			$.ajax({
-				url : basePath + "outcall/findTopicByProId.do",
-				type : "post",
-				data : {
-					pro_id : $("#pro_id").val()
-				},
-				success : function(data) {
-					var dataTopic = eval(data);
-					totolP = parseInt(dataTopic.length % 5 == 0 ? dataTopic.length / 5
-							: dataTopic.length / 5 + 1);
-					numP = dataTopic.length / 5 < 1 ? dataTopic.length % 5 : 5;
-					var options = {
-						currentPage : 1,
-						totalPages : totolP,
-						numberOfPages : numP,
-						itemTexts : function(type, page, current) {
-							switch (type) {
-							case "first":
-								return "首页";
-							case "prev":
-								return "上一页";
-							case "next":
-								return "下一页";
-							case "last":
-								return "尾页";
-							case "page":
-								return page;
-							}
+
+			$
+					.ajax({
+						url : basePath + "outcall/findTopicByProId.do",
+						type : "post",
+						data : {
+							pro_id : $("#pro_id").val()
 						},
-						onPageClicked : function(event, originalEvent, type, page) {
-							size = 5;
-							if (type == 'first' && dataTopic.length < 5) {
-								size = dataTopic.length;
-							}else if(type == 'next' && page==totolP){
-								size = dataTopic.length % 5;
-							}else if(page==totolP){
-								size = dataTopic.length % 5;
-							}else if (type == 'last' && dataTopic.length % 5 != 0) {
-								size = dataTopic.length % 5;
-							}
+						success : function(data) {
+							var dataTopic = eval(data);
+							totolP = parseInt(dataTopic.length % 10 == 0 ? dataTopic.length / 10
+									: dataTopic.length / 10 + 1);
+							numP = dataTopic.length / 10 < 1 ? dataTopic.length % 10
+									: 10;
+							var options = {
+								currentPage : 1,
+								totalPages : totolP,
+								numberOfPages : numP,
+								itemTexts : function(type, page, current) {
+									switch (type) {
+									case "first":
+										return "首页";
+									case "prev":
+										return "上一页";
+									case "next":
+										return "下一页";
+									case "last":
+										return "尾页";
+									case "page":
+										return page;
+									}
+								},
+								onPageClicked : function(event, originalEvent,
+										type, page) {
+									size = 10;
+									if (type == 'first'
+											&& dataTopic.length < 10) {
+										size = dataTopic.length;
+									} else if (type == 'next' && page == totolP
+											&& dataTopic.length % 10 != 0) {
+										size = dataTopic.length % 10;
+									} else if (type == 'next' && page == totolP
+											&& dataTopic.length % 10 == 0) {
+										size = 10;
+									} else if (page == totolP
+											&& dataTopic.length % 10 != 0) {
+										size = dataTopic.length % 10;
+									} else if (page == totolP
+											&& dataTopic.length % 10 == 0) {
+										size = 10;
+									} else if (type == 'last'
+											&& dataTopic.length % 10 != 0) {
+										size = dataTopic.length % 10;
+									} else if (type == 'last'
+											&& dataTopic.length % 10 == 0) {
+										size = 10;
+									}
+									$('#list-content').html('');
+									for ( var i = 0; i < size; i++) {
+										$('#list-content')
+												.append(
+														'<tr><td>'
+																+ dataTopic[(page - 1)
+																		* 10 + i].topic_id
+																+ '</td><td>'
+																+ dataTopic[(page - 1)
+																		* 10 + i].pro_name
+																+ '</td><td>'
+																+ dataTopic[(page - 1)
+																		* 10 + i].topic_content
+																+ '</td><td>'
+																+ dataTopic[(page - 1)
+																		* 10 + i].topic_type
+																+ '</td><td>'
+																+ dataTopic[(page - 1)
+																		* 10 + i].topic_remark
+																+ '</td></tr>');
+									}
+								}
+							};
+							bsize = dataTopic.length < 10 ? dataTopic.length : 10;
 							$('#list-content').html('');
-							for ( var i = 0; i < size; i++) {
+							for ( var i = 0; i < bsize; i++) {
 								$('#list-content').append(
-								'<tr><td>' + dataTopic[(page-1)*5+i].topic_id + '</td><td>'
-										+ dataTopic[(page-1)*5+i].pro_name + '</td><td>'
-										+ dataTopic[(page-1)*5+i].topic_content + '</td><td>'
-										+ dataTopic[(page-1)*5+i].topic_type + '</td><td>'
-										+ dataTopic[(page-1)*5+i].topic_remark + '</td></tr>');
+										'<tr><td>' + dataTopic[i].topic_id
+												+ '</td><td>'
+												+ dataTopic[i].pro_name
+												+ '</td><td>'
+												+ dataTopic[i].topic_content
+												+ '</td><td>'
+												+ dataTopic[i].topic_type
+												+ '</td><td>'
+												+ dataTopic[i].topic_remark
+												+ '</td></tr>');
 							}
+							$('#myPaginator').bootstrapPaginator(options);
 						}
-					};
-					bsize = dataTopic.length < 5 ? dataTopic.length : 5;
-					$('#list-content').html('');
-					for ( var i = 0; i < bsize; i++) {
-						$('#list-content').append(
-								'<tr><td>' + dataTopic[i].topic_id + '</td><td>'
-										+ dataTopic[i].pro_name + '</td><td>'
-										+ dataTopic[i].topic_content + '</td><td>'
-										+ dataTopic[i].topic_type + '</td><td>'
-										+ dataTopic[i].topic_remark + '</td></tr>');
-					}
-					$('#myPaginator').bootstrapPaginator(options);
-				}
-			});
+					});
 		});
 	</script>
 </body>

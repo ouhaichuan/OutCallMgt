@@ -8,7 +8,6 @@ import net.sf.json.JSONArray;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import cn.info.platform.entity.User;
@@ -23,13 +22,6 @@ public class UserController {
 	@Autowired
 	private UserService userService;
 
-	@RequestMapping(value = "findByID", method = RequestMethod.GET)
-	public String findByID(@PathVariable("userID") int userID) {
-		User user = userService.getUserByID(userID);
-		System.out.println(user.getPassWord());
-		return "/index.jsp";
-	}
-
 	/**
 	 * 登录验证，并记录session
 	 * 
@@ -42,18 +34,27 @@ public class UserController {
 	 * @return 要跳转的页面
 	 */
 	@RequestMapping(value = "login", method = RequestMethod.POST)
-	public String login(ModelMap map, User user, HttpServletRequest request) {
+	public void login(ModelMap map, User user, HttpServletRequest request,
+			HttpServletResponse response) {
 		String target = null;
+		String path = request.getContextPath();
+		String basePath = request.getScheme() + "://" + request.getServerName()
+				+ ":" + request.getServerPort() + path + "/";
+
 		if (null != userService.login(user)) {
 			User newUser = userService.login(user);
 			request.getSession().setAttribute("user", newUser);
-			target = "/index.jsp";
+			target = basePath + "index.jsp";
 			// 登陆成功
 		} else {
-			map.put("failure", "用户名或密码有误!");
-			target = "/login.jsp";
+			target = basePath + "login.jsp";
+			request.getSession().setAttribute("failure", "用户名或密码错误");
 		}
-		return target;
+		try {
+			response.sendRedirect(target);// 跳转，并改变地址栏
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 
 	/**
@@ -64,11 +65,19 @@ public class UserController {
 	 * @return 要跳转的页面
 	 */
 	@RequestMapping(value = "logout", method = RequestMethod.GET)
-	public String logout(HttpServletRequest request) {
+	public void logout(HttpServletRequest request, HttpServletResponse response) {
 		request.getSession().setAttribute("user", null);
 
-		String target = "/login.jsp";
-		return target;
+		String path = request.getContextPath();
+		String basePath = request.getScheme() + "://" + request.getServerName()
+				+ ":" + request.getServerPort() + path + "/";
+		String target = basePath + "login.jsp";
+
+		try {
+			response.sendRedirect(target);// 跳转，并改变地址栏
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 
 	/**
@@ -99,7 +108,7 @@ public class UserController {
 	 *            请求的对象
 	 */
 	@RequestMapping(value = "findUserForPro", method = RequestMethod.POST)
-	public void findAddr(HttpServletRequest request,
+	public void findUserForPro(HttpServletRequest request,
 			HttpServletResponse response) {
 		response.setContentType("text/html; charset=utf-8");
 

@@ -35,6 +35,11 @@
 		user_xm = new String(request.getParameter("user_xm").getBytes(
 				"iso-8859-1"), "utf-8");
 	}
+	String user_channel = "";
+	if (null != request.getParameter("user_channel")) {
+		user_channel = new String(request.getParameter("user_channel")
+				.getBytes("iso-8859-1"), "utf-8");
+	}
 %>
 <!DOCTYPE html>
 <html lang="CN">
@@ -107,8 +112,8 @@
 			<li><a href="index.jsp" target="_parent">主页</a> <span
 				class="divider">/</span>
 			</li>
-			<li><a href="users.jsp">人员管理</a> <span
-				class="divider">/</span></li>
+			<li><a href="users.jsp">员工管理</a> <span class="divider">/</span>
+			</li>
 			<li class="active">编辑</li>
 		</ul>
 		<%
@@ -118,8 +123,8 @@
 			<li><a href="index.jsp" target="_parent">主页</a> <span
 				class="divider">/</span>
 			</li>
-			<li><a href="users.jsp">人员管理</a> <span
-				class="divider">/</span></li>
+			<li><a href="users.jsp">员工管理</a> <span class="divider">/</span>
+			</li>
 			<li class="active">添加</li>
 		</ul>
 		<%
@@ -151,10 +156,6 @@
 					}
 				%>
 				<div class="well">
-					<ul class="nav nav-tabs">
-						<li class="active"><a href="#home" data-toggle="tab">详细信息</a>
-						</li>
-					</ul>
 					<div id="myTabContent" class="tab-content">
 						<div class="tab-pane active in" id="home">
 							<%
@@ -170,9 +171,11 @@
 									name="cfr_passWord" id="cfr_passWord" value="<%=user_pass%>"
 									type="password" class="span3" /><label>电话</label> <input
 									name="user_phone" id="user_phone" value="<%=user_phone%>"
-									class="span3" /><label>姓名</label> <input name="user_xm"
-									id="user_xm" value="<%=user_xm%>" class="span3" /><label>角色</label>
-								<select name="role_select" id="role_select" class="span3">
+									class="span3" /><label>通道号</label> <input name="user_channel"
+									id="user_channel" value="<%=user_channel%>" class="span3" /><label>姓名</label>
+								<input name="user_xm" id="user_xm" value="<%=user_xm%>"
+									class="span3" /><label>角色</label> <select name="role_select"
+									id="role_select" class="span3">
 									<option value="1">管理员</option>
 									<option value="2">普通用户</option>
 								</select> <input type="hidden" name="role_id" id='role_id'
@@ -189,8 +192,9 @@
 									class="span3" /> <label>确认密码</label> <input
 									name="cfr_passWord" id="cfr_passWord" type="password"
 									class="span3" /><label>电话</label> <input name="user_phone"
-									id="user_phone" class="span3" /><label>姓名</label> <input
-									name="user_xm" id="user_xm" class="span3" /><label>角色</label>
+									id="user_phone" class="span3" /><label>通道号</label> <input
+									name="user_channel" id="user_channel" class="span3" /><label>姓名</label>
+								<input name="user_xm" id="user_xm" class="span3" /><label>角色</label>
 								<select name="role_select" id="role_select" style="height:30px"
 									class="span3">
 									<option value="1">管理员</option>
@@ -241,7 +245,8 @@
 					|| $('#passWord').val().Trim() == ""
 					|| $('#cfr_passWord').val().Trim() == ""
 					|| $('#user_phone').val().Trim() == ""
-					|| $('#user_xm').val().Trim() == "") {
+					|| $('#user_xm').val().Trim() == ""
+					|| $('#user_channel').val().Trim() == "") {
 				flag = 1;
 			} else if ($('#passWord').val().Trim() != $('#cfr_passWord').val()
 					.Trim()) {

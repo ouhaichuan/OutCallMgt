@@ -21,7 +21,7 @@
 	</filter-mapping>
 	<filter>
 		<filter-name>rightFilter</filter-name>
-		<filter-class>com.info.platform.filter.RightFilter</filter-class>
+		<filter-class>cn.info.platform.filter.RightFilter</filter-class>
 	</filter>
 	<filter-mapping>
 		<filter-name>rightFilter</filter-name>

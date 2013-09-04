@@ -26,6 +26,9 @@
 
 <script src="lib/jquery-1.7.2.min.js" type="text/javascript"></script>
 <script type="text/javascript" src="js/bootstrap-paginator.min.js"></script>
+<script src="artDialog4.1.7/artDialog.js?skin=twitter"></script>
+<script src="artDialog4.1.7/jquery.artDialog.js"></script>
+<script src="artDialog4.1.7/plugins/iframeTools.js"></script>
 
 <style type="text/css">
 #line-chart {
@@ -82,6 +85,18 @@
 					<button class="btn btn-primary" id='addpro_btn'>
 						<i class="icon-plus"></i> 添加项目
 					</button>
+					<button class="btn btn-info" id='startpro_btn'>
+						<i class="icon-play"></i> 启动
+					</button>
+					<button class="btn btn-info" id='pausepro_btn'>
+						<i class="icon-pause"></i> 暂停
+					</button>
+					<button class="btn btn-info" id='stoppro_btn'>
+						<i class="icon-stop"></i> 停止
+					</button>
+					<button class="btn btn-info" id='cplpro_btn'>
+						<i class="icon-ok-sign"></i> 完成
+					</button>
 					<div style="float: right;">
 						<input type="text" placeholder='项目名称/类型'
 							class="input-medium search-query">
@@ -93,13 +108,15 @@
 					<table class="table table-striped" id='pro_info_tab'>
 						<thead>
 							<tr>
+								<th style="width: 32px;"></th>
 								<th>编号</th>
 								<th>项目名称</th>
 								<th>项目类型</th>
 								<th>项目状态</th>
 								<th>启动日期</th>
-								<th>项目备注</th>
-								<th style="width: 56px;"></th>
+								<th>项目指派人</th>
+								<th style="width: 122px;">项目负责人</th>
+								<th style="width: 122px;"></th>
 							</tr>
 						</thead>
 						<tbody id="list-content">
@@ -132,18 +149,17 @@
 	<script src="lib/bootstrap/js/bootstrap.js"></script>
 	<script type="text/javascript">
 		$("[rel=tooltip]").tooltip();
+		var basePath = $('#basePathIn').val();
 		$(function() {
-			var basePath = $('#basePathIn').val();
-
 			$
 					.post(
 							basePath + "project/find_projects_pg.do",
 							function(data) {
 								var dataPro = eval(data);
-								totolP = parseInt(dataPro.length % 5 == 0 ? dataPro.length / 5
-										: dataPro.length / 5 + 1);
-								numP = dataPro.length / 5 < 1 ? dataPro.length % 5
-										: 5;
+								totolP = parseInt(dataPro.length % 7 == 0 ? dataPro.length / 7
+										: dataPro.length / 7 + 1);
+								numP = dataPro.length / 7 < 1 ? dataPro.length % 7
+										: 7;
 								var options = {
 									currentPage : 1,
 									totalPages : totolP,
@@ -164,80 +180,130 @@
 									},
 									onPageClicked : function(event,
 											originalEvent, type, page) {
-										size = 5;
+										size = 7;
 										if (type == 'first'
-												&& dataPro.length < 5) {
+												&& dataPro.length < 7) {
 											size = dataPro.length;
 										} else if (type == 'next'
-												&& page == totolP) {
-											size = dataPro.length % 5;
-										} else if (page == totolP) {
-											size = dataPro.length % 5;
+												&& page == totolP
+												&& dataPro.length % 7 != 0) {
+											size = dataPro.length % 7;
+										} else if (type == 'next'
+												&& page == totolP
+												&& dataPro.length % 7 == 0) {
+											size = 7;
+										} else if (page == totolP
+												&& dataPro.length % 7 != 0) {
+											size = dataPro.length % 7;
+										} else if (page == totolP
+												&& dataPro.length % 7 == 0) {
+											size = 7;
 										} else if (type == 'last'
-												&& dataPro.length % 5 != 0) {
-											size = dataPro.length % 5;
+												&& dataPro.length % 7 != 0) {
+											size = dataPro.length % 7;
+										} else if (type == 'last'
+												&& dataPro.length % 7 == 0) {
+											size = 7;
 										}
 										$('#list-content').html('');
 										for ( var i = 0; i < size; i++) {
 											$('#list-content')
 													.append(
-															'<tr><td>'
+															"<tr><td><label class='checkbox'><input type='checkbox' onchange='checkedFn("
 																	+ dataPro[(page - 1)
-																			* 5
+																			* 7
+																			+ i].pro_id
+																	+ ",this);'/></label></td><td>"
+																	+ dataPro[(page - 1)
+																			* 7
 																			+ i].pro_id
 																	+ '</td><td>'
 																	+ dataPro[(page - 1)
-																			* 5
+																			* 7
 																			+ i].pro_name
 																	+ '</td><td>'
 																	+ dataPro[(page - 1)
-																			* 5
+																			* 7
 																			+ i].pro_type
 																	+ '</td><td>'
 																	+ dataPro[(page - 1)
-																			* 5
+																			* 7
 																			+ i].pro_state
 																	+ '</td><td>'
 																	+ dataPro[(page - 1)
-																			* 5
+																			* 7
 																			+ i].pro_date
 																	+ '</td><td>'
 																	+ dataPro[(page - 1)
-																			* 5
-																			+ i].pro_remark
+																			* 7
+																			+ i].pro_zpr
 																	+ '</td><td>'
-																	+ "<a href='project_user.jsp?pro_id="
 																	+ dataPro[(page - 1)
-																			* 5
+																			* 7
+																			+ i].pro_users
+																	+ '</td><td>'
+																	+ "<a href='callobjects.jsp?pro_id="
+																	+ dataPro[(page - 1)
+																			* 7
 																			+ i].pro_id
 																	+ "&pro_name="
 																	+ dataPro[(page - 1)
-																			* 5
+																			* 7
 																			+ i].pro_name
-																	+ "' rel='tooltip' title='绑定工号'><i class='icon-user'></i> </a>&nbsp;&nbsp;"
+																	+ "' rel='tooltip' title='外呼号码'><i class='icon-book'></i> </a>&nbsp;&nbsp;"
+																	+ "<a href='topics.jsp?pro_id="
+																	+ dataPro[(page - 1)
+																			* 7
+																			+ i].pro_id
+																	+ "&pro_name="
+																	+ dataPro[(page - 1)
+																			* 7
+																			+ i].pro_name
+																	+ "' rel='tooltip' title='题目管理'><i class='icon-file'></i> </a>&nbsp;&nbsp;"
+																	+ "<a href='project_user.jsp?pro_id="
+																	+ dataPro[(page - 1)
+																			* 7
+																			+ i].pro_id
+																	+ "&pro_name="
+																	+ dataPro[(page - 1)
+																			* 7
+																			+ i].pro_name
+																	+ "' rel='tooltip' title='绑定工号'><i class='icon-user'></i> </a>&nbsp;&nbsp;<a href='salenumbers.jsp?pro_id="
+																	+ dataPro[(page - 1)
+																			* 7
+																			+ i].pro_id
+																	+ "&pro_name="
+																	+ dataPro[(page - 1)
+																			* 7
+																			+ i].pro_name
+																	+ "' rel='tooltip' title='销售号码'><i class='icon-bookmark'></i> </a>&nbsp;&nbsp;"
 																	+ "<a href='project.jsp?edit_type=2&pro_id="
 																	+ dataPro[(page - 1)
-																			* 5
+																			* 7
 																			+ i].pro_id
 																	+ '&pro_name='
 																	+ dataPro[(page - 1)
-																			* 5
+																			* 7
 																			+ i].pro_name
+																	+ '&pro_zpr='
+																	+ dataPro[(page - 1)
+																			* 7
+																			+ i].pro_zpr
 																	+ '&pro_type='
 																	+ dataPro[(page - 1)
-																			* 5
+																			* 7
 																			+ i].pro_type
 																	+ '&pro_state='
 																	+ dataPro[(page - 1)
-																			* 5
+																			* 7
 																			+ i].pro_state
 																	+ '&pro_date='
 																	+ dataPro[(page - 1)
-																			* 5
+																			* 7
 																			+ i].pro_date
 																	+ '&pro_remark='
 																	+ dataPro[(page - 1)
-																			* 5
+																			* 7
 																			+ i].pro_remark
 																	+ "'><i class='icon-pencil'></i></a>&nbsp;&nbsp;<a href='#myModal' role='button' data-toggle='modal'><i class='icon-remove'></i> </a></td></tr>");
 										}
@@ -245,7 +311,7 @@
 												function() {
 													var pro_id = $(this)
 															.children(
-																	"td:eq(0)")
+																	"td:eq(1)")
 															.text();
 													if (pro_id != "") {
 														$('#del_app_id').val(
@@ -254,12 +320,14 @@
 												});
 									}
 								};
-								bsize = dataPro.length < 5 ? dataPro.length : 5;
+								bsize = dataPro.length < 7 ? dataPro.length : 7;
 								$('#list-content').html('');
 								for ( var i = 0; i < bsize; i++) {
 									$('#list-content')
 											.append(
-													'<tr><td>'
+													"<tr><td><label class='checkbox'><input type='checkbox' onchange='checkedFn("
+															+ dataPro[i].pro_id
+															+ ",this);'/></label></td><td>"
 															+ dataPro[i].pro_id
 															+ '</td><td>'
 															+ dataPro[i].pro_name
@@ -270,17 +338,35 @@
 															+ '</td><td>'
 															+ dataPro[i].pro_date
 															+ '</td><td>'
-															+ dataPro[i].pro_remark
+															+ dataPro[i].pro_zpr
 															+ '</td><td>'
+															+ dataPro[i].pro_users
+															+ '</td><td>'
+															+ "<a href='callobjects.jsp?pro_id="
+															+ dataPro[i].pro_id
+															+ "&pro_name="
+															+ dataPro[i].pro_name
+															+ "' rel='tooltip' title='外呼号码'><i class='icon-book'></i> </a>&nbsp;&nbsp;"
+															+ "<a href='topics.jsp?pro_id="
+															+ dataPro[i].pro_id
+															+ "&pro_name="
+															+ dataPro[i].pro_name
+															+ "' rel='tooltip' title='题目管理'><i class='icon-file'></i> </a>&nbsp;&nbsp;"
 															+ "<a href='project_user.jsp?pro_id="
 															+ dataPro[i].pro_id
 															+ "&pro_name="
 															+ dataPro[i].pro_name
-															+ "' rel='tooltip' title='绑定工号'><i class='icon-user'></i> </a>&nbsp;&nbsp;"
+															+ "' rel='tooltip' title='绑定工号'><i class='icon-user'></i> </a>&nbsp;&nbsp;<a href='salenumbers.jsp?pro_id="
+															+ dataPro[i].pro_id
+															+ "&pro_name="
+															+ dataPro[i].pro_name
+															+ "' rel='tooltip' title='销售号码'><i class='icon-bookmark'></i> </a>&nbsp;&nbsp;"
 															+ "<a href='project.jsp?edit_type=2&pro_id="
 															+ dataPro[i].pro_id
 															+ '&pro_name='
 															+ dataPro[i].pro_name
+															+ '&pro_zpr='
+															+ dataPro[i].pro_zpr
 															+ '&pro_type='
 															+ dataPro[i].pro_type
 															+ '&pro_state='
@@ -295,7 +381,7 @@
 								$("#pro_info_tab,tr").click(
 										function() {
 											var pro_id = $(this).children(
-													"td:eq(0)").text();
+													"td:eq(1)").text();
 											if (pro_id != "") {
 												$('#del_app_id').val(pro_id);
 											}
@@ -311,6 +397,157 @@
 								+ "project/del_pro.do?id="
 								+ $('#del_app_id').val();
 					});
+		});
+
+		/* 
+		 *  方法:Array.remove(dx) 
+		 *  功能:根据元素值删除数组元素. 
+		 *  参数:元素值 
+		 *  返回:在原数组上修改数组 
+		 */
+		Array.prototype.indexOf = function(val) {
+			for ( var i = 0; i < this.length; i++) {
+				if (this[i] == val) {
+					return i;
+				}
+			}
+			return -1;
+		};
+		Array.prototype.removevalue = function(val) {
+			var index = this.indexOf(val);
+			if (index > -1) {
+				this.splice(index, 1);
+			}
+		};
+
+		proIdList = new Array();
+		function checkedFn(pro_id, obj) {
+			if (obj.checked) {
+				proIdList.push(pro_id);
+			} else {
+				proIdList.removevalue(pro_id);
+			}
+		}
+
+		$('#startpro_btn').click(function() {
+			if (proIdList.length < 1) {
+				dialog = art.dialog({
+					content : "请选择要启动的项目",
+					lock : true,
+					drag : false,
+					resize : false,
+					icon : 'succeed'
+				});
+				return;
+			}
+			$.ajax({
+				url : basePath + "project/changestatepro.do",
+				type : "post",
+				data : {
+					pro_state : '进行中',
+					pro_id_list : proIdList.join()
+				},
+				success : function(data) {
+					dialog = art.dialog({
+						content : data,
+						lock : true,
+						drag : false,
+						resize : false,
+						icon : 'succeed'
+					});
+					window.location.href = basePath + 'projects.jsp';
+				}
+			});
+		});
+		$('#pausepro_btn').click(function() {
+			if (proIdList.length < 1) {
+				dialog = art.dialog({
+					content : "请选择要暂停的项目",
+					lock : true,
+					drag : false,
+					resize : false,
+					icon : 'succeed'
+				});
+				return;
+			}
+			$.ajax({
+				url : basePath + "project/changestatepro.do",
+				type : "post",
+				data : {
+					pro_state : '暂停',
+					pro_id_list : proIdList.join()
+				},
+				success : function(data) {
+					dialog = art.dialog({
+						content : data,
+						lock : true,
+						drag : false,
+						resize : false,
+						icon : 'succeed'
+					});
+					window.location.href = basePath + 'projects.jsp';
+				}
+			});
+		});
+		$('#stoppro_btn').click(function() {
+			if (proIdList.length < 1) {
+				dialog = art.dialog({
+					content : "请选择要停止的项目",
+					lock : true,
+					drag : false,
+					resize : false,
+					icon : 'succeed'
+				});
+				return;
+			}
+			$.ajax({
+				url : basePath + "project/changestatepro.do",
+				type : "post",
+				data : {
+					pro_state : '停止',
+					pro_id_list : proIdList.join()
+				},
+				success : function(data) {
+					dialog = art.dialog({
+						content : data,
+						lock : true,
+						drag : false,
+						resize : false,
+						icon : 'succeed'
+					});
+					window.location.href = basePath + 'projects.jsp';
+				}
+			});
+		});
+		$('#cplpro_btn').click(function() {
+			if (proIdList.length < 1) {
+				dialog = art.dialog({
+					content : "请选择要完成的项目",
+					lock : true,
+					drag : false,
+					resize : false,
+					icon : 'succeed'
+				});
+				return;
+			}
+			$.ajax({
+				url : basePath + "project/changestatepro.do",
+				type : "post",
+				data : {
+					pro_state : '完成',
+					pro_id_list : proIdList.join()
+				},
+				success : function(data) {
+					dialog = art.dialog({
+						content : data,
+						lock : true,
+						drag : false,
+						resize : false,
+						icon : 'succeed'
+					});
+					window.location.href = basePath + 'projects.jsp';
+				}
+			});
 		});
 	</script>
 </body>

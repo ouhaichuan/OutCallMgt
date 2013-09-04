@@ -12,6 +12,11 @@
 		response.setContentType("text/html; charset=utf-8");
 		response.sendRedirect(basePath + "index.jsp");
 	}
+
+	String failure = (String) (request.getSession().getAttribute(
+			"failure") != null ? request.getSession().getAttribute(
+			"failure") : "");
+	request.getSession().setAttribute("failure", "");
 %>
 
 <!DOCTYPE html>
@@ -69,14 +74,14 @@
 	href="../assets/ico/apple-touch-icon-57-precomposed.png">
 </head>
 <body>
-	<input type="hidden" value="${requestScope.failure}" id='resultHid'>
+	<input type="hidden" value="<%=failure%>" id='resultHid'>
 	<div class="navbar">
 		<div class="navbar-inner">
 			<ul class="nav pull-right">
 
 			</ul>
-			<a class="brand" href="login.jsp"><span class="first">移动</span> <span class="second">外呼</span>
-			</a>
+			<a class="brand" href="login.jsp"><span class="first">重庆移动城二公司</span> <span
+				class="second">外呼管理</span> </a>
 		</div>
 	</div>
 	<div class="row-fluid">
@@ -97,9 +102,6 @@
 					<div class="clearfix"></div>
 				</div>
 			</div>
-			<p class="pull-right" style="">
-				<a href="http://www.wewin.com.cn" target="blank">&copy;品胜科技</a>
-			</p>
 		</div>
 	</div>
 

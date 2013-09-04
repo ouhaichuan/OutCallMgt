@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- namespace名字必须与Mapper接口名一致 -->
+<mapper namespace="cn.info.platform.mapper.SaleTelNumberMapper">
+	<select id="findAllNumbers" resultMap="saletelnumberMap"
+		parameterType="int">
+		select *,(select pro_name
+		from tab_project where
+		pro_id=tab_saletelnumber.pro_id)
+		pro_name,(select user_xm from tab_user
+		where
+		user_name=tab_saletelnumber.user_name) user_xm
+		from
+		tab_saletelnumber where pro_id = #{pro_id}
+	</select>
+	<select id="find_cansale_numbers" resultMap="saletelnumberMap"
+		parameterType="int">
+		select *
+		from
+		tab_saletelnumber where pro_id = #{pro_id}
+		and num_state='未售'
+	</select>
+	<insert id="add_num" parameterType="saletelnumber">
+		insert into
+		tab_saletelnumber(telnumber,num_state,sale_time,pro_id,user_name)
+		values
+		(#{telnumber},#{num_state},'',#{pro_id},'')
+	</insert>
+	<update id="save_num" parameterType="saletelnumber" flushCache="true">
+		update tab_saletelnumber
+		<set>
+			<if test="telnumber != null">
+				telnumber = #{telnumber,jdbcType=VARCHAR},
+			</if>
+			<if test="num_state != null">
+				num_state = #{num_state,jdbcType=VARCHAR},
+			</if>
+			<if test="sale_time != null">
+				sale_time = #{sale_time,jdbcType=VARCHAR},
+			</if>
+			<if test="pro_id != null">
+				pro_id = #{pro_id,jdbcType=VARCHAR},
+			</if>
+			<if test="user_name != null">
+				user_name = #{user_name,jdbcType=VARCHAR},
+			</if>
+		</set>
+		where num_id = #{num_id,jdbcType=INTEGER}
+	</update>
+	<delete id="del_num" parameterType="int">
+		delete from tab_saletelnumber
+		where
+		num_id = #{num_id}
+	</delete>
+	<insert id="import_num" parameterType="saletelnumber">
+		insert into
+		tab_saletelnumber(telnumber,num_state,sale_time,pro_id,user_name)
+		values
+		(#{telnumber},'未售','',#{pro_id},'')
+	</insert>
+	<update id="updateSaleNum" parameterType="map" flushCache="true">
+		update tab_saletelnumber
+		<set>
+			<if test="num_state != null">
+				num_state = #{num_state,jdbcType=VARCHAR},
+			</if>
+			<if test="sale_time != null">
+				sale_time = #{sale_time,jdbcType=VARCHAR},
+			</if>
+			<if test="user_name != null">
+				user_name = #{user_name,jdbcType=VARCHAR},
+			</if>
+		</set>
+		where telnumber = #{telnumber,jdbcType=INTEGER}
+	</update>
+	<delete id="delNumByProId" parameterType="int">
+		delete from
+		tab_saletelnumber
+		where
+		pro_id = #{pro_id}
+	</delete>
+</mapper>

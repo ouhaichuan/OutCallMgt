@@ -54,4 +54,26 @@ public interface CallObjectMapper extends BaseMapper<CallObject> {
 	 * @param object
 	 */
 	void commitError(CallObject object);
+
+	/**
+	 * 导入
+	 * 
+	 * @param obj
+	 */
+	void import_obj(CallObject obj);
+
+	/**
+	 * 查询所属项目的号码
+	 * 
+	 * @param map
+	 * @return
+	 */
+	List<CallObject> findCallObjectByProIdNoUser(Map<String, Object> map);
+
+	/**
+	 * 根据项目ID删除号码
+	 * 
+	 * @param pro_id
+	 */
+	void del_objByProId(int pro_id);
 }

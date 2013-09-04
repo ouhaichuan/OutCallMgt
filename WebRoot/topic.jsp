@@ -111,9 +111,14 @@
 		%>
 		<ul class="breadcrumb">
 			<li><a href="index.jsp" target="_parent">主页</a> <span
-				class="divider">/</span></li>
-			<li><a href="topics.jsp">题目管理</a> <span
-				class="divider">/</span></li>
+				class="divider">/</span>
+			</li>
+			<li><a href="projects.jsp">项目管理</a> <span class="divider">/</span>
+			</li>
+			<li><a
+				href="topics.jsp?pro_id=<%=pro_id%>&pro_name=<%=pro_name%>">题目管理</a>
+				<span class="divider">/</span>
+			</li>
 			<li class="active">编辑</li>
 		</ul>
 		<%
@@ -121,9 +126,14 @@
 		%>
 		<ul class="breadcrumb">
 			<li><a href="index.jsp" target="_parent">主页</a> <span
-				class="divider">/</span></li>
-			<li><a href="topics.jsp">题目管理</a> <span
-				class="divider">/</span></li>
+				class="divider">/</span>
+			</li>
+			<li><a href="projects.jsp">项目管理</a> <span class="divider">/</span>
+			</li>
+			<li><a
+				href="topics.jsp?pro_id=<%=pro_id%>&pro_name=<%=pro_name%>">题目管理</a>
+				<span class="divider">/</span>
+			</li>
 			<li class="active">添加</li>
 		</ul>
 		<%
@@ -155,10 +165,6 @@
 					}
 				%>
 				<div class="well">
-					<ul class="nav nav-tabs">
-						<li class="active"><a href="#home" data-toggle="tab">详细信息</a>
-						</li>
-					</ul>
 					<div id="myTabContent" class="tab-content">
 						<div class="tab-pane active in" id="home">
 							<%
@@ -167,10 +173,9 @@
 							<form id="edit_info" action="topic/save_topic.do" method="post">
 								<input type="hidden" name="topic_id" id='topic_id'
 									value="<%=topic_id%>"> <input id="pro_id" name="pro_id"
-									value="<%=pro_id%>" type="hidden" /><label>所属项目</label><select
-									name="project_select" id="project_select" style="height:30px"
-									class="span3">
-								</select><label>题目内容</label>
+									value="<%=pro_id%>" type="hidden" /><label>所属项目</label><input
+									name="pro_name" id='pro_name' value="<%=pro_name%>"
+									readonly="readonly" /><label>题目内容</label>
 								<textarea name="topic_content" id="topic_content" rows="6"
 									class="span3" style="width: 800px;"><%=topic_content%></textarea>
 								<label>项目类型</label><select name="type_select" id="type_select"
@@ -186,10 +191,10 @@
 							%>
 							<form id="add_info" action="topic/add_topic.do" method="post">
 								<input type="hidden" name="topic_id" id='topic_id' value="0">
-								<input name="pro_id" id="pro_id" type="hidden" /> <label>所属项目</label><select
-									name="project_select" id="project_select" style="height:30px"
-									class="span3">
-								</select><label>题目内容</label>
+								<input name="pro_id" id="pro_id" type="hidden"
+									value="<%=pro_id%>" /> <label>所属项目</label><input
+									name="pro_name" id='pro_name' value="<%=pro_name%>"
+									readonly="readonly" /><label>题目内容</label>
 								<textarea name="topic_content" id="topic_content" rows="6"
 									class="span3" style="width: 800px;"></textarea>
 								<label>项目类型</label><select name="type_select" id="type_select"
@@ -244,25 +249,6 @@
 		$(function() {
 			var basePath = $('#basePathIn').val();
 
-			$.post(basePath + "outcall/getProList.do", function(data) {
-				var dataPro = eval(data);
-				var html = "";
-				for ( var i = 0; i < dataPro.length; i++) {
-					html += "<option value='"+dataPro[i].pro_id+"'>"
-							+ dataPro[i].pro_name + "</option>";
-				}
-				$("#project_select").append(html);
-				var pro_id = $('#pro_id').val();
-				$("#project_select option[value='" + pro_id + "']").attr(
-						"selected", "true");
-				if ($('#pro_id').val() == "") {
-					$('#pro_id').val(dataPro[0].pro_id);
-				}
-			});
-			$("#project_select").change(function() {
-				$('#pro_id').val($("#project_select").val());
-			});
-
 			var topic_type = $('#topic_type').val();
 			$("#type_select option[value='" + topic_type + "']").attr(
 					"selected", "true");
@@ -312,7 +298,9 @@
 					function() {
 						window.location.href = basePath
 								+ "topic/del_topic.do?id="
-								+ $('#topic_id').val();
+								+ $('#topic_id').val() + "&pro_id="
+								+ $('#pro_id').val() + "&pro_name="
+								+ $('#pro_name').val();
 					});
 			$('#topic_content').focus();
 		});

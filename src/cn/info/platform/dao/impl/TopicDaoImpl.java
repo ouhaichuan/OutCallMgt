@@ -43,8 +43,27 @@ public class TopicDaoImpl extends BaseDaoImpl<Topic, TopicMapper> implements
 	public List<Topic> findAllTopic() {
 		return this.getMapper().findAllTopic();
 	}
-	
+
+	/**
+	 * 根据项目ID查询题目
+	 */
 	public List<Topic> findTopicByProId(int pro_id) {
 		return this.getMapper().findTopicByProId(pro_id);
+	}
+
+	/**
+	 * 导入
+	 * 
+	 * @param topic
+	 */
+	public void import_topic(Topic topic) {
+		this.getMapper().import_topic(topic);
+	}
+
+	/**
+	 * 清除关联的题目
+	 */
+	public void del_topicByProId(int pro_id) {
+		this.getMapper().del_topicByProId(pro_id);
 	}
 }

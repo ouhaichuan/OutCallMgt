@@ -53,6 +53,9 @@
 			<if test="user_xm != null">
 				user_xm = #{user_xm,jdbcType=VARCHAR},
 			</if>
+			<if test="user_channel != null">
+				user_channel = #{user_channel,jdbcType=VARCHAR},
+			</if>
 		</set>
 		where user_id = #{userID,jdbcType=INTEGER}
 	</update>
@@ -62,9 +65,9 @@
 	</delete>
 	<insert id="add_user" parameterType="user">
 		insert into
-		tab_user(user_name,user_pass,role_id,remark,mark,user_phone,user_xm)
+		tab_user(user_name,user_pass,role_id,remark,mark,user_phone,user_xm,user_channel)
 		values
-		(#{userName},#{passWord},#{role_id},#{remark},'0',#{user_phone},#{user_xm})
+		(#{userName},#{passWord},#{role_id},#{remark},'0',#{user_phone},#{user_xm},#{user_channel})
 	</insert>
 	<select id="validate_user" resultType="user" resultMap="userMap"
 		parameterType="String">
