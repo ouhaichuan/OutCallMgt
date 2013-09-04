@@ -113,7 +113,7 @@ body {
 	overflow: hidden;
 	height: 48px;
 	opacity: .6;
-	filter: alpha(opacity =                       60);
+	filter: alpha(opacity =                         60);
 	position: absolute;
 	right: 9px;
 	text-indent: 100%;
@@ -127,7 +127,7 @@ body {
 	overflow: hidden;
 	height: 48px;
 	opacity: .6;
-	filter: alpha(opacity =                         60);
+	filter: alpha(opacity =                           60);
 	position: absolute;
 	right: 65px;
 	text-indent: 100%;
@@ -142,7 +142,7 @@ body {
 	overflow: hidden;
 	height: 48px;
 	opacity: .6;
-	filter: alpha(opacity =                           60);
+	filter: alpha(opacity =                             60);
 	text-indent: 100%;
 	white-space: nowrap;
 	width: 48px;
@@ -150,7 +150,7 @@ body {
 
 .float-close:hover,.float-refresh:hover,.open-btn:hover {
 	opacity: 1;
-	filter: alpha(opacity =                          100);
+	filter: alpha(opacity =                            100);
 }
 
 .newslist h3 {
@@ -232,14 +232,11 @@ body {
 
 		<ul class="breadcrumb">
 			<li><a href="index.jsp" target="_parent">主页</a> <span
-				class="divider">/</span>
-			</li>
+				class="divider">/</span></li>
 			<li><a href="outcall_start.jsp" target="mainFrame">外呼</a> <span
-				class="divider">/</span>
-			</li>
+				class="divider">/</span></li>
 			<li><a href="outcall_callobject.jsp?pro_id=<%=pro_id%>"
-				target="mainFrame">号码</a> <span class="divider">/</span>
-			</li>
+				target="mainFrame">号码</a> <span class="divider">/</span></li>
 			<li class="active">答题</li>
 		</ul>
 		<div class="container-fluid">
@@ -265,7 +262,7 @@ body {
 						<div class="btn-group"></div>
 						<div class="btn-group"></div>
 						<span class="add-on">售出号码</span> <input class="span3"
-							id="saletelnum" type="text">
+							id="saletelnum" type="text" disabled="disabled">
 					</div>
 				</div>
 				<div class="well">
@@ -281,14 +278,13 @@ body {
 						<tbody>
 							<%
 								List<Topic> list = (List<Topic>)request.getAttribute("topic_list");
-										for(Topic topic:list){
+															for(Topic topic:list){
 							%>
 							<tr>
 								<td><%=topic.getTopic_id()%></td>
 								<td><%=topic.getTopic_type()%></td>
 								<td><%=topic.getTopic_content()%></td>
-								<td><textarea class='span3' rows='4'></textarea>
-								</td>
+								<td><textarea class='span3' rows='4'></textarea></td>
 							</tr>
 							<%
 								}

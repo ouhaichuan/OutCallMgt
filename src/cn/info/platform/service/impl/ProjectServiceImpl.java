@@ -73,4 +73,11 @@ public class ProjectServiceImpl extends BaseServiceImpl<Project> implements
 	public void changestatepro(Map<String, Object> map) {
 		projectDao.changestatepro(map);
 	}
+
+	/**
+	 * 统计个人数据
+	 */
+	public List<Project> staticsDataForSign(String userName) {
+		return projectDao.staticsDataForSign(userName);
+	}
 }

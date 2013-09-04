@@ -66,4 +66,11 @@ public class ProjectDaoImpl extends BaseDaoImpl<Project, ProjectMapper>
 	public void changestatepro(Map<String, Object> map) {
 		this.getMapper().changestatepro(map);
 	}
+
+	/**
+	 * 统计个人数据
+	 */
+	public List<Project> staticsDataForSign(String userName) {
+		return this.getMapper().staticsDataForSign(userName);
+	}
 }

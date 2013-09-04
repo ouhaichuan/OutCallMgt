@@ -86,7 +86,8 @@
 	<div>
 		<ul class="breadcrumb">
 			<li><a href="index.jsp" target="_parent">主页</a> <span
-				class="divider">/</span></li>
+				class="divider">/</span>
+			</li>
 			<li><a href="projects.jsp">项目管理</a> <span class="divider">/</span>
 			</li>
 			<li class="active">绑定工号</li>
@@ -208,7 +209,7 @@
 								dialog = art
 										.dialog({
 											title : '分配数量',
-											content : "数量&nbsp;&nbsp;<input name='txt_num' id='txt_num' value='' onkeyup='validateNum(this);' onafterpaste='validateNum(this);' style='width:80px;' class='span3'/>&nbsp;&nbsp;<span id='txt_sy'>剩余"
+											content : "数量&nbsp;&nbsp;<input name='txt_num' id='txt_num' value='' onkeyup='validateNum(this);' onafterpaste='validateNum(this);' style='width:80px;' class=''/>&nbsp;&nbsp;<span id='txt_sy'>剩余"
 													+ $('#object_num').val()
 													+ "</span>",
 											lock : true,

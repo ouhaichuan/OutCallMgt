@@ -13,6 +13,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import cn.info.platform.entity.Project;
+import cn.info.platform.entity.User;
 import cn.info.platform.service.CallObjectService;
 import cn.info.platform.service.ObjectUserService;
 import cn.info.platform.service.ProjectService;
@@ -67,12 +68,20 @@ public class ProjectController {
 	 *            请求的对象
 	 * @return 要跳转的页面
 	 */
-	@RequestMapping(value = "staticsData")
-	public void staticsData(HttpServletRequest request,
+	@RequestMapping(value = "staticsDataPro")
+	public void staticsDataPro(HttpServletRequest request,
 			HttpServletResponse response) {
 		response.setContentType("text/html; charset=utf-8");
 
-		List<Project> list = projectService.staticsData();
+		List<Project> list = null;
+		User user = (User) request.getSession().getAttribute("user");
+
+		if ("管理员".equals(user.getRole_name())) {
+			list = projectService.staticsData();// 全部数据
+		} else {
+			list = projectService.staticsDataForSign(user.getUserName());// 个人数据
+		}
+
 		JSONArray jsonArray = JSONArray.fromObject(list);
 		try {
 			response.getWriter().write(jsonArray.toString());
@@ -162,7 +171,7 @@ public class ProjectController {
 
 		String[] dataArray = request.getParameter("pro_id_list").split(",");
 		String pro_state = request.getParameter("pro_state");
-		
+
 		for (int i = 0; i < dataArray.length; i++) {
 			Map<String, Object> map = new HashMap<String, Object>();
 			map.put("pro_id", Integer.valueOf(dataArray[i]));

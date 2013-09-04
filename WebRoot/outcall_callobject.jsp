@@ -75,11 +75,9 @@
 	<div>
 		<ul class="breadcrumb">
 			<li><a href="index.jsp" target="_parent">主页</a> <span
-				class="divider">/</span>
-			</li>
+				class="divider">/</span></li>
 			<li><a href="outcall_start.jsp" target="mainFrame">外呼</a> <span
-				class="divider">/</span>
-			</li>
+				class="divider">/</span></li>
 			<li class="active">号码</li>
 		</ul>
 
@@ -100,8 +98,6 @@
 								<th>号码</th>
 								<th>所属项目</th>
 								<th>号码状态</th>
-								<th>外呼时间</th>
-								<th>外呼人</th>
 								<th style="width: 75px;"></th>
 							</tr>
 						</thead>
@@ -189,10 +185,6 @@
 												+ dataObject[(page - 1) * 7 + i].pro_name
 												+ '</td><td>'
 												+ dataObject[(page - 1) * 7 + i].state_name
-												+ '</td><td>'
-												+ dataObject[(page - 1) * 7 + i].out_time
-												+ '</td><td>'
-												+ dataObject[(page - 1) * 7 + i].call_user_name
 												+ '</td>';
 										if (dataObject[(page - 1) * 7 + i].state_name == '初始状态') {
 											td_str += "<td><a href='outcall/outcall.do?pro_id="
@@ -221,10 +213,7 @@
 										+ dataObject[i].object_pnumber
 										+ '</td><td>' + dataObject[i].pro_name
 										+ '</td><td>'
-										+ dataObject[i].state_name
-										+ '</td><td>' + dataObject[i].out_time
-										+ '</td><td>' + dataObject[i].call_user_name
-										+ '</td>';
+										+ dataObject[i].state_name + '</td>';
 								if (dataObject[i].state_name == '初始状态') {
 									td_str += "<td><a href='outcall/outcall.do?pro_id="
 											+ dataObject[i].pro_id

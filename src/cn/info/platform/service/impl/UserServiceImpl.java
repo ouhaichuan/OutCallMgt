@@ -83,4 +83,18 @@ public class UserServiceImpl extends BaseServiceImpl<User> implements
 	public User validate_user(String user_name) {
 		return userDao.validate_user(user_name);
 	}
+
+	/**
+	 * 按员工统计外呼情况
+	 */
+	public List<User> staticsData() {
+		return userDao.staticsData();
+	}
+
+	/**
+	 * 统计个人数据
+	 */
+	public List<User> staticsDataForSign(String userName) {
+		return userDao.staticsDataForSign(userName);
+	}
 }

@@ -122,7 +122,6 @@
 								<th>号码状态</th>
 								<th>外呼时间</th>
 								<th>外呼人</th>
-								<th>号码负责人</th>
 								<th style="width: 30px;"></th>
 							</tr>
 						</thead>
@@ -241,9 +240,6 @@
 																+ dataObject[(page - 1)
 																		* 7 + i].call_user_name
 																+ '</td><td>'
-																+ dataObject[(page - 1)
-																		* 7 + i].object_users
-																+ '</td><td>'
 																+ "<a href='callobject.jsp?edit_type=2&object_id="
 																+ dataObject[(page - 1)
 																		* 7 + i].object_id
@@ -291,8 +287,6 @@
 														+ dataObject[i].out_time
 														+ '</td><td>'
 														+ dataObject[i].call_user_name
-														+ '</td><td>'
-														+ dataObject[i].object_users
 														+ '</td><td>'
 														+ "<a href='callobject.jsp?edit_type=2&object_id="
 														+ dataObject[i].object_id

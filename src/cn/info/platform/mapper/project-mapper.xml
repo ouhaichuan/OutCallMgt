@@ -77,4 +77,17 @@
 		</set>
 		where pro_id = #{pro_id,jdbcType=INTEGER}
 	</update>
+	<select id="staticsDataForSign" resultMap="projectMap" parameterType="String">
+		SELECT *,(select count(*)
+		from tab_callobject where pro_id=t.pro_id and
+		object_state!='0')
+		calltotal,(select count(*) from tab_callobject where
+		pro_id=t.pro_id
+		and object_state='2') callcomplete,(select count(*)
+		from
+		tab_callobject where pro_id=t.pro_id and object_state not in
+		('0','2')) callnotcomplete FROM tab_project t where t.pro_id in
+		(select pro_id from tab_project_user where
+		tab_project_user.user_name=#{userName})
+	</select>
 </mapper>

@@ -73,4 +73,48 @@
 		parameterType="String">
 		select * from tab_user where user_name = #{user_name}
 	</select>
+	<select id="staticsData" resultType="user">
+		SELECT user_xm,(select
+		count(*)
+		from tab_callobject where call_user=t.user_name and
+		object_state!='0')
+		outcall_times,(select count(*) from tab_callobject
+		where call_user=t.user_name
+		and object_state='2')
+		outcall_complete,(select count(*) from
+		tab_callobject where
+		call_user=t.user_name and object_state not in
+		('0','2'))
+		outcall_notcomplete, (select ifnull(sum(out_time_length),0) from
+		tab_callobject
+		where
+		call_user=t.user_name and object_state!='0')
+		outcall_timelength
+		FROM
+		tab_user t
+	</select>
+	<select id="staticsDataForSign" resultType="user" parameterType="String">
+		SELECT user_xm,(select
+		count(*)
+		from tab_callobject where
+		call_user=t.user_name and
+		object_state!='0')
+		outcall_times,(select
+		count(*) from tab_callobject
+		where call_user=t.user_name
+		and
+		object_state='2')
+		outcall_complete,(select count(*) from
+		tab_callobject
+		where
+		call_user=t.user_name and object_state not in
+		('0','2'))
+		outcall_notcomplete, (select ifnull(sum(out_time_length),0) from
+		tab_callobject
+		where
+		call_user=t.user_name and object_state!='0')
+		outcall_timelength
+		FROM
+		tab_user t where t.user_name=#{userName}
+	</select>
 </mapper>

@@ -25,8 +25,7 @@
 		when
 		object_state='9' then '挂机'
 		else '其他状态' END
-		state_name,(select user_xm
-		from tab_user where user_name=tab_callobject.call_user) object_users,
+		state_name,
 		(select user_xm
 		from tab_user where user_name=tab_callobject.call_user)
 		call_user_name
@@ -40,7 +39,8 @@
 		object_id
 		in (select object_id
 		from
-		tab_object_user where
+		tab_object_user
+		where
 		user_name=#{user_name}) order
 		by pro_id
 	</select>
@@ -66,8 +66,7 @@
 		when
 		object_state='9' then '挂机'
 		else '其他状态' END
-		state_name,(select user_xm
-		from tab_user where user_name=tab_callobject.call_user) object_users,
+		state_name,
 		(select user_xm
 		from tab_user where user_name=tab_callobject.call_user)
 		call_user_name
@@ -77,7 +76,8 @@
 		object_mark='0' and
 		pro_id=#{pro_id}
 		order
-		by pro_id
+		by
+		pro_id
 	</select>
 	<select id="findAllCallObject" resultMap="callobjectMap">
 		select *,(select

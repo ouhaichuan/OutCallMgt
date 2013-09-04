@@ -18,6 +18,43 @@ public class User {
 	private String user_xm;
 	private String user_channel;// 通道号
 
+	private String outcall_times;// 外呼次数
+	private String outcall_complete;// 外呼完成数
+	private String outcall_notcomplete;// 外呼未完成数；
+	private String outcall_timelength;// 外乎时长
+
+	public String getOutcall_times() {
+		return outcall_times;
+	}
+
+	public void setOutcall_times(String outcall_times) {
+		this.outcall_times = outcall_times;
+	}
+
+	public String getOutcall_complete() {
+		return outcall_complete;
+	}
+
+	public void setOutcall_complete(String outcall_complete) {
+		this.outcall_complete = outcall_complete;
+	}
+
+	public String getOutcall_notcomplete() {
+		return outcall_notcomplete;
+	}
+
+	public void setOutcall_notcomplete(String outcall_notcomplete) {
+		this.outcall_notcomplete = outcall_notcomplete;
+	}
+
+	public String getOutcall_timelength() {
+		return outcall_timelength;
+	}
+
+	public void setOutcall_timelength(String outcall_timelength) {
+		this.outcall_timelength = outcall_timelength;
+	}
+
 	public String getUser_channel() {
 		return user_channel;
 	}

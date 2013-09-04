@@ -195,4 +195,32 @@ public class UserController {
 			e.printStackTrace();
 		}
 	}
+
+	/**
+	 * 根据员工统计外呼情况
+	 * 
+	 * @param request
+	 *            请求的对象
+	 * @return 要跳转的页面
+	 */
+	@RequestMapping(value = "staticsDataUser")
+	public void staticsDataPro(HttpServletRequest request,
+			HttpServletResponse response) {
+		response.setContentType("text/html; charset=utf-8");
+
+		List<User> list = null;
+		User user = (User) request.getSession().getAttribute("user");
+
+		if ("管理员".equals(user.getRole_name())) {
+			list = userService.staticsData();// 全部数据
+		} else {
+			list = userService.staticsDataForSign(user.getUserName());// 个人数据
+		}
+		JSONArray jsonArray = JSONArray.fromObject(list);
+		try {
+			response.getWriter().write(jsonArray.toString());
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
 }

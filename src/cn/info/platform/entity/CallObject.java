@@ -21,7 +21,6 @@ public class CallObject {
 	private String out_time_length;
 	private String call_user;// 外呼人
 	private String call_user_name;// 外呼人姓名
-	private String object_users;// 号码负责人
 
 	public String getCall_user() {
 		return call_user;
@@ -125,14 +124,6 @@ public class CallObject {
 
 	public void setOut_time(String out_time) {
 		this.out_time = out_time;
-	}
-
-	public String getObject_users() {
-		return object_users;
-	}
-
-	public void setObject_users(String object_users) {
-		this.object_users = object_users;
 	}
 
 	public String getCall_user_name() {

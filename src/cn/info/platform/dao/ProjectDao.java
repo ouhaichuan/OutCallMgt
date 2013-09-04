@@ -62,4 +62,12 @@ public interface ProjectDao extends BaseDao<Project, ProjectMapper> {
 	 * @param map
 	 */
 	void changestatepro(Map<String, Object> map);
+
+	/**
+	 * 统计个人数据
+	 * 
+	 * @param userName
+	 * @return
+	 */
+	List<Project> staticsDataForSign(String userName);
 }

@@ -60,4 +60,12 @@ public interface ProjectService extends BaseService<Project> {
 	 * @param map
 	 */
 	void changestatepro(Map<String, Object> map);
+
+	/**
+	 * 统计个人数据
+	 * 
+	 * @param userName
+	 * @return
+	 */
+	List<Project> staticsDataForSign(String userName);
 }

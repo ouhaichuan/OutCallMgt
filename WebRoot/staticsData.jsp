@@ -75,141 +75,270 @@
 				class="divider">/</span></li>
 			<li class="active">统计</li>
 		</ul>
-
 		<div class="container-fluid">
 			<div class="row-fluid">
 				<div class="well">
-					<table class="table table-striped" id='pro_info_tab'>
-						<thead>
-							<tr>
-								<th>项目名称</th>
-								<th>项目类型</th>
-								<th>外呼总量</th>
-								<th>完成量</th>
-								<th>未完成量</th>
-								<th style="width:12px;"></th>
-							</tr>
-						</thead>
-						<tbody id="list-content">
-						</tbody>
-					</table>
+					<ul class="nav nav-tabs">
+						<li class="active"><a href="#home" data-toggle="tab">项目数据</a>
+						</li>
+						<li><a href="#profile" data-toggle="tab">员工数据</a></li>
+					</ul>
+					<div id="myTabContent" class="tab-content">
+						<div class="tab-pane active in" id="home">
+							<form id="tab">
+								<table class="table table-striped" id='pro_info_tab'>
+									<thead>
+										<tr>
+											<th>项目名称</th>
+											<th>项目类型</th>
+											<th>外呼总量</th>
+											<th>完成量</th>
+											<th>未完成量</th>
+										</tr>
+									</thead>
+									<tbody id="list-content">
+									</tbody>
+								</table>
+							</form>
+							<div id="myPaginator"></div>
+						</div>
+						<div class="tab-pane fade" id="profile">
+							<form id="tab2">
+								<table class="table table-striped" id='pro_info_tab_person'>
+									<thead>
+										<tr>
+											<th>员工姓名</th>
+											<th>外呼次数</th>
+											<th>外呼完成数</th>
+											<th>外呼未完成数</th>
+											<th>外呼时长（秒）</th>
+										</tr>
+									</thead>
+									<tbody id="list-content2">
+									</tbody>
+								</table>
+							</form>
+							<div id="myPaginator2"></div>
+						</div>
+					</div>
 				</div>
-				<div id="myPaginator"></div>
 			</div>
 		</div>
-	</div>
-	<script src="lib/bootstrap/js/bootstrap.js"></script>
-	<script type="text/javascript">
-		$("[rel=tooltip]").tooltip();
-		$(function() {
-			var basePath = $('#basePathIn').val();
+		<script src="lib/bootstrap/js/bootstrap.js"></script>
+		<script type="text/javascript">
+			$("[rel=tooltip]").tooltip();
+			$(function() {
+				var basePath = $('#basePathIn').val();
 
-			$
-					.post(
-							basePath + "project/staticsData.do",
-							function(data) {
-								var dataPro = eval(data);
-								totolP = parseInt(dataPro.length % 5 == 0 ? dataPro.length / 5
-										: dataPro.length / 5 + 1);
-								numP = dataPro.length / 5 < 1 ? dataPro.length % 5
-										: 5;
-								var options = {
-									currentPage : 1,
-									totalPages : totolP,
-									numberOfPages : numP,
-									itemTexts : function(type, page, current) {
-										switch (type) {
-										case "first":
-											return "首页";
-										case "prev":
-											return "上一页";
-										case "next":
-											return "下一页";
-										case "last":
-											return "尾页";
-										case "page":
-											return page;
+				$
+						.post(
+								basePath + "project/staticsDataPro.do",
+								function(data) {
+									var dataPro = eval(data);
+									totolP = parseInt(dataPro.length % 8 == 0 ? dataPro.length / 8
+											: dataPro.length / 8 + 1);
+									numP = dataPro.length / 8 < 1 ? dataPro.length % 8
+											: 8;
+									var options = {
+										currentPage : 1,
+										totalPages : totolP,
+										numberOfPages : numP,
+										itemTexts : function(type, page,
+												current) {
+											switch (type) {
+											case "first":
+												return "首页";
+											case "prev":
+												return "上一页";
+											case "next":
+												return "下一页";
+											case "last":
+												return "尾页";
+											case "page":
+												return page;
+											}
+										},
+										onPageClicked : function(event,
+												originalEvent, type, page) {
+											size = 8;
+											if (type == 'first'
+													&& dataPro.length < 8) {
+												size = dataPro.length;
+											} else if (type == 'next'
+													&& page == totolP
+													&& dataPro.length % 8 != 0) {
+												size = dataPro.length % 8;
+											} else if (type == 'next'
+													&& page == totolP
+													&& dataPro.length % 8 == 0) {
+												size = 8;
+											} else if (page == totolP
+													&& dataPro.length % 8 != 0) {
+												size = dataPro.length % 8;
+											} else if (page == totolP
+													&& dataPro.length % 8 == 0) {
+												size = 8;
+											} else if (type == 'last'
+													&& dataPro.length % 8 != 0) {
+												size = dataPro.length % 8;
+											} else if (type == 'last'
+													&& dataPro.length % 8 == 0) {
+												size = 8;
+											}
+											$('#list-content').html('');
+											for ( var i = 0; i < size; i++) {
+												$('#list-content')
+														.append(
+																'<tr><td>'
+																		+ dataPro[(page - 1)
+																				* 8
+																				+ i].pro_name
+																		+ '</td><td>'
+																		+ dataPro[(page - 1)
+																				* 8
+																				+ i].pro_type
+																		+ '</td><td>'
+																		+ dataPro[(page - 1)
+																				* 8
+																				+ i].calltotal
+																		+ '</td><td>'
+																		+ dataPro[(page - 1)
+																				* 8
+																				+ i].callcomplete
+																		+ '</td><td>'
+																		+ dataPro[(page - 1)
+																				* 8
+																				+ i].callnotcomplete
+																		+ '</td></tr>');
+											}
 										}
-									},
-									onPageClicked : function(event,
-											originalEvent, type, page) {
-										size = 5;
-										if (type == 'first'
-												&& dataPro.length < 5) {
-											size = dataPro.length;
-										} else if (type == 'next'
-												&& page == totolP
-												&& dataPro.length % 5 != 0) {
-											size = dataPro.length % 5;
-										} else if (type == 'next'
-												&& page == totolP
-												&& dataPro.length % 5 == 0) {
-											size = 5;
-										} else if (page == totolP
-												&& dataPro.length % 5 != 0) {
-											size = dataPro.length % 5;
-										} else if (page == totolP
-												&& dataPro.length % 5 == 0) {
-											size = 5;
-										} else if (type == 'last'
-												&& dataPro.length % 5 != 0) {
-											size = dataPro.length % 5;
-										} else if (type == 'last'
-												&& dataPro.length % 5 == 0) {
-											size = 5;
-										}
-										$('#list-content').html('');
-										for ( var i = 0; i < size; i++) {
-											$('#list-content')
-													.append(
-															'<tr><td>'
-																	+ dataPro[(page - 1)
-																			* 5
-																			+ i].pro_name
-																	+ '</td><td>'
-																	+ dataPro[(page - 1)
-																			* 5
-																			+ i].pro_type
-																	+ '</td><td>'
-																	+ dataPro[(page - 1)
-																			* 5
-																			+ i].calltotal
-																	+ '</td><td>'
-																	+ dataPro[(page - 1)
-																			* 5
-																			+ i].callcomplete
-																	+ '</td><td>'
-																	+ dataPro[(page - 1)
-																			* 5
-																			+ i].callnotcomplete
-																	+ '</td><td>'
-																	+ "<a href='#' target='_parent' rel='tooltip' title='详细情况'><i class='icon-list-alt'></i></a>"
-																	+ "</td></tr>");
-										}
+									};
+									bsize = dataPro.length < 8 ? dataPro.length
+											: 8;
+									$('#list-content').html('');
+									for ( var i = 0; i < bsize; i++) {
+										$('#list-content')
+												.append(
+														'<tr><td>'
+																+ dataPro[i].pro_name
+																+ '</td><td>'
+																+ dataPro[i].pro_type
+																+ '</td><td>'
+																+ dataPro[i].calltotal
+																+ '</td><td>'
+																+ dataPro[i].callcomplete
+																+ '</td><td>'
+																+ dataPro[i].callnotcomplete
+																+ '</td></tr>');
 									}
-								};
-								bsize = dataPro.length < 5 ? dataPro.length : 5;
-								$('#list-content').html('');
-								for ( var i = 0; i < bsize; i++) {
-									$('#list-content')
-											.append(
-													'<tr><td>'
-															+ dataPro[i].pro_name
-															+ '</td><td>'
-															+ dataPro[i].pro_type
-															+ '</td><td>'
-															+ dataPro[i].calltotal
-															+ '</td><td>'
-															+ dataPro[i].callcomplete
-															+ '</td><td>'
-															+ dataPro[i].callnotcomplete
-															+ '</td><td>'
-															+ "<a href='#' target='_parent' rel='tooltip' title='详细情况'><i class='icon-list-alt'></i></a>"
-															+ "</td></tr>");
-								}
-								$('#myPaginator').bootstrapPaginator(options);
-							});
-		});
-	</script>
+									$('#myPaginator').bootstrapPaginator(
+											options);
+								});
+				$
+						.post(
+								basePath + "user/staticsDataUser.do",
+								function(data) {
+									var dataUser = eval(data);
+									totolP = parseInt(dataUser.length % 8 == 0 ? dataUser.length / 8
+											: dataUser.length / 8 + 1);
+									numP = dataUser.length / 8 < 1 ? dataUser.length % 8
+											: 8;
+									var options = {
+										currentPage : 1,
+										totalPages : totolP,
+										numberOfPages : numP,
+										itemTexts : function(type, page,
+												current) {
+											switch (type) {
+											case "first":
+												return "首页";
+											case "prev":
+												return "上一页";
+											case "next":
+												return "下一页";
+											case "last":
+												return "尾页";
+											case "page":
+												return page;
+											}
+										},
+										onPageClicked : function(event,
+												originalEvent, type, page) {
+											size = 8;
+											if (type == 'first'
+													&& dataUser.length < 8) {
+												size = dataUser.length;
+											} else if (type == 'next'
+													&& page == totolP
+													&& dataUser.length % 8 != 0) {
+												size = dataUser.length % 8;
+											} else if (type == 'next'
+													&& page == totolP
+													&& dataUser.length % 8 == 0) {
+												size = 8;
+											} else if (page == totolP
+													&& dataUser.length % 8 != 0) {
+												size = dataUser.length % 8;
+											} else if (page == totolP
+													&& dataUser.length % 8 == 0) {
+												size = 8;
+											} else if (type == 'last'
+													&& dataUser.length % 8 != 0) {
+												size = dataUser.length % 8;
+											} else if (type == 'last'
+													&& dataUser.length % 8 == 0) {
+												size = 8;
+											}
+											$('#list-content2').html('');
+											for ( var i = 0; i < size; i++) {
+												$('#list-content2')
+														.append(
+																'<tr><td>'
+																		+ dataUser[(page - 1)
+																				* 8
+																				+ i].user_xm
+																		+ '</td><td>'
+																		+ dataUser[(page - 1)
+																				* 8
+																				+ i].outcall_times
+																		+ '</td><td>'
+																		+ dataUser[(page - 1)
+																				* 8
+																				+ i].outcall_complete
+																		+ '</td><td>'
+																		+ dataUser[(page - 1)
+																				* 8
+																				+ i].outcall_notcomplete
+																		+ '</td><td>'
+																		+ dataUser[(page - 1)
+																				* 8
+																				+ i].outcall_timelength
+																		+ '</td></tr>');
+											}
+										}
+									};
+									bsize = dataUser.length < 8 ? dataUser.length
+											: 8;
+									$('#list-content2').html('');
+									for ( var i = 0; i < bsize; i++) {
+										$('#list-content2')
+												.append(
+														'<tr><td>'
+																+ dataUser[i].user_xm
+																+ '</td><td>'
+																+ dataUser[i].outcall_times
+																+ '</td><td>'
+																+ dataUser[i].outcall_complete
+																+ '</td><td>'
+																+ dataUser[i].outcall_notcomplete
+																+ '</td><td>'
+																+ dataUser[i].outcall_timelength
+																+ '</td></tr>');
+									}
+									$('#myPaginator2').bootstrapPaginator(
+											options);
+								});
+			});
+		</script>
 </body>
 </html>

@@ -60,4 +60,19 @@ public interface UserService extends BaseService<User> {
 	 * @return 返回用户对象
 	 */
 	User validate_user(String user_name);
+
+	/**
+	 * 按员工统计外呼情况
+	 * 
+	 * @return
+	 */
+	List<User> staticsData();
+
+	/**
+	 * 统计个人数据
+	 * 
+	 * @param userName
+	 * @return
+	 */
+	List<User> staticsDataForSign(String userName);
 }
