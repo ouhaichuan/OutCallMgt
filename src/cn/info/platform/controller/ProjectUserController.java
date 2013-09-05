@@ -79,8 +79,9 @@ public class ProjectUserController {
 			map2.put("object_num", Integer.valueOf(infos[i + 1]));
 			objectUserService.add_user(map2);// 重新绑定
 		}
+		int num = projectUserService.findObjectNumByProId(pro_id);// 重新查询数量
 		try {
-			response.getWriter().write("绑定成功");
+			response.getWriter().write(num + "");
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

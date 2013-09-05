@@ -50,7 +50,64 @@ public class CallObjectController {
 
 		List<CallObject> list = callObjectService
 				.findCallObjectByProIdNoUser(map);
+		JSONArray jsonArray = JSONArray.fromObject(list);
+		try {
+			response.getWriter().write(jsonArray.toString());
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
+	/**
+	 * 查找根据项目和状态对象
+	 * 
+	 * @param request
+	 *            请求的对象
+	 * @return 要跳转的页面
+	 */
+	@RequestMapping(value = "findCallObjectByProIdAndState")
+	public void findCallObjectByProIdAndState(HttpServletRequest request,
+			HttpServletResponse response) {
 		response.setContentType("text/html; charset=utf-8");
+
+		int pro_id = Integer.valueOf(request.getParameter("pro_id"));
+		int state = Integer.valueOf(request.getParameter("state"));
+
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("pro_id", pro_id);
+		map.put("state", state);
+
+		List<CallObject> list = callObjectService
+				.findCallObjectByProIdAndState(map);// 根据状态和项目查询号码
+		JSONArray jsonArray = JSONArray.fromObject(list);
+		try {
+			response.getWriter().write(jsonArray.toString());
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
+	/**
+	 * 根据项目和用户查询对象
+	 * 
+	 * @param request
+	 *            请求的对象
+	 * @return 要跳转的页面
+	 */
+	@RequestMapping(value = "findCallObjectByUserAndState")
+	public void findCallObjectByUserAndState(HttpServletRequest request,
+			HttpServletResponse response) {
+		response.setContentType("text/html; charset=utf-8");
+
+		String user_name = request.getParameter("user_name");
+		int state = Integer.valueOf(request.getParameter("state"));
+
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("user_name", user_name);
+		map.put("state", state);
+
+		List<CallObject> list = callObjectService
+				.findCallObjectByUserAndState(map);// 根据状态和用户查询号码
 		JSONArray jsonArray = JSONArray.fromObject(list);
 		try {
 			response.getWriter().write(jsonArray.toString());
@@ -136,7 +193,7 @@ public class CallObjectController {
 		map.put("pro_id", pro_id);
 		int counts = objectUserService.getCountsByUserName(map);// 得到删除后的绑定号码数量
 		map.put("object_num", counts);
-		
+
 		// 跟新项目用户绑定表
 		if (counts == 0) {
 			projectUserService.delBindByMap(map);// 根据用户名和项目号删除绑定记录

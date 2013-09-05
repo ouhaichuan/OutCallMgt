@@ -68,4 +68,20 @@ public interface CallObjectDao extends BaseDao<CallObject, CallObjectMapper> {
 	 * @param pro_id
 	 */
 	void del_objByProId(int pro_id);
+
+	/**
+	 * 根据状态查询号码
+	 * 
+	 * @param map
+	 * @return
+	 */
+	List<CallObject> findCallObjectByProIdAndState(Map<String, Object> map);
+
+	/**
+	 * 根据状态和用户查询号码
+	 * 
+	 * @param map
+	 * @return
+	 */
+	List<CallObject> findCallObjectByUserAndState(Map<String, Object> map);
 }

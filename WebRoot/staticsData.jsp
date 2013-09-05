@@ -108,7 +108,7 @@
 									<thead>
 										<tr>
 											<th>员工姓名</th>
-											<th>外呼次数</th>
+											<th>外呼总次数</th>
 											<th>外呼完成数</th>
 											<th>外呼未完成数</th>
 											<th>外呼时长（秒）</th>
@@ -197,19 +197,31 @@
 																		+ dataPro[(page - 1)
 																				* 8
 																				+ i].pro_type
-																		+ '</td><td>'
+																		+ "</td><td><a href='statics4object.jsp?state=1&pro_id="
+																		+ dataPro[i].pro_id
+																		+ "&pro_name="
+																		+ dataPro[i].pro_name
+																		+ "'>"
 																		+ dataPro[(page - 1)
 																				* 8
 																				+ i].calltotal
-																		+ '</td><td>'
+																		+ "</a></td><td><a href='statics4object.jsp?state=2&pro_id="
+																		+ dataPro[i].pro_id
+																		+ "&pro_name="
+																		+ dataPro[i].pro_name
+																		+ "'>"
 																		+ dataPro[(page - 1)
 																				* 8
 																				+ i].callcomplete
-																		+ '</td><td>'
+																		+ "</a></td><td><a href='statics4object.jsp?state=3&pro_id="
+																		+ dataPro[i].pro_id
+																		+ "&pro_name="
+																		+ dataPro[i].pro_name
+																		+ "'>"
 																		+ dataPro[(page - 1)
 																				* 8
 																				+ i].callnotcomplete
-																		+ '</td></tr>');
+																		+ '</a></td></tr>');
 											}
 										}
 									};
@@ -223,13 +235,25 @@
 																+ dataPro[i].pro_name
 																+ '</td><td>'
 																+ dataPro[i].pro_type
-																+ '</td><td>'
+																+ "</td><td><a href='statics4object.jsp?state=1&pro_id="
+																+ dataPro[i].pro_id
+																+ "&pro_name="
+																+ dataPro[i].pro_name
+																+ "'>"
 																+ dataPro[i].calltotal
-																+ '</td><td>'
+																+ "</a></td><td><a href='statics4object.jsp?state=2&pro_id="
+																+ dataPro[i].pro_id
+																+ "&pro_name="
+																+ dataPro[i].pro_name
+																+ "'>"
 																+ dataPro[i].callcomplete
-																+ '</td><td>'
+																+ "</a></td><td><a href='statics4object.jsp?state=3&pro_id="
+																+ dataPro[i].pro_id
+																+ "&pro_name="
+																+ dataPro[i].pro_name
+																+ "'>"
 																+ dataPro[i].callnotcomplete
-																+ '</td></tr>');
+																+ '</a></td></tr>');
 									}
 									$('#myPaginator').bootstrapPaginator(
 											options);
@@ -297,19 +321,31 @@
 																		+ dataUser[(page - 1)
 																				* 8
 																				+ i].user_xm
-																		+ '</td><td>'
+																		+ "</td><td><a href='statics4userdetail.jsp?state=1&user_name="
+																		+ dataUser[(page - 1)
+																				* 8
+																				+ i].userName
+																		+ "'>"
 																		+ dataUser[(page - 1)
 																				* 8
 																				+ i].outcall_times
-																		+ '</td><td>'
+																		+ "</a></td><td><a href='statics4userdetail.jsp?state=2&user_name="
+																		+ dataUser[(page - 1)
+																				* 8
+																				+ i].userName
+																		+ "'>"
 																		+ dataUser[(page - 1)
 																				* 8
 																				+ i].outcall_complete
-																		+ '</td><td>'
+																		+ "</a></td><td><a href='statics4userdetail.jsp?state=3&user_name="
+																		+ dataUser[(page - 1)
+																				* 8
+																				+ i].userName
+																		+ "'>"
 																		+ dataUser[(page - 1)
 																				* 8
 																				+ i].outcall_notcomplete
-																		+ '</td><td>'
+																		+ '</a></td><td>'
 																		+ dataUser[(page - 1)
 																				* 8
 																				+ i].outcall_timelength
@@ -325,13 +361,19 @@
 												.append(
 														'<tr><td>'
 																+ dataUser[i].user_xm
-																+ '</td><td>'
+																+ "</td><td><a href='statics4userdetail.jsp?state=1&user_name="
+																+ dataUser[i].userName
+																+ "'>"
 																+ dataUser[i].outcall_times
-																+ '</td><td>'
+																+ "</a></td><td><a href='statics4userdetail.jsp?state=2&user_name="
+																+ dataUser[i].userName
+																+ "'>"
 																+ dataUser[i].outcall_complete
-																+ '</td><td>'
+																+ "</a></td><td><a href='statics4userdetail.jsp?state=3&user_name="
+																+ dataUser[i].userName
+																+ "'>"
 																+ dataUser[i].outcall_notcomplete
-																+ '</td><td>'
+																+ '</a></td><td>'
 																+ dataUser[i].outcall_timelength
 																+ '</td></tr>');
 									}

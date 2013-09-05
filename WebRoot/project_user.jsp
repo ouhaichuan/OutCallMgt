@@ -86,8 +86,7 @@
 	<div>
 		<ul class="breadcrumb">
 			<li><a href="index.jsp" target="_parent">主页</a> <span
-				class="divider">/</span>
-			</li>
+				class="divider">/</span></li>
 			<li><a href="projects.jsp">项目管理</a> <span class="divider">/</span>
 			</li>
 			<li class="active">绑定工号</li>
@@ -110,7 +109,7 @@
 								<input type="hidden" name="pro_id" id='pro_id'
 									value="<%=pro_id%>"> <label>项目名称</label> <input
 									name="pro_name" id="pro_name" value="<%=pro_name%>"
-									class="span3" readonly="readonly" /> <label>号码数量</label> <input
+									class="span3" readonly="readonly" /> <label>号码余量</label> <input
 									name="object_num" id="object_num" value="<%=object_num%>"
 									class="span3" readonly="readonly" /> <label>员工</label>
 								<div style="float: left;">
@@ -298,8 +297,9 @@
 							user_infos : user_infos.toString()
 						},
 						success : function(data) {
+							$('#object_num').val(data);
 							dialog = art.dialog({
-								content : data,
+								content : '绑定完成',
 								lock : true,
 								drag : false,
 								resize : false,

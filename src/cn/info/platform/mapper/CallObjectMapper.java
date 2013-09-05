@@ -76,4 +76,52 @@ public interface CallObjectMapper extends BaseMapper<CallObject> {
 	 * @param pro_id
 	 */
 	void del_objByProId(int pro_id);
+
+	/**
+	 * 查询外呼总量
+	 * 
+	 * @param integer
+	 * @return
+	 */
+	List<CallObject> findCallObjectByProIdTotal(Integer integer);
+
+	/**
+	 * 查询外呼完成
+	 * 
+	 * @param integer
+	 * @return
+	 */
+	List<CallObject> findCallObjectByProIdComplete(Integer integer);
+
+	/**
+	 * 查询外呼未完成
+	 * 
+	 * @param integer
+	 * @return
+	 */
+	List<CallObject> findCallObjectByProIdNotComplete(Integer integer);
+
+	/**
+	 * 查询外呼总量根据用户
+	 * 
+	 * @param integer
+	 * @return
+	 */
+	List<CallObject> findCallObjectByUserTotal(String user_name);
+
+	/**
+	 * 查询外呼完成量根据用户
+	 * 
+	 * @param integer
+	 * @return
+	 */
+	List<CallObject> findCallObjectByUserComplete(String user_name);
+
+	/**
+	 * 查询外呼未完成量根据用户
+	 * 
+	 * @param integer
+	 * @return
+	 */
+	List<CallObject> findCallObjectByUserNotComplete(String user_name);
 }

@@ -75,4 +75,19 @@ public class CallObjectServiceImpl extends BaseServiceImpl<CallObject>
 	public void del_objByProId(int pro_id) {
 		callObjectDao.del_objByProId(pro_id);
 	}
+
+	/**
+	 * 根据状态和项目查询号码
+	 */
+	public List<CallObject> findCallObjectByProIdAndState(
+			Map<String, Object> map) {
+		return callObjectDao.findCallObjectByProIdAndState(map);
+	}
+
+	/**
+	 * 根据状态和用户查询号码
+	 */
+	public List<CallObject> findCallObjectByUserAndState(Map<String, Object> map) {
+		return callObjectDao.findCallObjectByUserAndState(map);
+	}
 }

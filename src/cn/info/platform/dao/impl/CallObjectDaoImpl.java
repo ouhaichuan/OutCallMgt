@@ -73,4 +73,43 @@ public class CallObjectDaoImpl extends
 	public void del_objByProId(int pro_id) {
 		this.getMapper().del_objByProId(pro_id);
 	}
+
+	/**
+	 * 根据状态和项目查询号码
+	 */
+	public List<CallObject> findCallObjectByProIdAndState(
+			Map<String, Object> map) {
+		int state = (Integer) map.get("state");
+		List<CallObject> list = null;
+		if (state == 1) {// 外呼总量
+			list = this.getMapper().findCallObjectByProIdTotal(
+					(Integer) map.get("pro_id"));
+		} else if (state == 2) {// 完成
+			list = this.getMapper().findCallObjectByProIdComplete(
+					(Integer) map.get("pro_id"));
+		} else if (state == 3) {// 未完成
+			list = this.getMapper().findCallObjectByProIdNotComplete(
+					(Integer) map.get("pro_id"));
+		}
+		return list;
+	}
+
+	/**
+	 * 根据状态和用户查询号码
+	 */
+	public List<CallObject> findCallObjectByUserAndState(Map<String, Object> map) {
+		int state = (Integer) map.get("state");
+		List<CallObject> list = null;
+		if (state == 1) {// 外呼总量
+			list = this.getMapper().findCallObjectByUserTotal(
+					(String) map.get("user_name"));
+		} else if (state == 2) {// 完成
+			list = this.getMapper().findCallObjectByUserComplete(
+					(String) map.get("user_name"));
+		} else if (state == 3) {// 未完成
+			list = this.getMapper().findCallObjectByUserNotComplete(
+					(String) map.get("user_name"));
+		}
+		return list;
+	}
 }

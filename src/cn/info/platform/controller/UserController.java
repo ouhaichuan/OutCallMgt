@@ -204,7 +204,7 @@ public class UserController {
 	 * @return 要跳转的页面
 	 */
 	@RequestMapping(value = "staticsDataUser")
-	public void staticsDataPro(HttpServletRequest request,
+	public void staticsDataUser(HttpServletRequest request,
 			HttpServletResponse response) {
 		response.setContentType("text/html; charset=utf-8");
 

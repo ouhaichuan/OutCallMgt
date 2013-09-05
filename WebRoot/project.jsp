@@ -117,8 +117,7 @@
 		%>
 		<ul class="breadcrumb">
 			<li><a href="index.jsp" target="_parent">主页</a> <span
-				class="divider">/</span>
-			</li>
+				class="divider">/</span></li>
 			<li><a href="projects.jsp">项目管理</a> <span class="divider">/</span>
 			</li>
 			<li class="active">编辑</li>
@@ -128,8 +127,7 @@
 		%>
 		<ul class="breadcrumb">
 			<li><a href="index.jsp" target="_parent">主页</a> <span
-				class="divider">/</span>
-			</li>
+				class="divider">/</span></li>
 			<li><a href="projects.jsp">项目管理</a> <span class="divider">/</span>
 			</li>
 			<li class="active">添加</li>
@@ -254,7 +252,7 @@
 			var flag = 0;
 			if ($('#pro_name').val() == "" || $('#pro_type').val() == ""
 					|| $('#pro_state').val() == ""
-					|| $('#pro_date').val() == "") {
+					|| $('#pro_date').val() == "" || $('#pro_zpr').val() == "") {
 				flag = 1;
 			} else if ($("#state_select").val() != '初始化'
 					&& new Date(Date.parse($("#pro_date").val())) > new Date()) {

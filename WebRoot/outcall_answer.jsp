@@ -113,7 +113,7 @@ body {
 	overflow: hidden;
 	height: 48px;
 	opacity: .6;
-	filter: alpha(opacity =                         60);
+	filter: alpha(opacity =                             60);
 	position: absolute;
 	right: 9px;
 	text-indent: 100%;
@@ -127,7 +127,7 @@ body {
 	overflow: hidden;
 	height: 48px;
 	opacity: .6;
-	filter: alpha(opacity =                           60);
+	filter: alpha(opacity =                               60);
 	position: absolute;
 	right: 65px;
 	text-indent: 100%;
@@ -142,7 +142,7 @@ body {
 	overflow: hidden;
 	height: 48px;
 	opacity: .6;
-	filter: alpha(opacity =                             60);
+	filter: alpha(opacity =                                 60);
 	text-indent: 100%;
 	white-space: nowrap;
 	width: 48px;
@@ -150,7 +150,7 @@ body {
 
 .float-close:hover,.float-refresh:hover,.open-btn:hover {
 	opacity: 1;
-	filter: alpha(opacity =                            100);
+	filter: alpha(opacity =                                100);
 }
 
 .newslist h3 {
@@ -214,8 +214,8 @@ body {
 		<a class="float-close" href="javascript:void(0);">X</a> <a
 			class="float-refresh" href="javascript:void(0);">R</a>
 		<div class="newslist">
-			<h3>号码列表</h3>
-			<ul id='listUl' style="overflow-y:scroll; height: 300px;">
+			<h3>号码列表，<span id='titleNum'></span></h3>
+			<ul id='listUl' style="overflow-y:scroll; height: 275px;">
 			</ul>
 		</div>
 	</div>
@@ -278,7 +278,7 @@ body {
 						<tbody>
 							<%
 								List<Topic> list = (List<Topic>)request.getAttribute("topic_list");
-															for(Topic topic:list){
+																	for(Topic topic:list){
 							%>
 							<tr>
 								<td><%=topic.getTopic_id()%></td>
@@ -384,6 +384,7 @@ body {
 					},
 					success : function(data) {
 						var dataNums = eval(data);
+						$('#titleNum').text('数量：' + dataNums.length);
 						for ( var i = 0; i < dataNums.length; i++) {
 							$('#listUl').append(
 									"<li><a href='javascript:void(0);' onclick='selectToBoard("
@@ -418,6 +419,7 @@ body {
 				},
 				success : function(data) {
 					var dataNums = eval(data);
+					$('#titleNum').text('数量：' + dataNums.length);
 					for ( var i = 0; i < dataNums.length; i++) {
 						$('#listUl').append(
 								"<li><a href='javascript:void(0);' onclick='selectToBoard("

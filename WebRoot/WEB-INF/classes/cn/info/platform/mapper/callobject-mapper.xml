@@ -182,4 +182,220 @@
 		</set>
 		where object_id = #{object_id,jdbcType=INTEGER}
 	</update>
+	<select id="findCallObjectByProIdTotal" resultMap="callobjectMap"
+		parameterType="int">
+		select *,(select pro_name from tab_project where
+		pro_id=tab_callobject.pro_id) pro_name,
+		case
+		when
+		object_state='0' then
+		'初始状态'
+		when object_state='1'
+		then '外呼中'
+		when object_state='2' then '外呼成功'
+		when object_state='3' then '关机'
+		when object_state='4' then '停机'
+		when
+		object_state='5' then '空号'
+		when object_state='6' then '无人接听'
+		when
+		object_state='7' then '中途续约'
+		when object_state='8' then '中途挂机'
+		when
+		object_state='9' then '挂机'
+		else '其他状态' END
+		state_name,
+		(select user_xm
+		from tab_user where user_name=tab_callobject.call_user)
+		call_user_name
+		from
+		tab_callobject
+		where
+		object_mark='0' and
+		pro_id=#{pro_id} and
+		object_state not in ('0','1')
+		order
+		by
+		pro_id
+	</select>
+	<select id="findCallObjectByProIdComplete" resultMap="callobjectMap"
+		parameterType="int">
+		select *,(select pro_name from tab_project where
+		pro_id=tab_callobject.pro_id) pro_name,
+		case
+		when
+		object_state='0' then
+		'初始状态'
+		when object_state='1'
+		then '外呼中'
+		when object_state='2' then '外呼成功'
+		when object_state='3' then '关机'
+		when object_state='4' then '停机'
+		when
+		object_state='5' then '空号'
+		when object_state='6' then '无人接听'
+		when
+		object_state='7' then '中途续约'
+		when object_state='8' then '中途挂机'
+		when
+		object_state='9' then '挂机'
+		else '其他状态' END
+		state_name,
+		(select user_xm
+		from tab_user where user_name=tab_callobject.call_user)
+		call_user_name
+		from
+		tab_callobject
+		where
+		object_mark='0' and
+		pro_id=#{pro_id} and
+		object_state = '2'
+		order
+		by
+		pro_id
+	</select>
+	<select id="findCallObjectByProIdNotComplete" resultMap="callobjectMap"
+		parameterType="int">
+		select *,(select pro_name from tab_project where
+		pro_id=tab_callobject.pro_id) pro_name,
+		case
+		when
+		object_state='0' then
+		'初始状态'
+		when object_state='1'
+		then '外呼中'
+		when object_state='2' then '外呼成功'
+		when object_state='3' then '关机'
+		when object_state='4' then '停机'
+		when
+		object_state='5' then '空号'
+		when object_state='6' then '无人接听'
+		when
+		object_state='7' then '中途续约'
+		when object_state='8' then '中途挂机'
+		when
+		object_state='9' then '挂机'
+		else '其他状态' END
+		state_name,
+		(select user_xm
+		from tab_user where user_name=tab_callobject.call_user)
+		call_user_name
+		from
+		tab_callobject
+		where
+		object_mark='0' and
+		pro_id=#{pro_id} and
+		object_state not in ('0','1','2')
+		order
+		by
+		pro_id
+	</select>
+	<select id="findCallObjectByUserTotal" resultMap="callobjectMap"
+		parameterType="String">
+		select *,(select pro_name from tab_project where
+		pro_id=tab_callobject.pro_id) pro_name,
+		case
+		when
+		object_state='0' then
+		'初始状态'
+		when object_state='1'
+		then '外呼中'
+		when object_state='2' then '外呼成功'
+		when object_state='3' then '关机'
+		when object_state='4' then '停机'
+		when
+		object_state='5' then '空号'
+		when object_state='6' then '无人接听'
+		when
+		object_state='7' then '中途续约'
+		when object_state='8' then '中途挂机'
+		when
+		object_state='9' then '挂机'
+		else '其他状态' END
+		state_name,
+		(select user_xm
+		from tab_user where user_name=tab_callobject.call_user)
+		call_user_name
+		from
+		tab_callobject
+		where
+		object_mark='0' and
+		call_user=#{user_name} and
+		object_state not in ('0','1')
+		order
+		by
+		pro_id
+	</select>
+	<select id="findCallObjectByUserComplete" resultMap="callobjectMap"
+		parameterType="String">
+		select *,(select pro_name from tab_project where
+		pro_id=tab_callobject.pro_id) pro_name,
+		case
+		when
+		object_state='0' then
+		'初始状态'
+		when object_state='1'
+		then '外呼中'
+		when object_state='2' then '外呼成功'
+		when object_state='3' then '关机'
+		when object_state='4' then '停机'
+		when
+		object_state='5' then '空号'
+		when object_state='6' then '无人接听'
+		when
+		object_state='7' then '中途续约'
+		when object_state='8' then '中途挂机'
+		when
+		object_state='9' then '挂机'
+		else '其他状态' END
+		state_name,
+		(select user_xm
+		from tab_user where user_name=tab_callobject.call_user)
+		call_user_name
+		from
+		tab_callobject
+		where
+		object_mark='0' and
+		call_user=#{user_name} and
+		object_state = '2'
+		order
+		by
+		pro_id
+	</select>
+	<select id="findCallObjectByUserNotComplete" resultMap="callobjectMap"
+		parameterType="String">
+		select *,(select pro_name from tab_project where
+		pro_id=tab_callobject.pro_id) pro_name,
+		case
+		when
+		object_state='0' then
+		'初始状态'
+		when object_state='1'
+		then '外呼中'
+		when object_state='2' then '外呼成功'
+		when object_state='3' then '关机'
+		when object_state='4' then '停机'
+		when
+		object_state='5' then '空号'
+		when object_state='6' then '无人接听'
+		when
+		object_state='7' then '中途续约'
+		when object_state='8' then '中途挂机'
+		when
+		object_state='9' then '挂机'
+		else '其他状态' END
+		state_name,
+		(select user_xm
+		from tab_user where user_name=tab_callobject.call_user)
+		call_user_name
+		from
+		tab_callobject
+		where
+		object_mark='0' and
+		call_user=#{user_name} and
+		object_state not in ('0','1','2')
+		order
+		by
+		pro_id
+	</select>
 </mapper>

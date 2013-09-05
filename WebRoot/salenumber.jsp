@@ -103,14 +103,12 @@
 		%>
 		<ul class="breadcrumb">
 			<li><a href="index.jsp" target="_parent">主页</a> <span
-				class="divider">/</span>
-			</li>
+				class="divider">/</span></li>
 			<li><a href="projects.jsp">项目管理</a> <span class="divider">/</span>
 			</li>
 			<li><a
 				href="salenumbers.jsp?pro_id=<%=pro_id%>&pro_name=<%=pro_name%>">销售号码管理</a>
-				<span class="divider">/</span>
-			</li>
+				<span class="divider">/</span></li>
 			<li class="active">编辑</li>
 		</ul>
 		<%
@@ -118,13 +116,13 @@
 		%>
 		<ul class="breadcrumb">
 			<li><a href="index.jsp" target="_parent">主页</a> <span
-				class="divider">/</span>
-			</li>
+				class="divider">/</span></li>
 			<li><a href="projects.jsp">项目管理</a> <span class="divider">/</span>
 			</li>
 			<li><a
 				href="salenumbers.jsp?pro_id=<%=pro_id%>&pro_name=<%=pro_name%>">销售号码管理</a>
-				<span class="divider">/</span></li>
+				<span class="divider">/</span>
+			</li>
 			<li class="active">添加</li>
 		</ul>
 		<%
@@ -228,7 +226,7 @@
 		$("[rel=tooltip]").tooltip();
 		function validate() {
 			var flag = 0;
-			if ($('#topic_content').val() == "" || $('#topic_type').val() == "") {
+			if ($('#telnumber').val() == "") {
 				flag = 1;
 			} else {
 				flag = 2;
