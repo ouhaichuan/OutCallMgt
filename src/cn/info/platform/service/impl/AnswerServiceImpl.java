@@ -29,7 +29,7 @@ public class AnswerServiceImpl extends BaseServiceImpl<Answer> implements
 	/**
 	 * ²éÑ¯ËùÓÐanswer
 	 */
-	public List<Answer> findAllAnswer() {
-		return answerDao.findAllAnswer();
+	public List<Answer> findAllAnswer(String search_txt) {
+		return answerDao.findAllAnswer(search_txt);
 	}
 }

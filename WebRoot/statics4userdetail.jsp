@@ -89,11 +89,9 @@
 	<div>
 		<ul class="breadcrumb">
 			<li><a href="index.jsp" target="_parent">主页</a> <span
-				class="divider">/</span>
-			</li>
+				class="divider">/</span></li>
 			<li><a href="staticsData.jsp" target="mainFrame">统计</a> <span
-				class="divider">/</span>
-			</li>
+				class="divider">/</span></li>
 			<li class="active">外呼详细</li>
 		</ul>
 
@@ -115,7 +113,9 @@
 								<th>所属项目</th>
 								<th>号码状态</th>
 								<th>外呼时间</th>
+								<th>外呼时长</th>
 								<th>外呼人</th>
+								<th style="width: 60px;"></th>
 							</tr>
 						</thead>
 						<tbody id="list-content">
@@ -215,8 +215,14 @@
 																		* 7 + i].out_time
 																+ '</td><td>'
 																+ dataObject[(page - 1)
+																		* 7 + i].out_time_length
+																+ '</td><td>'
+																+ dataObject[(page - 1)
 																		* 7 + i].call_user_name
-																+ '</td><td></tr>');
+																+ "</td><td><a target='_blank' href='playsound.jsp?object_id="
+																+ dataObject[(page - 1)
+																		* 7 + i].object_id
+																+ "' rel='tooltip' title='播放录音文件'><li class='icon-play'></li>播放录音</a></td></tr>");
 									}
 								}
 							};
@@ -224,19 +230,25 @@
 									: 7;
 							$('#list-content').html('');
 							for ( var i = 0; i < bsize; i++) {
-								$('#list-content').append(
-										'<tr><td>' + dataObject[i].object_id
-												+ '</td><td>'
-												+ dataObject[i].object_pnumber
-												+ '</td><td>'
-												+ dataObject[i].pro_name
-												+ '</td><td>'
-												+ dataObject[i].state_name
-												+ '</td><td>'
-												+ dataObject[i].out_time
-												+ '</td><td>'
-												+ dataObject[i].call_user_name
-												+ '</td><td></tr>');
+								$('#list-content')
+										.append(
+												'<tr><td>'
+														+ dataObject[i].object_id
+														+ '</td><td>'
+														+ dataObject[i].object_pnumber
+														+ '</td><td>'
+														+ dataObject[i].pro_name
+														+ '</td><td>'
+														+ dataObject[i].state_name
+														+ '</td><td>'
+														+ dataObject[i].out_time
+														+ '</td><td>'
+														+ dataObject[i].out_time_length
+														+ '</td><td>'
+														+ dataObject[i].call_user_name
+														+ "</td><td><a target='_blank' href='playsound.jsp?object_id="
+														+ dataObject[i].object_id
+														+ "' rel='tooltip' title='播放录音文件'><li class='icon-play'></li>播放录音</a></td></tr>");
 							}
 							$('#myPaginator').bootstrapPaginator(options);
 						}

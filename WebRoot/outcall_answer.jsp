@@ -262,7 +262,7 @@ body {
 						<div class="btn-group"></div>
 						<div class="btn-group"></div>
 						<span class="add-on">售出号码</span> <input class="span3"
-							id="saletelnum" type="text" disabled="disabled">
+							id="saletelnum" type="text">
 					</div>
 				</div>
 				<div class="well">
@@ -278,7 +278,7 @@ body {
 						<tbody>
 							<%
 								List<Topic> list = (List<Topic>)request.getAttribute("topic_list");
-																	for(Topic topic:list){
+										for(Topic topic:list){
 							%>
 							<tr>
 								<td><%=topic.getTopic_id()%></td>

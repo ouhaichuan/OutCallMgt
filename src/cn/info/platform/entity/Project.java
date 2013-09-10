@@ -20,6 +20,7 @@ public class Project {
 	private String calltotal;// 项目外呼总量
 	private String callcomplete;// 外呼完成量
 	private String callnotcomplete;// 外呼未完成量
+	private String outCallNums; // 外呼号码数量
 
 	public String getCalltotal() {
 		return calltotal;
@@ -115,5 +116,13 @@ public class Project {
 
 	public void setPro_zpr(String pro_zpr) {
 		this.pro_zpr = pro_zpr;
+	}
+
+	public String getOutCallNums() {
+		return outCallNums;
+	}
+
+	public void setOutCallNums(String outCallNums) {
+		this.outCallNums = outCallNums;
 	}
 }

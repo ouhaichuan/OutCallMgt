@@ -9,6 +9,7 @@ package cn.info.platform.entity;
 public class Answer {
 	private int answer_id;
 	private int topic_id;
+	private String pro_name;
 	private String topic_content;
 	private int object_id;
 	private String object_pnumber;
@@ -78,5 +79,13 @@ public class Answer {
 
 	public void setAnswer_mark(String answer_mark) {
 		this.answer_mark = answer_mark;
+	}
+
+	public String getPro_name() {
+		return pro_name;
+	}
+
+	public void setPro_name(String pro_name) {
+		this.pro_name = pro_name;
 	}
 }

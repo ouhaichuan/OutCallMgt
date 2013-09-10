@@ -1,6 +1,7 @@
 package cn.info.platform.service.impl;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -39,8 +40,8 @@ public class UserServiceImpl extends BaseServiceImpl<User> implements
 	 * 
 	 * @return 用户列表
 	 */
-	public List<User> findAllUsers() {
-		return userDao.findAllUsers();
+	public List<User> findAllUsers(String search_txt) {
+		return userDao.findAllUsers(search_txt);
 	}
 
 	/**
@@ -87,8 +88,8 @@ public class UserServiceImpl extends BaseServiceImpl<User> implements
 	/**
 	 * 按员工统计外呼情况
 	 */
-	public List<User> staticsData() {
-		return userDao.staticsData();
+	public List<User> staticsData(Map<String, Object> map) {
+		return userDao.staticsData(map);
 	}
 
 	/**
@@ -96,5 +97,19 @@ public class UserServiceImpl extends BaseServiceImpl<User> implements
 	 */
 	public List<User> staticsDataForSign(String userName) {
 		return userDao.staticsDataForSign(userName);
+	}
+
+	/**
+	 * 查询可以绑定的员工
+	 */
+	public List<User> findUserForPro() {
+		return userDao.findUserForPro();
+	}
+
+	/**
+	 * 导入用户
+	 */
+	public void import_user(User user) {
+		userDao.import_user(user);
 	}
 }

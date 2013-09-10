@@ -82,9 +82,6 @@
 			<li><a href="staticsData.jsp" target="mainFrame"><i
 					class="icon-align-left"></i>统计</a>
 			</li>
-			<li><a href="mycharts.jsp" target="mainFrame"><i
-					class="icon-adjust"></i>分析对比</a>
-			</li>
 			<%
 				} else {
 			%>

@@ -24,8 +24,8 @@ public class ProjectServiceImpl extends BaseServiceImpl<Project> implements
 	/**
 	 * 查询所有Project
 	 */
-	public List<Project> findAllProject() {
-		return projectDao.findAllProject();
+	public List<Project> findAllProject(String search_txt) {
+		return projectDao.findAllProject(search_txt);
 	}
 
 	/**
@@ -56,15 +56,15 @@ public class ProjectServiceImpl extends BaseServiceImpl<Project> implements
 	/**
 	 * 查询相应用户名的项目
 	 */
-	public List<Project> findAllProjectByUserName(String user_name) {
-		return projectDao.findAllProjectByUserName(user_name);
+	public List<Project> findAllProjectByUserName(Map<String, Object> map) {
+		return projectDao.findAllProjectByUserName(map);
 	}
 
 	/**
 	 * 根据项目统计
 	 */
-	public List<Project> staticsData() {
-		return projectDao.staticsData();
+	public List<Project> staticsData(Map<String, Object> map) {
+		return projectDao.staticsData(map);
 	}
 
 	/**
@@ -75,9 +75,9 @@ public class ProjectServiceImpl extends BaseServiceImpl<Project> implements
 	}
 
 	/**
-	 * 统计个人数据
+	 * 检查是否导入题目和号码
 	 */
-	public List<Project> staticsDataForSign(String userName) {
-		return projectDao.staticsDataForSign(userName);
+	public int checkPro(String pro_id) {
+		return projectDao.checkPro(pro_id);
 	}
 }

@@ -10,7 +10,7 @@
 <html lang="CN">
 <head>
 <base href="<%=basePath%>">
-<link rel="shortcut icon" href="<%=basePath%>images/favicon.ico" />
+<link rel="shortcut icon" href="images/favicon.ico" />
 <title>重庆移动外呼系统</title>
 
 <meta charset="utf-8">
@@ -58,9 +58,9 @@
 	href="../assets/ico/apple-touch-icon-57-precomposed.png">
 </head>
 
-<frameset rows="40,*," cols="*" frameborder="no" border="0"
+<frameset rows="47,*," cols="*" frameborder="no" border="0"
 	framespacing="0">
-	<frame src="top.html" name="topFrame" frameborder="no" scrolling="No"
+	<frame src="top.jsp" name="topFrame" frameborder="no" scrolling="No"
 		noresize="noresize" id="topFrame" title="topFrame" />
 	<frameset name="myFrame" cols="187,5,*" frameborder="no" border="0"
 		framespacing="0">
@@ -68,7 +68,7 @@
 			scrolling="yes" noresize="noresize" id="leftFrame" title="leftFrame" />
 		<frame src="midbar.html" name="midFrame" frameborder="no"
 			scrolling="no" noresize="noresize" id="midFrame" title="midFrame" />
-		<frame src="mycharts.jsp" name="mainFrame" scrolling="auto"
+		<frame src="staticsData.jsp" name="mainFrame" scrolling="auto"
 			frameborder="no" id="mainFrame" title="mainFrame" />
 	</frameset>
 </frameset>

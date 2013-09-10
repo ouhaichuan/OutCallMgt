@@ -71,22 +71,30 @@ public class AnswerController {
 		object.setOut_time(out_time);
 
 		callObjectService.commitError(object);// 提交状态
+		String result = "";
 
 		if (null != saletelnum && !"".equals(saletelnum)) {
-			SimpleDateFormat format = new SimpleDateFormat(
-					"yyyy-MM-dd HH:mm:ss");
-			String sale_time = format.format(new Date());
+			String state = saleTelNumberService.checkNumState(saletelnum);// 检查号码状态
 
-			Map<String, String> map = new HashMap<String, String>();
-			map.put("telnumber", saletelnum);
-			map.put("user_name", user_name);
-			map.put("sale_time", sale_time);
-			map.put("num_state", "已售");
-			saleTelNumberService.updateSaleNum(map);// 更新号码状态
+			if (state.equals("未售")) {
+				SimpleDateFormat format = new SimpleDateFormat(
+						"yyyy-MM-dd HH:mm:ss");
+				String sale_time = format.format(new Date());
+
+				Map<String, String> map = new HashMap<String, String>();
+				map.put("telnumber", saletelnum);
+				map.put("user_name", user_name);
+				map.put("sale_time", sale_time);
+				map.put("num_state", "已售");
+				saleTelNumberService.updateSaleNum(map);// 更新号码状态
+				result = "提交完成";
+			} else {
+				result = "你选择的号码已售出，请重新选择";
+			}
 		}
 
 		try {
-			response.getWriter().write("提交完成");
+			response.getWriter().write(result);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -104,7 +112,12 @@ public class AnswerController {
 			HttpServletResponse response) {
 		response.setContentType("text/html; charset=utf-8");
 
-		List<Answer> list = answerService.findAllAnswer();
+		String search_txt = "";
+		if (null != request.getParameter("search_txt")) {
+			search_txt = request.getParameter("search_txt");
+		}
+
+		List<Answer> list = answerService.findAllAnswer(search_txt);
 		JSONArray jsonArray = JSONArray.fromObject(list);
 		try {
 			response.getWriter().write(jsonArray.toString());

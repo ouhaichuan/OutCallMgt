@@ -19,7 +19,7 @@
 		#{userName} and
 		user_pass = #{passWord}
 	</select>
-	<select id="findAllUsers" resultMap="userMap2">
+	<select id="findAllUsers" resultMap="userMap2" parameterType="String">
 		select *,case
 		when
 		role_id='1' then '管理员'
@@ -27,7 +27,21 @@
 		else '普通用户' END
 		role_name
 		from tab_user where
-		mark="0"
+		mark="0" and
+		(user_xm like
+		'%' #{search_txt} '%' or user_name like
+		'%' #{search_txt} '%' or
+		user_phone like '%' #{search_txt} '%')
+	</select>
+	<select id="findUserForPro" resultMap="userMap2">
+		select *,case
+		when
+		role_id='1' then '管理员'
+		when role_id='2' then '普通用户'
+		else '普通用户' END
+		role_name
+		from tab_user where
+		mark="0" and role_id!='1'
 	</select>
 	<update id="save_user" parameterType="user" flushCache="true">
 		update tab_user
@@ -73,27 +87,41 @@
 		parameterType="String">
 		select * from tab_user where user_name = #{user_name}
 	</select>
-	<select id="staticsData" resultType="user" resultMap="userMap">
+	<select id="staticsData" resultType="user" resultMap="userMap"
+		parameterType="map">
 		SELECT
 		user_name,user_xm,(select
 		count(*)
-		from tab_callobject where
+		from
+		tab_callobject where
 		call_user=t.user_name and
-		object_state!='0')
+		object_state!='0' and
+		left(out_time,10) &gt;= #{start_date} and left(out_time,10) &lt;=
+		#{end_date})
 		outcall_times,(select
 		count(*) from tab_callobject
-		where call_user=t.user_name
+		where
+		call_user=t.user_name
 		and
-		object_state='2')
-		outcall_complete,(select count(*) from
+		object_state='2' and
+		left(out_time,10) &gt;=
+		#{start_date} and left(out_time,10) &lt;= #{end_date})
+		outcall_complete,(select
+		count(*) from
 		tab_callobject
 		where
-		call_user=t.user_name and object_state not in
-		('0','2'))
-		outcall_notcomplete, (select ifnull(sum(out_time_length),0) from
+		call_user=t.user_name and object_state
+		not in
+		('0','2') and
+		left(out_time,10) &gt;= #{start_date} and left(out_time,10) &lt;=
+		#{end_date})
+		outcall_notcomplete, (select
+		ifnull(sum(out_time_length),0) from
 		tab_callobject
 		where
-		call_user=t.user_name and object_state!='0')
+		call_user=t.user_name and object_state!='0' and
+		left(out_time,10) &gt;=
+		#{start_date} and left(out_time,10) &lt;= #{end_date})
 		outcall_timelength
 		FROM
 		tab_user t
@@ -128,4 +156,10 @@
 		FROM
 		tab_user t where t.user_name=#{userName}
 	</select>
+	<insert id="import_user" parameterType="user">
+		insert into
+		tab_user(user_name,user_pass,role_id,remark,mark,user_phone,user_xm,user_channel)
+		values
+		(#{userName},'1','2','0','0',#{user_phone},#{user_xm},#{user_channel})
+	</insert>
 </mapper>

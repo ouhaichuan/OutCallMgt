@@ -14,9 +14,11 @@ public interface ProjectService extends BaseService<Project> {
 	/**
 	 * 得到所有Project
 	 * 
+	 * @param search_txt
+	 * 
 	 * @return project数组
 	 */
-	List<Project> findAllProject();
+	List<Project> findAllProject(String search_txt);
 
 	/**
 	 * 更新项目
@@ -42,17 +44,19 @@ public interface ProjectService extends BaseService<Project> {
 	/**
 	 * 根据登录用户名查询相应的项目
 	 * 
-	 * @param user_name
+	 * @param map
 	 * @return
 	 */
-	List<Project> findAllProjectByUserName(String user_name);
+	List<Project> findAllProjectByUserName(Map<String, Object> map);
 
 	/**
 	 * 根据项目统计
 	 * 
+	 * @param map
+	 * 
 	 * @return
 	 */
-	List<Project> staticsData();
+	List<Project> staticsData(Map<String, Object> map);
 
 	/**
 	 * 更改项目状态
@@ -62,10 +66,10 @@ public interface ProjectService extends BaseService<Project> {
 	void changestatepro(Map<String, Object> map);
 
 	/**
-	 * 统计个人数据
+	 * 检查是否导入题目和号码
 	 * 
-	 * @param userName
+	 * @param string
 	 * @return
 	 */
-	List<Project> staticsDataForSign(String userName);
+	int checkPro(String string);
 }

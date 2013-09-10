@@ -21,7 +21,9 @@ public interface AnswerMapper extends BaseMapper<Answer> {
 	/**
 	 * 查询所有答案
 	 * 
+	 * @param search_txt
+	 * 
 	 * @return
 	 */
-	List<Answer> findAllAnswer();
+	List<Answer> findAllAnswer(String search_txt);
 }

@@ -33,15 +33,17 @@
 		tab_callobject
 		where
 		object_mark='0' and
-		object_state =
-		'0' and
+		object_state in ('0','7')
+		and
 		pro_id=#{pro_id} and
 		object_id
 		in (select object_id
 		from
 		tab_object_user
 		where
-		user_name=#{user_name}) order
+		user_name=#{user_name}) and object_pnumber like
+		'%' #{search_txt}
+		'%' order
 		by pro_id
 	</select>
 	<select id="findCallObjectByProIdNoUser" resultMap="callobjectMap"
@@ -74,7 +76,8 @@
 		tab_callobject
 		where
 		object_mark='0' and
-		pro_id=#{pro_id}
+		pro_id=#{pro_id} and
+		object_pnumber like '%' #{search_txt} '%'
 		order
 		by
 		pro_id

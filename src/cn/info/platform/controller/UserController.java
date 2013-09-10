@@ -1,7 +1,10 @@
 package cn.info.platform.controller;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import net.sf.json.JSONArray;
@@ -92,7 +95,12 @@ public class UserController {
 			HttpServletResponse response) {
 		response.setContentType("text/html; charset=utf-8");
 
-		List<User> list = userService.findAllUsers();
+		String search_txt = "";
+		if (null != request.getParameter("search_txt")) {
+			search_txt = request.getParameter("search_txt");
+		}
+
+		List<User> list = userService.findAllUsers(search_txt);
 		JSONArray jsonArray = JSONArray.fromObject(list);
 		try {
 			response.getWriter().write(jsonArray.toString());
@@ -112,7 +120,7 @@ public class UserController {
 			HttpServletResponse response) {
 		response.setContentType("text/html; charset=utf-8");
 
-		List<User> list = userService.findAllUsers();
+		List<User> list = userService.findUserForPro();
 		JSONArray jsonArray = JSONArray.fromObject(list);
 		try {
 			response.getWriter().write(jsonArray.toString());
@@ -211,8 +219,16 @@ public class UserController {
 		List<User> list = null;
 		User user = (User) request.getSession().getAttribute("user");
 
+		String start_date = request.getParameter("start_date");
+		String end_date = request.getParameter("end_date");
+
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("start_date", start_date);
+		map.put("end_date", end_date);
+		map.put("user_name", user.getUserName());
+
 		if ("管理员".equals(user.getRole_name())) {
-			list = userService.staticsData();// 全部数据
+			list = userService.staticsData(map);// 全部数据
 		} else {
 			list = userService.staticsDataForSign(user.getUserName());// 个人数据
 		}

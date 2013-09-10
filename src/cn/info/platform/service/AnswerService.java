@@ -20,8 +20,9 @@ public interface AnswerService extends BaseService<Answer> {
 
 	/**
 	 * ²éÑ¯ËùÓÐanswer
+	 * @param search_txt 
 	 * 
 	 * @return
 	 */
-	List<Answer> findAllAnswer();
+	List<Answer> findAllAnswer(String search_txt);
 }

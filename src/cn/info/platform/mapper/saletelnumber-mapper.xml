@@ -4,7 +4,7 @@
 <!-- namespace名字必须与Mapper接口名一致 -->
 <mapper namespace="cn.info.platform.mapper.SaleTelNumberMapper">
 	<select id="findAllNumbers" resultMap="saletelnumberMap"
-		parameterType="int">
+		parameterType="map">
 		select *,(select pro_name
 		from tab_project where
 		pro_id=tab_saletelnumber.pro_id)
@@ -12,7 +12,8 @@
 		where
 		user_name=tab_saletelnumber.user_name) user_xm
 		from
-		tab_saletelnumber where pro_id = #{pro_id}
+		tab_saletelnumber where pro_id = #{pro_id} and telnumber like '%'
+		#{search_txt} '%'
 	</select>
 	<select id="find_cansale_numbers" resultMap="saletelnumberMap"
 		parameterType="int">
@@ -20,6 +21,11 @@
 		from
 		tab_saletelnumber where pro_id = #{pro_id}
 		and num_state='未售'
+	</select>
+	<select id="checkNumState" resultType="String" parameterType="String">
+		select num_state
+		from
+		tab_saletelnumber where telnumber = #{saletelnum}
 	</select>
 	<insert id="add_num" parameterType="saletelnumber">
 		insert into

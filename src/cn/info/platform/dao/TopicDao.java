@@ -1,6 +1,8 @@
 package cn.info.platform.dao;
 
 import java.util.List;
+import java.util.Map;
+
 import cn.info.platform.entity.Topic;
 import cn.info.platform.mapper.TopicMapper;
 
@@ -45,7 +47,7 @@ public interface TopicDao extends BaseDao<Topic, TopicMapper> {
 	 * 
 	 * @return
 	 */
-	List<Topic> findTopicByProId(int pro_id);
+	List<Topic> findTopicByProId(Map<String, Object> map);
 
 	/**
 	 * µº»Î

@@ -41,8 +41,18 @@ public class OutCallController {
 	@RequestMapping(value = "outcall")
 	public String outcall(HttpServletRequest request) {
 		String target = null;
-		List<Topic> list = topicService.findTopicByProId(Integer
-				.valueOf(request.getParameter("pro_id")));
+		int pro_id = Integer.valueOf(request.getParameter("pro_id"));
+
+		String search_txt = "";
+		if (null != request.getParameter("search_txt")) {
+			search_txt = request.getParameter("search_txt");
+		}
+
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("pro_id", pro_id);
+		map.put("search_txt", search_txt);
+
+		List<Topic> list = topicService.findTopicByProId(map);
 
 		request.setAttribute("topic_list", list);
 		request.setAttribute("object_id", request.getParameter("object_id"));
@@ -65,8 +75,16 @@ public class OutCallController {
 		String user_name = ((User) request.getSession().getAttribute("user"))
 				.getUserName();
 		response.setContentType("text/html; charset=utf-8");
+		String search_txt = "";
+		if (null != request.getParameter("search_txt")) {
+			search_txt = request.getParameter("search_txt");
+		}
 
-		List<Project> list = projectService.findAllProjectByUserName(user_name);
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("search_txt", search_txt);
+		map.put("user_name", user_name);
+
+		List<Project> list = projectService.findAllProjectByUserName(map);
 		JSONArray jsonArray = JSONArray.fromObject(list);
 		try {
 			response.getWriter().write(jsonArray.toString());
@@ -86,9 +104,18 @@ public class OutCallController {
 	public void findTopicByProId(HttpServletRequest request,
 			HttpServletResponse response) {
 		response.setContentType("text/html; charset=utf-8");
+		int pro_id = Integer.valueOf(request.getParameter("pro_id"));
 
-		List<Topic> list = topicService.findTopicByProId(Integer
-				.valueOf(request.getParameter("pro_id")));
+		String search_txt = "";
+		if (null != request.getParameter("search_txt")) {
+			search_txt = request.getParameter("search_txt");
+		}
+
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("pro_id", pro_id);
+		map.put("search_txt", search_txt);
+
+		List<Topic> list = topicService.findTopicByProId(map);
 		JSONArray jsonArray = JSONArray.fromObject(list);
 		try {
 			response.getWriter().write(jsonArray.toString());
@@ -111,9 +138,15 @@ public class OutCallController {
 				.getUserName();
 		int pro_id = Integer.valueOf(request.getParameter("pro_id"));
 
+		String search_txt = "";
+		if (null != request.getParameter("search_txt")) {
+			search_txt = request.getParameter("search_txt");
+		}
+
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("pro_id", pro_id);
 		map.put("user_name", user_name);
+		map.put("search_txt", search_txt);
 
 		List<CallObject> list = callObjectService.findCallObjectByProId(map);
 		response.setContentType("text/html; charset=utf-8");

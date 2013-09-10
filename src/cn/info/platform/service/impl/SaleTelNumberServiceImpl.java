@@ -23,8 +23,8 @@ public class SaleTelNumberServiceImpl extends BaseServiceImpl<SaleTelNumber>
 	/**
 	 * ²éÑ¯ËùÓĞºÅÂë
 	 */
-	public List<SaleTelNumber> findAllNumbers(int pro_id) {
-		return saleTelNumberDao.findAllNumbers(pro_id);
+	public List<SaleTelNumber> findAllNumbers(Map<String, Object> map) {
+		return saleTelNumberDao.findAllNumbers(map);
 	}
 
 	/**
@@ -74,5 +74,12 @@ public class SaleTelNumberServiceImpl extends BaseServiceImpl<SaleTelNumber>
 	 */
 	public void delNumByProId(int pro_id) {
 		saleTelNumberDao.delNumByProId(pro_id);
+	}
+
+	/**
+	 * ¼ì²éºÅÂë×´Ì¬
+	 */
+	public String checkNumState(String saletelnum) {
+		return saleTelNumberDao.checkNumState(saletelnum);
 	}
 }

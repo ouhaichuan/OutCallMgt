@@ -1,6 +1,8 @@
 package cn.info.platform.service.impl;
 
 import java.util.List;
+import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import cn.info.platform.dao.TopicDao;
@@ -51,8 +53,8 @@ public class TopicServiceImpl extends BaseServiceImpl<Topic> implements
 	/**
 	 * 查询相关项目的题目
 	 */
-	public List<Topic> findTopicByProId(int pro_id) {
-		return topicDao.findTopicByProId(pro_id);
+	public List<Topic> findTopicByProId(Map<String, Object> map) {
+		return topicDao.findTopicByProId(map);
 	}
 
 	/**

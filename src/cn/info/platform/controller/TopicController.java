@@ -1,7 +1,10 @@
 package cn.info.platform.controller;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import net.sf.json.JSONArray;
@@ -33,8 +36,18 @@ public class TopicController {
 			HttpServletResponse response) {
 		response.setContentType("text/html; charset=utf-8");
 
-		List<Topic> list = topicService.findTopicByProId(Integer
-				.valueOf(request.getParameter("pro_id")));
+		int pro_id = Integer.valueOf(request.getParameter("pro_id"));
+
+		String search_txt = "";
+		if (null != request.getParameter("search_txt")) {
+			search_txt = request.getParameter("search_txt");
+		}
+
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("pro_id", pro_id);
+		map.put("search_txt", search_txt);
+
+		List<Topic> list = topicService.findTopicByProId(map);
 		JSONArray jsonArray = JSONArray.fromObject(list);
 		try {
 			response.getWriter().write(jsonArray.toString());

@@ -106,9 +106,9 @@
 						<i class="icon-circle-arrow-down"></i> 导入号码
 					</button>
 					<div style="float: right;">
-						<input type="text" placeholder='号码/所属项目'
+						<input type="text" placeholder='号码' id='search_txt'
 							class="input-medium search-query">
-						<button id='search_bnt' class="btn btn-primary">搜索</button>
+						<button id='search_btn' class="btn btn-primary">搜索</button>
 					</div>
 					<div class="btn-group"></div>
 				</div>
@@ -121,6 +121,7 @@
 								<th>所属项目</th>
 								<th>号码状态</th>
 								<th>外呼时间</th>
+								<th>外呼时长</th>
 								<th>外呼人</th>
 								<th style="width: 30px;"></th>
 							</tr>
@@ -165,7 +166,8 @@
 						url : basePath + "callobject/findCallObjectByProId.do",
 						type : "post",
 						data : {
-							pro_id : $("#pro_id").val()
+							pro_id : $("#pro_id").val(),
+							search_txt : $('#search_txt').val()
 						},
 						success : function(data) {
 							var dataObject = eval(data);
@@ -238,6 +240,9 @@
 																		* 7 + i].out_time
 																+ '</td><td>'
 																+ dataObject[(page - 1)
+																		* 7 + i].out_time_length
+																+ '</td><td>'
+																+ dataObject[(page - 1)
 																		* 7 + i].call_user_name
 																+ '</td><td>'
 																+ "<a href='callobject.jsp?edit_type=2&object_id="
@@ -286,6 +291,8 @@
 														+ '</td><td>'
 														+ dataObject[i].out_time
 														+ '</td><td>'
+														+ dataObject[i].out_time_length
+														+ '</td><td>'
 														+ dataObject[i].call_user_name
 														+ '</td><td>'
 														+ "<a href='callobject.jsp?edit_type=2&object_id="
@@ -311,6 +318,204 @@
 									});
 						}
 					});
+			$('#search_btn')
+					.click(
+							function() {
+								$
+										.ajax({
+											url : basePath
+													+ "callobject/findCallObjectByProId.do",
+											type : "post",
+											data : {
+												pro_id : $("#pro_id").val(),
+												search_txt : $('#search_txt')
+														.val()
+											},
+											success : function(data) {
+												var dataObject = eval(data);
+												$('#content')
+														.text(
+																'号码总数：'
+																		+ dataObject.length);
+												totolP = parseInt(dataObject.length % 7 == 0 ? dataObject.length / 7
+														: dataObject.length / 7 + 1);
+												numP = dataObject.length / 7 < 1 ? dataObject.length % 7
+														: 7;
+												var options = {
+													currentPage : 1,
+													totalPages : totolP,
+													numberOfPages : numP,
+													itemTexts : function(type,
+															page, current) {
+														switch (type) {
+														case "first":
+															return "首页";
+														case "prev":
+															return "上一页";
+														case "next":
+															return "下一页";
+														case "last":
+															return "尾页";
+														case "page":
+															return page;
+														}
+													},
+													onPageClicked : function(
+															event,
+															originalEvent,
+															type, page) {
+														size = 7;
+														if (type == 'first'
+																&& dataObject.length < 7) {
+															size = dataObject.length;
+														} else if (type == 'next'
+																&& page == totolP
+																&& dataObject.length % 7 != 0) {
+															size = dataObject.length % 7;
+														} else if (type == 'next'
+																&& page == totolP
+																&& dataObject.length % 7 == 0) {
+															size = 7;
+														} else if (page == totolP
+																&& dataObject.length % 7 != 0) {
+															size = dataObject.length % 7;
+														} else if (page == totolP
+																&& dataObject.length % 7 == 0) {
+															size = 7;
+														} else if (type == 'last'
+																&& dataObject.length % 7 != 0) {
+															size = dataObject.length % 7;
+														} else if (type == 'last'
+																&& dataObject.length % 7 == 0) {
+															size = 7;
+														}
+														$('#list-content')
+																.html('');
+														for ( var i = 0; i < size; i++) {
+															$('#list-content')
+																	.append(
+																			'<tr><td>'
+																					+ dataObject[(page - 1)
+																							* 7
+																							+ i].object_id
+																					+ '</td><td>'
+																					+ dataObject[(page - 1)
+																							* 7
+																							+ i].object_pnumber
+																					+ '</td><td>'
+																					+ dataObject[(page - 1)
+																							* 7
+																							+ i].pro_name
+																					+ '</td><td>'
+																					+ dataObject[(page - 1)
+																							* 7
+																							+ i].state_name
+																					+ '</td><td>'
+																					+ dataObject[(page - 1)
+																							* 7
+																							+ i].out_time
+																					+ '</td><td>'
+																					+ dataObject[(page - 1)
+																							* 7
+																							+ i].out_time_length
+																					+ '</td><td>'
+																					+ dataObject[(page - 1)
+																							* 7
+																							+ i].call_user_name
+																					+ '</td><td>'
+																					+ "<a href='callobject.jsp?edit_type=2&object_id="
+																					+ dataObject[(page - 1)
+																							* 7
+																							+ i].object_id
+																					+ '&object_pnumber='
+																					+ dataObject[(page - 1)
+																							* 7
+																							+ i].object_pnumber
+																					+ '&object_remark='
+																					+ dataObject[(page - 1)
+																							* 7
+																							+ i].object_remark
+																					+ '&pro_id='
+																					+ dataObject[(page - 1)
+																							* 7
+																							+ i].pro_id
+																					+ '&pro_name='
+																					+ dataObject[(page - 1)
+																							* 7
+																							+ i].pro_name
+																					+ "'><i class='icon-pencil'></i></a>&nbsp;&nbsp;<a href='#myModal' role='button' data-toggle='modal'><i class='icon-remove'></i> </a></td></tr>");
+														}
+														$("#obj_info_tab,tr")
+																.click(
+																		function() {
+																			var object_id = $(
+																					this)
+																					.children(
+																							"td:eq(0)")
+																					.text();
+																			if (object_id != "") {
+																				$(
+																						'#del_app_id')
+																						.val(
+																								object_id);
+																			}
+																		});
+													}
+												};
+												bsize = dataObject.length < 7 ? dataObject.length
+														: 7;
+												$('#list-content').html('');
+												for ( var i = 0; i < bsize; i++) {
+													$('#list-content')
+															.append(
+																	'<tr><td>'
+																			+ dataObject[i].object_id
+																			+ '</td><td>'
+																			+ dataObject[i].object_pnumber
+																			+ '</td><td>'
+																			+ dataObject[i].pro_name
+																			+ '</td><td>'
+																			+ dataObject[i].state_name
+																			+ '</td><td>'
+																			+ dataObject[i].out_time
+																			+ '</td><td>'
+																			+ dataObject[i].out_time_length
+																			+ '</td><td>'
+																			+ dataObject[i].call_user_name
+																			+ '</td><td>'
+																			+ "<a href='callobject.jsp?edit_type=2&object_id="
+																			+ dataObject[i].object_id
+																			+ '&object_pnumber='
+																			+ dataObject[i].object_pnumber
+																			+ '&object_remark='
+																			+ dataObject[i].object_remark
+																			+ '&pro_id='
+																			+ dataObject[i].pro_id
+																			+ '&pro_name='
+																			+ dataObject[i].pro_name
+																			+ "'><i class='icon-pencil'></i></a>&nbsp;&nbsp;<a href='#myModal' role='button' data-toggle='modal'><i class='icon-remove'></i> </a></td></tr>");
+												}
+												$('#myPaginator')
+														.bootstrapPaginator(
+																options);
+												$("#obj_info_tab,tr")
+														.click(
+																function() {
+																	var object_id = $(
+																			this)
+																			.children(
+																					"td:eq(0)")
+																			.text();
+																	if (object_id != "") {
+																		$(
+																				'#del_app_id')
+																				.val(
+																						object_id);
+																	}
+																});
+											}
+										});
+							});
 
 			$('#addobj_btn').click(
 					function() {

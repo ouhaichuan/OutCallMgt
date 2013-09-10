@@ -45,8 +45,14 @@ public class CallObjectController {
 
 		int pro_id = Integer.valueOf(request.getParameter("pro_id"));
 
+		String search_txt = "";
+		if (null != request.getParameter("search_txt")) {
+			search_txt = request.getParameter("search_txt");
+		}
+
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("pro_id", pro_id);
+		map.put("search_txt", search_txt);
 
 		List<CallObject> list = callObjectService
 				.findCallObjectByProIdNoUser(map);

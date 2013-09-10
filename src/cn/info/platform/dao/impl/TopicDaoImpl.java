@@ -1,6 +1,8 @@
 package cn.info.platform.dao.impl;
 
 import java.util.List;
+import java.util.Map;
+
 import org.springframework.stereotype.Repository;
 import cn.info.platform.dao.TopicDao;
 import cn.info.platform.entity.Topic;
@@ -47,8 +49,8 @@ public class TopicDaoImpl extends BaseDaoImpl<Topic, TopicMapper> implements
 	/**
 	 * 根据项目ID查询题目
 	 */
-	public List<Topic> findTopicByProId(int pro_id) {
-		return this.getMapper().findTopicByProId(pro_id);
+	public List<Topic> findTopicByProId(Map<String, Object> map) {
+		return this.getMapper().findTopicByProId(map);
 	}
 
 	/**

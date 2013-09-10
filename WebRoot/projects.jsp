@@ -98,7 +98,7 @@
 						<i class="icon-ok-sign"></i> 完成
 					</button>
 					<div style="float: right;">
-						<input type="text" placeholder='项目名称/类型'
+						<input type="text" placeholder='项目名称' id='search_txt'
 							class="input-medium search-query">
 						<button id='search_bnt' class="btn btn-primary">搜索</button>
 					</div>
@@ -108,15 +108,16 @@
 					<table class="table table-striped" id='pro_info_tab'>
 						<thead>
 							<tr>
-								<th style="width: 32px;"></th>
-								<th>编号</th>
-								<th>项目名称</th>
-								<th>项目类型</th>
-								<th>项目状态</th>
-								<th>启动日期</th>
-								<th>项目指派人</th>
-								<th style="width: 122px;">项目负责人</th>
-								<th style="width: 122px;"></th>
+								<th style="width: 10px;"></th>
+								<th style="width: 30px;">编号</th>
+								<th style="width: 180px;">项目名称</th>
+								<th style="width: 60px;">项目类型</th>
+								<th style="width: 60px;">项目状态</th>
+								<th style="width: 80px;">启动日期</th>
+								<th style="width: 80px;">项目指派人</th>
+								<th style="width: 80px;">外呼号码量</th>
+								<th style="width: 80px;">项目负责人</th>
+								<th style="width: 150px;"></th>
 							</tr>
 						</thead>
 						<tbody id="list-content">
@@ -152,241 +153,223 @@
 		var basePath = $('#basePathIn').val();
 		$(function() {
 			$
-					.post(
-							basePath + "project/find_projects_pg.do",
-							function(data) {
-								var dataPro = eval(data);
-								totolP = parseInt(dataPro.length % 7 == 0 ? dataPro.length / 7
-										: dataPro.length / 7 + 1);
-								numP = dataPro.length / 7 < 1 ? dataPro.length % 7
-										: 7;
-								var options = {
-									currentPage : 1,
-									totalPages : totolP,
-									numberOfPages : numP,
-									itemTexts : function(type, page, current) {
-										switch (type) {
-										case "first":
-											return "首页";
-										case "prev":
-											return "上一页";
-										case "next":
-											return "下一页";
-										case "last":
-											return "尾页";
-										case "page":
-											return page;
-										}
-									},
-									onPageClicked : function(event,
-											originalEvent, type, page) {
-										size = 7;
-										if (type == 'first'
-												&& dataPro.length < 7) {
-											size = dataPro.length;
-										} else if (type == 'next'
-												&& page == totolP
-												&& dataPro.length % 7 != 0) {
-											size = dataPro.length % 7;
-										} else if (type == 'next'
-												&& page == totolP
-												&& dataPro.length % 7 == 0) {
-											size = 7;
-										} else if (page == totolP
-												&& dataPro.length % 7 != 0) {
-											size = dataPro.length % 7;
-										} else if (page == totolP
-												&& dataPro.length % 7 == 0) {
-											size = 7;
-										} else if (type == 'last'
-												&& dataPro.length % 7 != 0) {
-											size = dataPro.length % 7;
-										} else if (type == 'last'
-												&& dataPro.length % 7 == 0) {
-											size = 7;
-										}
-										$('#list-content').html('');
-										for ( var i = 0; i < size; i++) {
-											$('#list-content')
-													.append(
-															"<tr><td><label class='checkbox'><input type='checkbox' onchange='checkedFn("
-																	+ dataPro[(page - 1)
-																			* 7
-																			+ i].pro_id
-																	+ ",this);'/></label></td><td>"
-																	+ dataPro[(page - 1)
-																			* 7
-																			+ i].pro_id
-																	+ '</td><td>'
-																	+ dataPro[(page - 1)
-																			* 7
-																			+ i].pro_name
-																	+ '</td><td>'
-																	+ dataPro[(page - 1)
-																			* 7
-																			+ i].pro_type
-																	+ '</td><td>'
-																	+ dataPro[(page - 1)
-																			* 7
-																			+ i].pro_state
-																	+ '</td><td>'
-																	+ dataPro[(page - 1)
-																			* 7
-																			+ i].pro_date
-																	+ '</td><td>'
-																	+ dataPro[(page - 1)
-																			* 7
-																			+ i].pro_zpr
-																	+ '</td><td>'
-																	+ dataPro[(page - 1)
-																			* 7
-																			+ i].pro_users
-																	+ '</td><td>'
-																	+ "<a href='callobjects.jsp?pro_id="
-																	+ dataPro[(page - 1)
-																			* 7
-																			+ i].pro_id
-																	+ "&pro_name="
-																	+ dataPro[(page - 1)
-																			* 7
-																			+ i].pro_name
-																	+ "' rel='tooltip' title='外呼号码'><i class='icon-book'></i> </a>&nbsp;&nbsp;"
-																	+ "<a href='topics.jsp?pro_id="
-																	+ dataPro[(page - 1)
-																			* 7
-																			+ i].pro_id
-																	+ "&pro_name="
-																	+ dataPro[(page - 1)
-																			* 7
-																			+ i].pro_name
-																	+ "' rel='tooltip' title='题目管理'><i class='icon-file'></i> </a>&nbsp;&nbsp;"
-																	+ "<a href='project_user.jsp?pro_id="
-																	+ dataPro[(page - 1)
-																			* 7
-																			+ i].pro_id
-																	+ "&pro_name="
-																	+ dataPro[(page - 1)
-																			* 7
-																			+ i].pro_name
-																	+ "' rel='tooltip' title='绑定工号'><i class='icon-user'></i> </a>&nbsp;&nbsp;<a href='salenumbers.jsp?pro_id="
-																	+ dataPro[(page - 1)
-																			* 7
-																			+ i].pro_id
-																	+ "&pro_name="
-																	+ dataPro[(page - 1)
-																			* 7
-																			+ i].pro_name
-																	+ "' rel='tooltip' title='销售号码'><i class='icon-bookmark'></i> </a>&nbsp;&nbsp;"
-																	+ "<a href='project.jsp?edit_type=2&pro_id="
-																	+ dataPro[(page - 1)
-																			* 7
-																			+ i].pro_id
-																	+ '&pro_name='
-																	+ dataPro[(page - 1)
-																			* 7
-																			+ i].pro_name
-																	+ '&pro_zpr='
-																	+ dataPro[(page - 1)
-																			* 7
-																			+ i].pro_zpr
-																	+ '&pro_type='
-																	+ dataPro[(page - 1)
-																			* 7
-																			+ i].pro_type
-																	+ '&pro_state='
-																	+ dataPro[(page - 1)
-																			* 7
-																			+ i].pro_state
-																	+ '&pro_date='
-																	+ dataPro[(page - 1)
-																			* 7
-																			+ i].pro_date
-																	+ '&pro_remark='
-																	+ dataPro[(page - 1)
-																			* 7
-																			+ i].pro_remark
-																	+ "'><i class='icon-pencil'></i></a>&nbsp;&nbsp;<a href='#myModal' role='button' data-toggle='modal'><i class='icon-remove'></i> </a></td></tr>");
-										}
-										$("#pro_info_tab,tr").click(
-												function() {
-													var pro_id = $(this)
-															.children(
-																	"td:eq(1)")
-															.text();
-													if (pro_id != "") {
-														$('#del_app_id').val(
-																pro_id);
-													}
-												});
+					.ajax({
+						url : basePath + "project/find_projects_pg.do",
+						type : "post",
+						data : {
+							search_txt : $('#search_txt').val()
+						},
+						success : function(data) {
+							var dataPro = eval(data);
+							totolP = parseInt(dataPro.length % 7 == 0 ? dataPro.length / 7
+									: dataPro.length / 7 + 1);
+							numP = dataPro.length / 7 < 1 ? dataPro.length % 7
+									: 7;
+							var options = {
+								currentPage : 1,
+								totalPages : totolP,
+								numberOfPages : numP,
+								itemTexts : function(type, page, current) {
+									switch (type) {
+									case "first":
+										return "首页";
+									case "prev":
+										return "上一页";
+									case "next":
+										return "下一页";
+									case "last":
+										return "尾页";
+									case "page":
+										return page;
 									}
-								};
-								bsize = dataPro.length < 7 ? dataPro.length : 7;
-								$('#list-content').html('');
-								for ( var i = 0; i < bsize; i++) {
-									$('#list-content')
-											.append(
-													"<tr><td><label class='checkbox'><input type='checkbox' onchange='checkedFn("
-															+ dataPro[i].pro_id
-															+ ",this);'/></label></td><td>"
-															+ dataPro[i].pro_id
-															+ '</td><td>'
-															+ dataPro[i].pro_name
-															+ '</td><td>'
-															+ dataPro[i].pro_type
-															+ '</td><td>'
-															+ dataPro[i].pro_state
-															+ '</td><td>'
-															+ dataPro[i].pro_date
-															+ '</td><td>'
-															+ dataPro[i].pro_zpr
-															+ '</td><td>'
-															+ dataPro[i].pro_users
-															+ '</td><td>'
-															+ "<a href='callobjects.jsp?pro_id="
-															+ dataPro[i].pro_id
-															+ "&pro_name="
-															+ dataPro[i].pro_name
-															+ "' rel='tooltip' title='外呼号码'><i class='icon-book'></i> </a>&nbsp;&nbsp;"
-															+ "<a href='topics.jsp?pro_id="
-															+ dataPro[i].pro_id
-															+ "&pro_name="
-															+ dataPro[i].pro_name
-															+ "' rel='tooltip' title='题目管理'><i class='icon-file'></i> </a>&nbsp;&nbsp;"
-															+ "<a href='project_user.jsp?pro_id="
-															+ dataPro[i].pro_id
-															+ "&pro_name="
-															+ dataPro[i].pro_name
-															+ "' rel='tooltip' title='绑定工号'><i class='icon-user'></i> </a>&nbsp;&nbsp;<a href='salenumbers.jsp?pro_id="
-															+ dataPro[i].pro_id
-															+ "&pro_name="
-															+ dataPro[i].pro_name
-															+ "' rel='tooltip' title='销售号码'><i class='icon-bookmark'></i> </a>&nbsp;&nbsp;"
-															+ "<a href='project.jsp?edit_type=2&pro_id="
-															+ dataPro[i].pro_id
-															+ '&pro_name='
-															+ dataPro[i].pro_name
-															+ '&pro_zpr='
-															+ dataPro[i].pro_zpr
-															+ '&pro_type='
-															+ dataPro[i].pro_type
-															+ '&pro_state='
-															+ dataPro[i].pro_state
-															+ '&pro_date='
-															+ dataPro[i].pro_date
-															+ '&pro_remark='
-															+ dataPro[i].pro_remark
-															+ "'><i class='icon-pencil'></i> </a>&nbsp;&nbsp;<a href='#myModal' role='button' data-toggle='modal'><i class='icon-remove'></i> </a></td></tr>");
+								},
+								onPageClicked : function(event, originalEvent,
+										type, page) {
+									size = 7;
+									if (type == 'first' && dataPro.length < 7) {
+										size = dataPro.length;
+									} else if (type == 'next' && page == totolP
+											&& dataPro.length % 7 != 0) {
+										size = dataPro.length % 7;
+									} else if (type == 'next' && page == totolP
+											&& dataPro.length % 7 == 0) {
+										size = 7;
+									} else if (page == totolP
+											&& dataPro.length % 7 != 0) {
+										size = dataPro.length % 7;
+									} else if (page == totolP
+											&& dataPro.length % 7 == 0) {
+										size = 7;
+									} else if (type == 'last'
+											&& dataPro.length % 7 != 0) {
+										size = dataPro.length % 7;
+									} else if (type == 'last'
+											&& dataPro.length % 7 == 0) {
+										size = 7;
+									}
+									$('#list-content').html('');
+									for ( var i = 0; i < size; i++) {
+										$('#list-content')
+												.append(
+														"<tr><td><label class='checkbox'><input type='checkbox' onchange='checkedFn("
+																+ dataPro[(page - 1)
+																		* 7 + i].pro_id
+																+ ",this);'/></label></td><td>"
+																+ dataPro[(page - 1)
+																		* 7 + i].pro_id
+																+ '</td><td>'
+																+ dataPro[(page - 1)
+																		* 7 + i].pro_name
+																+ '</td><td>'
+																+ dataPro[(page - 1)
+																		* 7 + i].pro_type
+																+ '</td><td>'
+																+ dataPro[(page - 1)
+																		* 7 + i].pro_state
+																+ '</td><td>'
+																+ dataPro[(page - 1)
+																		* 7 + i].pro_date
+																+ '</td><td>'
+																+ dataPro[(page - 1)
+																		* 7 + i].pro_zpr
+																+ '</td><td>'
+																+ dataPro[(page - 1)
+																		* 7 + i].outCallNums
+																+ '</td><td>'
+																+ dataPro[(page - 1)
+																		* 7 + i].pro_users
+																+ '</td><td>'
+																+ "<a href='callobjects.jsp?pro_id="
+																+ dataPro[(page - 1)
+																		* 7 + i].pro_id
+																+ "&pro_name="
+																+ dataPro[(page - 1)
+																		* 7 + i].pro_name
+																+ "' rel='tooltip' title='外呼号码'><i class='icon-phone' style='font-size:20px;'></i> </a>&nbsp;&nbsp;"
+																+ "<a href='topics.jsp?pro_id="
+																+ dataPro[(page - 1)
+																		* 7 + i].pro_id
+																+ "&pro_name="
+																+ dataPro[(page - 1)
+																		* 7 + i].pro_name
+																+ "' rel='tooltip' title='题目管理'><i class='icon-file' style='font-size:20px;'></i> </a>&nbsp;&nbsp;"
+																+ "<a href='project_user.jsp?pro_id="
+																+ dataPro[(page - 1)
+																		* 7 + i].pro_id
+																+ "&pro_name="
+																+ dataPro[(page - 1)
+																		* 7 + i].pro_name
+																+ "' rel='tooltip' title='绑定工号'><i class='icon-user' style='font-size:20px;'></i> </a>&nbsp;&nbsp;<a href='salenumbers.jsp?pro_id="
+																+ dataPro[(page - 1)
+																		* 7 + i].pro_id
+																+ "&pro_name="
+																+ dataPro[(page - 1)
+																		* 7 + i].pro_name
+																+ "' rel='tooltip' title='销售号码'><i class='icon-bookmark' style='font-size:20px;'></i> </a>&nbsp;&nbsp;"
+																+ "<a href='project.jsp?edit_type=2&pro_id="
+																+ dataPro[(page - 1)
+																		* 7 + i].pro_id
+																+ '&pro_name='
+																+ dataPro[(page - 1)
+																		* 7 + i].pro_name
+																+ '&pro_zpr='
+																+ dataPro[(page - 1)
+																		* 7 + i].pro_zpr
+																+ '&pro_type='
+																+ dataPro[(page - 1)
+																		* 7 + i].pro_type
+																+ '&pro_state='
+																+ dataPro[(page - 1)
+																		* 7 + i].pro_state
+																+ '&pro_date='
+																+ dataPro[(page - 1)
+																		* 7 + i].pro_date
+																+ '&pro_remark='
+																+ dataPro[(page - 1)
+																		* 7 + i].pro_remark
+																+ "'><i class='icon-pencil' style='font-size:20px;'></i></a>&nbsp;&nbsp;<a href='#myModal' role='button' data-toggle='modal'><i class='icon-remove' style='font-size:20px;color:#FF0080;'></i> </a></td></tr>");
+									}
+									$("#pro_info_tab,tr").click(
+											function() {
+												var pro_id = $(this).children(
+														"td:eq(1)").text();
+												if (pro_id != "") {
+													$('#del_app_id')
+															.val(pro_id);
+												}
+											});
 								}
-								$('#myPaginator').bootstrapPaginator(options);
-								$("#pro_info_tab,tr").click(
-										function() {
-											var pro_id = $(this).children(
-													"td:eq(1)").text();
-											if (pro_id != "") {
-												$('#del_app_id').val(pro_id);
-											}
-										});
-							});
+							};
+							bsize = dataPro.length < 7 ? dataPro.length : 7;
+							$('#list-content').html('');
+							for ( var i = 0; i < bsize; i++) {
+								$('#list-content')
+										.append(
+												"<tr><td><label class='checkbox'><input type='checkbox' onchange='checkedFn("
+														+ dataPro[i].pro_id
+														+ ",this);'/></label></td><td>"
+														+ dataPro[i].pro_id
+														+ '</td><td>'
+														+ dataPro[i].pro_name
+														+ '</td><td>'
+														+ dataPro[i].pro_type
+														+ '</td><td>'
+														+ dataPro[i].pro_state
+														+ '</td><td>'
+														+ dataPro[i].pro_date
+														+ '</td><td>'
+														+ dataPro[i].pro_zpr
+														+ '</td><td>'
+														+ dataPro[i].outCallNums
+														+ '</td><td>'
+														+ dataPro[i].pro_users
+														+ '</td><td>'
+														+ "<a href='callobjects.jsp?pro_id="
+														+ dataPro[i].pro_id
+														+ "&pro_name="
+														+ dataPro[i].pro_name
+														+ "' rel='tooltip' title='外呼号码'><i class='icon-phone' style='font-size:20px;'></i> </a>&nbsp;&nbsp;"
+														+ "<a href='topics.jsp?pro_id="
+														+ dataPro[i].pro_id
+														+ "&pro_name="
+														+ dataPro[i].pro_name
+														+ "' rel='tooltip' title='题目管理'><i class='icon-file' style='font-size:20px;'></i> </a>&nbsp;&nbsp;"
+														+ "<a href='project_user.jsp?pro_id="
+														+ dataPro[i].pro_id
+														+ "&pro_name="
+														+ dataPro[i].pro_name
+														+ "' rel='tooltip' title='绑定工号'><i class='icon-user' style='font-size:20px;'></i> </a>&nbsp;&nbsp;<a href='salenumbers.jsp?pro_id="
+														+ dataPro[i].pro_id
+														+ "&pro_name="
+														+ dataPro[i].pro_name
+														+ "' rel='tooltip' title='销售号码'><i class='icon-book' style='font-size:20px;'></i> </a>&nbsp;&nbsp;"
+														+ "<a href='project.jsp?edit_type=2&pro_id="
+														+ dataPro[i].pro_id
+														+ '&pro_name='
+														+ dataPro[i].pro_name
+														+ '&pro_zpr='
+														+ dataPro[i].pro_zpr
+														+ '&pro_type='
+														+ dataPro[i].pro_type
+														+ '&pro_state='
+														+ dataPro[i].pro_state
+														+ '&pro_date='
+														+ dataPro[i].pro_date
+														+ '&pro_remark='
+														+ dataPro[i].pro_remark
+														+ "'><i class='icon-pencil' style='font-size:20px;'></i> </a>&nbsp;&nbsp;<a href='#myModal' role='button' data-toggle='modal'><i class='icon-remove' style='font-size:20px;color:#FF0080;'></i> </a></td></tr>");
+							}
+							$('#myPaginator').bootstrapPaginator(options);
+							$("#pro_info_tab,tr").click(
+									function() {
+										var pro_id = $(this).children(
+												"td:eq(1)").text();
+										if (pro_id != "") {
+											$('#del_app_id').val(pro_id);
+										}
+									});
+						}
+					});
 
 			$('#addpro_btn').click(function() {
 				window.location.href = basePath + "project.jsp?edit_type=1";
@@ -430,32 +413,51 @@
 		}
 
 		$('#startpro_btn').click(function() {
-			if (proIdList.length < 1) {
-				dialog = art.dialog({
-					content : "请选择要启动的项目",
-					lock : true,
-					drag : false,
-					resize : false,
-					icon : 'succeed'
-				});
-				return;
-			}
 			$.ajax({
-				url : basePath + "project/changestatepro.do",
+				url : basePath + "project/checkPro.do",
 				type : "post",
 				data : {
-					pro_state : '进行中',
-					pro_id_list : proIdList.join()
+					list : proIdList.join()
 				},
 				success : function(data) {
-					dialog = art.dialog({
-						content : data,
-						lock : true,
-						drag : false,
-						resize : false,
-						icon : 'succeed'
+					if (proIdList.length < 1) {
+						dialog = art.dialog({
+							content : "请选择要启动的项目",
+							lock : true,
+							drag : false,
+							resize : false,
+							icon : 'succeed'
+						});
+						return;
+					}
+					if (data == "false") {
+						dialog = art.dialog({
+							content : "你选择的项目未导入号码或者题目",
+							lock : true,
+							drag : false,
+							resize : false,
+							icon : 'succeed'
+						});
+						return;
+					}
+					$.ajax({
+						url : basePath + "project/changestatepro.do",
+						type : "post",
+						data : {
+							pro_state : '进行中',
+							pro_id_list : proIdList.join()
+						},
+						success : function(data) {
+							dialog = art.dialog({
+								content : data,
+								lock : true,
+								drag : false,
+								resize : false,
+								icon : 'succeed'
+							});
+							window.location.href = basePath + 'projects.jsp';
+						}
 					});
-					window.location.href = basePath + 'projects.jsp';
 				}
 			});
 		});
@@ -549,6 +551,273 @@
 				}
 			});
 		});
+		$('#search_bnt')
+				.click(
+						function() {
+							$
+									.ajax({
+										url : basePath
+												+ "project/find_projects_pg.do",
+										type : "post",
+										data : {
+											search_txt : $('#search_txt').val()
+										},
+										success : function(data) {
+											var dataPro = eval(data);
+											totolP = parseInt(dataPro.length % 7 == 0 ? dataPro.length / 7
+													: dataPro.length / 7 + 1);
+											numP = dataPro.length / 7 < 1 ? dataPro.length % 7
+													: 7;
+											var options = {
+												currentPage : 1,
+												totalPages : totolP,
+												numberOfPages : numP,
+												itemTexts : function(type,
+														page, current) {
+													switch (type) {
+													case "first":
+														return "首页";
+													case "prev":
+														return "上一页";
+													case "next":
+														return "下一页";
+													case "last":
+														return "尾页";
+													case "page":
+														return page;
+													}
+												},
+												onPageClicked : function(event,
+														originalEvent, type,
+														page) {
+													size = 7;
+													if (type == 'first'
+															&& dataPro.length < 7) {
+														size = dataPro.length;
+													} else if (type == 'next'
+															&& page == totolP
+															&& dataPro.length % 7 != 0) {
+														size = dataPro.length % 7;
+													} else if (type == 'next'
+															&& page == totolP
+															&& dataPro.length % 7 == 0) {
+														size = 7;
+													} else if (page == totolP
+															&& dataPro.length % 7 != 0) {
+														size = dataPro.length % 7;
+													} else if (page == totolP
+															&& dataPro.length % 7 == 0) {
+														size = 7;
+													} else if (type == 'last'
+															&& dataPro.length % 7 != 0) {
+														size = dataPro.length % 7;
+													} else if (type == 'last'
+															&& dataPro.length % 7 == 0) {
+														size = 7;
+													}
+													$('#list-content').html('');
+													for ( var i = 0; i < size; i++) {
+														$('#list-content')
+																.append(
+																		"<tr><td><label class='checkbox'><input type='checkbox' onchange='checkedFn("
+																				+ dataPro[(page - 1)
+																						* 7
+																						+ i].pro_id
+																				+ ",this);'/></label></td><td>"
+																				+ dataPro[(page - 1)
+																						* 7
+																						+ i].pro_id
+																				+ '</td><td>'
+																				+ dataPro[(page - 1)
+																						* 7
+																						+ i].pro_name
+																				+ '</td><td>'
+																				+ dataPro[(page - 1)
+																						* 7
+																						+ i].pro_type
+																				+ '</td><td>'
+																				+ dataPro[(page - 1)
+																						* 7
+																						+ i].pro_state
+																				+ '</td><td>'
+																				+ dataPro[(page - 1)
+																						* 7
+																						+ i].pro_date
+																				+ '</td><td>'
+																				+ dataPro[(page - 1)
+																						* 7
+																						+ i].pro_zpr
+																				+ '</td><td>'
+																				+ dataPro[(page - 1)
+																						* 7
+																						+ i].outCallNums
+																				+ '</td><td>'
+																				+ dataPro[(page - 1)
+																						* 7
+																						+ i].pro_users
+																				+ '</td><td>'
+																				+ "<a href='callobjects.jsp?pro_id="
+																				+ dataPro[(page - 1)
+																						* 7
+																						+ i].pro_id
+																				+ "&pro_name="
+																				+ dataPro[(page - 1)
+																						* 7
+																						+ i].pro_name
+																				+ "' rel='tooltip' title='外呼号码'><i class='icon-phone' style='font-size:20px;'></i> </a>&nbsp;&nbsp;"
+																				+ "<a href='topics.jsp?pro_id="
+																				+ dataPro[(page - 1)
+																						* 7
+																						+ i].pro_id
+																				+ "&pro_name="
+																				+ dataPro[(page - 1)
+																						* 7
+																						+ i].pro_name
+																				+ "' rel='tooltip' title='题目管理'><i class='icon-file' style='font-size:20px;'></i> </a>&nbsp;&nbsp;"
+																				+ "<a href='project_user.jsp?pro_id="
+																				+ dataPro[(page - 1)
+																						* 7
+																						+ i].pro_id
+																				+ "&pro_name="
+																				+ dataPro[(page - 1)
+																						* 7
+																						+ i].pro_name
+																				+ "' rel='tooltip' title='绑定工号'><i class='icon-user' style='font-size:20px;'></i> </a>&nbsp;&nbsp;<a href='salenumbers.jsp?pro_id="
+																				+ dataPro[(page - 1)
+																						* 7
+																						+ i].pro_id
+																				+ "&pro_name="
+																				+ dataPro[(page - 1)
+																						* 7
+																						+ i].pro_name
+																				+ "' rel='tooltip' title='销售号码'><i class='icon-bookmark' style='font-size:20px;'></i> </a>&nbsp;&nbsp;"
+																				+ "<a href='project.jsp?edit_type=2&pro_id="
+																				+ dataPro[(page - 1)
+																						* 7
+																						+ i].pro_id
+																				+ '&pro_name='
+																				+ dataPro[(page - 1)
+																						* 7
+																						+ i].pro_name
+																				+ '&pro_zpr='
+																				+ dataPro[(page - 1)
+																						* 7
+																						+ i].pro_zpr
+																				+ '&pro_type='
+																				+ dataPro[(page - 1)
+																						* 7
+																						+ i].pro_type
+																				+ '&pro_state='
+																				+ dataPro[(page - 1)
+																						* 7
+																						+ i].pro_state
+																				+ '&pro_date='
+																				+ dataPro[(page - 1)
+																						* 7
+																						+ i].pro_date
+																				+ '&pro_remark='
+																				+ dataPro[(page - 1)
+																						* 7
+																						+ i].pro_remark
+																				+ "'><i class='icon-pencil' style='font-size:20px;'></i></a>&nbsp;&nbsp;<a href='#myModal' role='button' data-toggle='modal'><i class='icon-remove' style='font-size:20px;color:#FF0080;'></i> </a></td></tr>");
+													}
+													$("#pro_info_tab,tr")
+															.click(
+																	function() {
+																		var pro_id = $(
+																				this)
+																				.children(
+																						"td:eq(1)")
+																				.text();
+																		if (pro_id != "") {
+																			$(
+																					'#del_app_id')
+																					.val(
+																							pro_id);
+																		}
+																	});
+												}
+											};
+											bsize = dataPro.length < 7 ? dataPro.length
+													: 7;
+											$('#list-content').html('');
+											for ( var i = 0; i < bsize; i++) {
+												$('#list-content')
+														.append(
+																"<tr><td><label class='checkbox'><input type='checkbox' onchange='checkedFn("
+																		+ dataPro[i].pro_id
+																		+ ",this);'/></label></td><td>"
+																		+ dataPro[i].pro_id
+																		+ '</td><td>'
+																		+ dataPro[i].pro_name
+																		+ '</td><td>'
+																		+ dataPro[i].pro_type
+																		+ '</td><td>'
+																		+ dataPro[i].pro_state
+																		+ '</td><td>'
+																		+ dataPro[i].pro_date
+																		+ '</td><td>'
+																		+ dataPro[i].pro_zpr
+																		+ '</td><td>'
+																		+ dataPro[i].outCallNums
+																		+ '</td><td>'
+																		+ dataPro[i].pro_users
+																		+ '</td><td>'
+																		+ "<a href='callobjects.jsp?pro_id="
+																		+ dataPro[i].pro_id
+																		+ "&pro_name="
+																		+ dataPro[i].pro_name
+																		+ "' rel='tooltip' title='外呼号码'><i class='icon-phone' style='font-size:20px;'></i> </a>&nbsp;&nbsp;"
+																		+ "<a href='topics.jsp?pro_id="
+																		+ dataPro[i].pro_id
+																		+ "&pro_name="
+																		+ dataPro[i].pro_name
+																		+ "' rel='tooltip' title='题目管理'><i class='icon-file' style='font-size:20px;'></i> </a>&nbsp;&nbsp;"
+																		+ "<a href='project_user.jsp?pro_id="
+																		+ dataPro[i].pro_id
+																		+ "&pro_name="
+																		+ dataPro[i].pro_name
+																		+ "' rel='tooltip' title='绑定工号'><i class='icon-user' style='font-size:20px;'></i> </a>&nbsp;&nbsp;<a href='salenumbers.jsp?pro_id="
+																		+ dataPro[i].pro_id
+																		+ "&pro_name="
+																		+ dataPro[i].pro_name
+																		+ "' rel='tooltip' title='销售号码'><i class='icon-book' style='font-size:20px;'></i> </a>&nbsp;&nbsp;"
+																		+ "<a href='project.jsp?edit_type=2&pro_id="
+																		+ dataPro[i].pro_id
+																		+ '&pro_name='
+																		+ dataPro[i].pro_name
+																		+ '&pro_zpr='
+																		+ dataPro[i].pro_zpr
+																		+ '&pro_type='
+																		+ dataPro[i].pro_type
+																		+ '&pro_state='
+																		+ dataPro[i].pro_state
+																		+ '&pro_date='
+																		+ dataPro[i].pro_date
+																		+ '&pro_remark='
+																		+ dataPro[i].pro_remark
+																		+ "'><i class='icon-pencil' style='font-size:20px;'></i> </a>&nbsp;&nbsp;<a href='#myModal' role='button' data-toggle='modal'><i class='icon-remove' style='font-size:20px;color:#FF0080;'></i> </a></td></tr>");
+											}
+											$('#myPaginator')
+													.bootstrapPaginator(options);
+											$("#pro_info_tab,tr")
+													.click(
+															function() {
+																var pro_id = $(
+																		this)
+																		.children(
+																				"td:eq(1)")
+																		.text();
+																if (pro_id != "") {
+																	$(
+																			'#del_app_id')
+																			.val(
+																					pro_id);
+																}
+															});
+										}
+									});
+						});
 	</script>
 </body>
 </html>

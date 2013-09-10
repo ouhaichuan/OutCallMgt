@@ -10,10 +10,20 @@
 		(select
 		object_pnumber from tab_callobject where
 		object_id=tab_answer.object_id)
-		object_pnumber
+		object_pnumber,(select
+		pro_name
+		from
+		tab_project where
+		pro_id = (select pro_id from tab_topic where
+		tab_answer.topic_id=tab_topic.topic_id))
+		pro_name
 		from
 		tab_answer where
-		answer_mark='0'
+		answer_mark='0' and
+		(object_id in (select object_id from tab_callobject
+		where object_pnumber like '%' #{search_txt} '%') or topic_id in
+		(select topic_id from tab_topic where pro_id in(select pro_id from
+		tab_project where pro_name like '%' #{search_txt} '%')))
 	</select>
 	<insert id="addAnswer" parameterType="answer">
 		insert into

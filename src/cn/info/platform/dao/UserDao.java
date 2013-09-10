@@ -1,6 +1,7 @@
 package cn.info.platform.dao;
 
 import java.util.List;
+import java.util.Map;
 
 import cn.info.platform.entity.User;
 import cn.info.platform.mapper.UserMapper;
@@ -25,10 +26,11 @@ public interface UserDao extends BaseDao<User, UserMapper> {
 
 	/**
 	 * 得到所有的用户
+	 * @param search_txt 
 	 * 
 	 * @return 用户列表
 	 */
-	List<User> findAllUsers();
+	List<User> findAllUsers(String search_txt);
 
 	/**
 	 * 更新用户
@@ -65,10 +67,11 @@ public interface UserDao extends BaseDao<User, UserMapper> {
 
 	/**
 	 * 按员工统计外呼情况
+	 * @param map 
 	 * 
 	 * @return
 	 */
-	List<User> staticsData();
+	List<User> staticsData(Map<String, Object> map);
 
 	/**
 	 * 统计个人数据
@@ -77,4 +80,18 @@ public interface UserDao extends BaseDao<User, UserMapper> {
 	 * @return
 	 */
 	List<User> staticsDataForSign(String userName);
+
+	/**
+	 * 查询可以绑定的员工
+	 * 
+	 * @return
+	 */
+	List<User> findUserForPro();
+
+	/**
+	 * 导入用户
+	 * 
+	 * @param user
+	 */
+	void import_user(User user);
 }

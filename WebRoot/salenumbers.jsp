@@ -86,10 +86,10 @@
 	<div>
 		<ul class="breadcrumb">
 			<li><a href="index.jsp" target="_parent">主页</a> <span
+				class="divider">/</span></li>
+			<li><a href="projects.jsp" target="mainFrame">项目管理</a> <span
 				class="divider">/</span>
 			</li>
-			<li><a href="projects.jsp" target="mainFrame">项目管理</a> <span
-				class="divider">/</span></li>
 			<li class="active">销售号码管理</li>
 		</ul>
 
@@ -103,9 +103,9 @@
 						<i class="icon-circle-arrow-down"></i> 导入号码
 					</button>
 					<div style="float: right;">
-						<input type="text" placeholder='号码'
+						<input type="text" placeholder='号码' id='search_txt'
 							class="input-medium search-query">
-						<button id='search_bnt' class="btn btn-primary">搜索</button>
+						<button id='search_btn' class="btn btn-primary">搜索</button>
 					</div>
 					<div class="btn-group"></div>
 				</div>
@@ -163,7 +163,8 @@
 						url : basePath + "saletelnumber/find_all_numbers.do",
 						type : "post",
 						data : {
-							pro_id : $("#pro_id").val()
+							pro_id : $("#pro_id").val(),
+							search_txt : $("#search_txt").val()
 						},
 						success : function(data) {
 							var dataNumber = eval(data);
@@ -308,7 +309,198 @@
 									});
 						}
 					});
-
+			$('#search_btn')
+					.click(
+							function() {
+								$
+										.ajax({
+											url : basePath
+													+ "saletelnumber/find_all_numbers.do",
+											type : "post",
+											data : {
+												pro_id : $("#pro_id").val(),
+												search_txt : $("#search_txt")
+														.val()
+											},
+											success : function(data) {
+												var dataNumber = eval(data);
+												$('#content')
+														.text(
+																'号码总数：'
+																		+ dataNumber.length);
+												totolP = parseInt(dataNumber.length % 8 == 0 ? dataNumber.length / 8
+														: dataNumber.length / 8 + 1);
+												numP = dataNumber.length / 8 < 1 ? dataNumber.length % 8
+														: 8;
+												var options = {
+													currentPage : 1,
+													totalPages : totolP,
+													numberOfPages : numP,
+													itemTexts : function(type,
+															page, current) {
+														switch (type) {
+														case "first":
+															return "首页";
+														case "prev":
+															return "上一页";
+														case "next":
+															return "下一页";
+														case "last":
+															return "尾页";
+														case "page":
+															return page;
+														}
+													},
+													onPageClicked : function(
+															event,
+															originalEvent,
+															type, page) {
+														size = 8;
+														if (type == 'first'
+																&& dataNumber.length < 8) {
+															size = dataNumber.length;
+														} else if (type == 'next'
+																&& page == totolP
+																&& dataNumber.length % 8 != 0) {
+															size = dataNumber.length % 8;
+														} else if (type == 'next'
+																&& page == totolP
+																&& dataNumber.length % 8 == 0) {
+															size = 8;
+														} else if (page == totolP
+																&& dataNumber.length % 8 != 0) {
+															size = dataNumber.length % 8;
+														} else if (page == totolP
+																&& dataNumber.length % 8 == 0) {
+															size = 8;
+														} else if (type == 'last'
+																&& dataNumber.length % 8 != 0) {
+															size = dataNumber.length % 8;
+														} else if (type == 'last'
+																&& dataNumber.length % 8 == 0) {
+															size = 8;
+														}
+														$('#list-content')
+																.html('');
+														for ( var i = 0; i < size; i++) {
+															$('#list-content')
+																	.append(
+																			'<tr><td>'
+																					+ dataNumber[(page - 1)
+																							* 8
+																							+ i].num_id
+																					+ '</td><td>'
+																					+ dataNumber[(page - 1)
+																							* 8
+																							+ i].telnumber
+																					+ '</td><td>'
+																					+ dataNumber[(page - 1)
+																							* 8
+																							+ i].num_state
+																					+ '</td><td>'
+																					+ dataNumber[(page - 1)
+																							* 8
+																							+ i].pro_name
+																					+ '</td><td>'
+																					+ dataNumber[(page - 1)
+																							* 8
+																							+ i].sale_time
+																					+ '</td><td>'
+																					+ dataNumber[(page - 1)
+																							* 8
+																							+ i].user_xm
+																					+ '</td><td>'
+																					+ "<a href='salenumber.jsp?edit_type=2&num_id="
+																					+ dataNumber[(page - 1)
+																							* 8
+																							+ i].num_id
+																					+ '&telnumber='
+																					+ dataNumber[(page - 1)
+																							* 8
+																							+ i].telnumber
+																					+ '&num_state='
+																					+ dataNumber[(page - 1)
+																							* 8
+																							+ i].num_state
+																					+ '&pro_id='
+																					+ dataNumber[(page - 1)
+																							* 8
+																							+ i].pro_id
+																					+ '&pro_name='
+																					+ dataNumber[(page - 1)
+																							* 8
+																							+ i].pro_name
+																					+ "'><i class='icon-pencil'></i> </a>&nbsp;&nbsp;<a href='#myModal' role='button' data-toggle='modal'><i class='icon-remove'></i> </a></td></tr>");
+														}
+														$("#list-content,tr")
+																.click(
+																		function() {
+																			var num_id = $(
+																					this)
+																					.children(
+																							"td:eq(0)")
+																					.text();
+																			if (num_id != "") {
+																				$(
+																						'#del_app_id')
+																						.val(
+																								num_id);
+																			}
+																		});
+													}
+												};
+												bsize = dataNumber.length < 8 ? dataNumber.length
+														: 8;
+												$('#list-content').html('');
+												for ( var i = 0; i < bsize; i++) {
+													$('#list-content')
+															.append(
+																	'<tr><td>'
+																			+ dataNumber[i].num_id
+																			+ '</td><td>'
+																			+ dataNumber[i].telnumber
+																			+ '</td><td>'
+																			+ dataNumber[i].num_state
+																			+ '</td><td>'
+																			+ dataNumber[i].pro_name
+																			+ '</td><td>'
+																			+ dataNumber[i].sale_time
+																			+ '</td><td>'
+																			+ dataNumber[i].user_xm
+																			+ '</td><td>'
+																			+ "<a href='salenumber.jsp?edit_type=2&num_id="
+																			+ dataNumber[i].num_id
+																			+ '&telnumber='
+																			+ dataNumber[i].telnumber
+																			+ '&num_state='
+																			+ dataNumber[i].num_state
+																			+ '&pro_id='
+																			+ dataNumber[i].pro_id
+																			+ '&pro_name='
+																			+ dataNumber[i].pro_name
+																			+ "'><i class='icon-pencil'></i> </a>&nbsp;&nbsp;<a href='#myModal' role='button' data-toggle='modal'><i class='icon-remove'></i> </a></td></tr>");
+												}
+												$('#myPaginator')
+														.bootstrapPaginator(
+																options);
+												$("#list-content,tr")
+														.click(
+																function() {
+																	var num_id = $(
+																			this)
+																			.children(
+																					"td:eq(0)")
+																			.text();
+																	if (num_id != "") {
+																		$(
+																				'#del_app_id')
+																				.val(
+																						num_id);
+																	}
+																});
+											}
+										});
+							});
 			$('#addnum_btn').click(
 					function() {
 						window.location.href = basePath

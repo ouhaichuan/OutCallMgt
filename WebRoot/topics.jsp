@@ -85,11 +85,9 @@
 	<div>
 		<ul class="breadcrumb">
 			<li><a href="index.jsp" target="_parent">主页</a> <span
-				class="divider">/</span>
-			</li>
+				class="divider">/</span></li>
 			<li><a href="projects.jsp" target="mainFrame">项目管理</a> <span
-				class="divider">/</span>
-			</li>
+				class="divider">/</span></li>
 			<li class="active">题目管理</li>
 		</ul>
 
@@ -103,9 +101,9 @@
 						<i class="icon-circle-arrow-down"></i> 导入题目
 					</button>
 					<div style="float: right;">
-						<input type="text" placeholder='所属项目'
+						<input type="text" placeholder='题目内容' id='search_txt'
 							class="input-medium search-query">
-						<button id='search_bnt' class="btn btn-primary">搜索</button>
+						<button id='search_btn' class="btn btn-primary">搜索</button>
 					</div>
 					<div class="btn-group"></div>
 				</div>
@@ -161,7 +159,8 @@
 						url : basePath + "topic/findTopicByProId.do",
 						type : "post",
 						data : {
-							pro_id : $("#pro_id").val()
+							pro_id : $("#pro_id").val(),
+							search_txt : $('#search_txt').val()
 						},
 						success : function(data) {
 							var dataTopic = eval(data);
@@ -306,7 +305,200 @@
 
 						}
 					});
+			$('#search_btn')
+					.click(
+							function() {
+								$
+										.ajax({
+											url : basePath
+													+ "topic/findTopicByProId.do",
+											type : "post",
+											data : {
+												pro_id : $("#pro_id").val(),
+												search_txt : $('#search_txt')
+														.val()
+											},
+											success : function(data) {
+												var dataTopic = eval(data);
+												$('#content')
+														.text(
+																'号码总数：'
+																		+ dataTopic.length);
+												totolP = parseInt(dataTopic.length % 7 == 0 ? dataTopic.length / 7
+														: dataTopic.length / 7 + 1);
+												numP = dataTopic.length / 7 < 1 ? dataTopic.length % 7
+														: 7;
+												var options = {
+													currentPage : 1,
+													totalPages : totolP,
+													numberOfPages : numP,
+													itemTexts : function(type,
+															page, current) {
+														switch (type) {
+														case "first":
+															return "首页";
+														case "prev":
+															return "上一页";
+														case "next":
+															return "下一页";
+														case "last":
+															return "尾页";
+														case "page":
+															return page;
+														}
+													},
+													onPageClicked : function(
+															event,
+															originalEvent,
+															type, page) {
+														size = 7;
+														if (type == 'first'
+																&& dataTopic.length < 7) {
+															size = dataTopic.length;
+														} else if (type == 'next'
+																&& page == totolP
+																&& dataTopic.length % 7 != 0) {
+															size = dataTopic.length % 7;
+														} else if (type == 'next'
+																&& page == totolP
+																&& dataTopic.length % 7 == 0) {
+															size = 7;
+														} else if (page == totolP
+																&& dataTopic.length % 7 != 0) {
+															size = dataTopic.length % 7;
+														} else if (page == totolP
+																&& dataTopic.length % 7 == 0) {
+															size = 7;
+														} else if (type == 'last'
+																&& dataTopic.length % 7 != 0) {
+															size = dataTopic.length % 7;
+														} else if (type == 'last'
+																&& dataTopic.length % 7 == 0) {
+															size = 7;
+														}
+														$('#list-content')
+																.html('');
+														for ( var i = 0; i < size; i++) {
+															$('#list-content')
+																	.append(
+																			'<tr><td>'
+																					+ dataTopic[(page - 1)
+																							* 7
+																							+ i].topic_id
+																					+ '</td><td>'
+																					+ dataTopic[(page - 1)
+																							* 7
+																							+ i].pro_name
+																					+ '</td><td>'
+																					+ dataTopic[(page - 1)
+																							* 7
+																							+ i].topic_content
+																					+ '</td><td>'
+																					+ dataTopic[(page - 1)
+																							* 7
+																							+ i].topic_type
+																					+ '</td><td>'
+																					+ dataTopic[(page - 1)
+																							* 7
+																							+ i].topic_remark
+																					+ '</td><td>'
+																					+ "<a href='topic.jsp?edit_type=2&topic_id="
+																					+ dataTopic[(page - 1)
+																							* 7
+																							+ i].topic_id
+																					+ '&pro_id='
+																					+ dataTopic[(page - 1)
+																							* 7
+																							+ i].pro_id
+																					+ '&pro_name='
+																					+ dataTopic[(page - 1)
+																							* 7
+																							+ i].pro_name
+																					+ '&topic_content='
+																					+ dataTopic[(page - 1)
+																							* 7
+																							+ i].topic_content
+																					+ '&topic_type='
+																					+ dataTopic[(page - 1)
+																							* 7
+																							+ i].topic_type
+																					+ '&topic_remark='
+																					+ dataTopic[(page - 1)
+																							* 7
+																							+ i].topic_remark
+																					+ "'><i class='icon-pencil'></i> </a>&nbsp;&nbsp;<a href='#myModal' role='button' data-toggle='modal'><i class='icon-remove'></i> </a></td></tr>");
+														}
+														$("#list-content,tr")
+																.click(
+																		function() {
+																			var topic_id = $(
+																					this)
+																					.children(
+																							"td:eq(0)")
+																					.text();
+																			if (topic_id != "") {
+																				$(
+																						'#del_app_id')
+																						.val(
+																								topic_id);
+																			}
+																		});
+													}
+												};
+												bsize = dataTopic.length < 7 ? dataTopic.length
+														: 7;
+												$('#list-content').html('');
+												for ( var i = 0; i < bsize; i++) {
+													$('#list-content')
+															.append(
+																	'<tr><td>'
+																			+ dataTopic[i].topic_id
+																			+ '</td><td>'
+																			+ dataTopic[i].pro_name
+																			+ '</td><td>'
+																			+ dataTopic[i].topic_content
+																			+ '</td><td>'
+																			+ dataTopic[i].topic_type
+																			+ '</td><td>'
+																			+ dataTopic[i].topic_remark
+																			+ '</td><td>'
+																			+ "<a href='topic.jsp?edit_type=2&topic_id="
+																			+ dataTopic[i].topic_id
+																			+ '&pro_id='
+																			+ dataTopic[i].pro_id
+																			+ '&pro_name='
+																			+ dataTopic[i].pro_name
+																			+ '&topic_content='
+																			+ dataTopic[i].topic_content
+																			+ '&topic_type='
+																			+ dataTopic[i].topic_type
+																			+ '&topic_remark='
+																			+ dataTopic[i].topic_remark
+																			+ "'><i class='icon-pencil'></i> </a>&nbsp;&nbsp;<a href='#myModal' role='button' data-toggle='modal'><i class='icon-remove'></i> </a></td></tr>");
+												}
+												$('#myPaginator')
+														.bootstrapPaginator(
+																options);
+												$("#list-content,tr")
+														.click(
+																function() {
+																	var topic_id = $(
+																			this)
+																			.children(
+																					"td:eq(0)")
+																			.text();
+																	if (topic_id != "") {
+																		$(
+																				'#del_app_id')
+																				.val(
+																						topic_id);
+																	}
+																});
 
+											}
+										});
+
+							});
 			$('#addtopic_btn').click(
 					function() {
 						window.location.href = basePath

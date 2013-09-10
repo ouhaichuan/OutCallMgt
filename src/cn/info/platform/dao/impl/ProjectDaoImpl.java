@@ -21,8 +21,8 @@ public class ProjectDaoImpl extends BaseDaoImpl<Project, ProjectMapper>
 	/**
 	 * 查询所有项目
 	 */
-	public List<Project> findAllProject() {
-		return this.getMapper().findAllProject();
+	public List<Project> findAllProject(String search_txt) {
+		return this.getMapper().findAllProject(search_txt);
 	}
 
 	/**
@@ -49,15 +49,15 @@ public class ProjectDaoImpl extends BaseDaoImpl<Project, ProjectMapper>
 	/**
 	 * 查询相应用户名的项目
 	 */
-	public List<Project> findAllProjectByUserName(String user_name) {
-		return this.getMapper().findAllProjectByUserName(user_name);
+	public List<Project> findAllProjectByUserName(Map<String, Object> map) {
+		return this.getMapper().findAllProjectByUserName(map);
 	}
 
 	/**
 	 * 根据项目统计
 	 */
-	public List<Project> staticsData() {
-		return this.getMapper().staticsData();
+	public List<Project> staticsData(Map<String, Object> map) {
+		return this.getMapper().staticsData(map);
 	}
 
 	/**
@@ -68,9 +68,9 @@ public class ProjectDaoImpl extends BaseDaoImpl<Project, ProjectMapper>
 	}
 
 	/**
-	 * 统计个人数据
+	 * 检查是否导入题目和号码
 	 */
-	public List<Project> staticsDataForSign(String userName) {
-		return this.getMapper().staticsDataForSign(userName);
+	public int checkPro(String pro_id) {
+		return this.getMapper().checkPro(pro_id);
 	}
 }

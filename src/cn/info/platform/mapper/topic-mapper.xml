@@ -4,14 +4,15 @@
 <!-- namespace名字必须与Mapper接口名一致 -->
 <mapper namespace="cn.info.platform.mapper.TopicMapper">
 	<select id="findTopicByProId" resultMap="topicMap"
-		parameterType="int">
+		parameterType="map">
 		select *,(select pro_name from tab_project where
 		pro_id=tab_topic.pro_id) pro_name
 		from
 		tab_topic where
 		topic_mark='0' and
-		pro_id=#{pro_id} order
-		by pro_id
+		pro_id=#{pro_id} and topic_content like '%' #{search_txt} '%' order
+		by
+		pro_id
 	</select>
 	<select id="findAllTopic" resultMap="topicMap">
 		select *,(select pro_name

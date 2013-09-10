@@ -72,8 +72,7 @@
 	<div>
 		<ul class="breadcrumb">
 			<li><a href="index.jsp" target="_parent">主页</a> <span
-				class="divider">/</span>
-			</li>
+				class="divider">/</span></li>
 			<li class="active">答案查询</li>
 		</ul>
 
@@ -81,7 +80,7 @@
 			<div class="row-fluid">
 				<div class="btn-toolbar" style="padding-bottom: 30px;">
 					<div style="float: right;">
-						<input type="text" placeholder='外呼号码/答案'
+						<input type="text" placeholder='外呼号码/所属项目' id='search_txt'
 							class="input-medium search-query">
 						<button id='search_bnt' class="btn btn-primary">搜索</button>
 					</div>
@@ -91,6 +90,7 @@
 						<thead>
 							<tr>
 								<th style="width: 80px;">编号</th>
+								<th>所属项目</th>
 								<th style="width: 100px;">外呼号码</th>
 								<th style="width: 600px;">题目</th>
 								<th>答案</th>
@@ -126,129 +126,270 @@
 	<script src="lib/bootstrap/js/bootstrap.js"></script>
 	<script type="text/javascript">
 		$("[rel=tooltip]").tooltip();
+		var basePath = $('#basePathIn').val();
 		$(function() {
-			var basePath = $('#basePathIn').val();
-
 			$
-					.post(
-							basePath + "answer/find_all_answer.do",
-							function(data) {
-								var dataAnswer = eval(data);
-								totolP = parseInt(dataAnswer.length % 5 == 0 ? dataAnswer.length / 5
-										: dataAnswer.length / 5 + 1);
-								numP = dataAnswer.length / 5 < 1 ? dataAnswer.length % 5
-										: 5;
-								var options = {
-									currentPage : 1,
-									totalPages : totolP,
-									numberOfPages : numP,
-									itemTexts : function(type, page, current) {
-										switch (type) {
-										case "first":
-											return "首页";
-										case "prev":
-											return "上一页";
-										case "next":
-											return "下一页";
-										case "last":
-											return "尾页";
-										case "page":
-											return page;
-										}
-									},
-									onPageClicked : function(event,
-											originalEvent, type, page) {
-										size = 5;
-										if (type == 'first'
-												&& dataAnswer.length < 5) {
-											size = dataAnswer.length;
-										} else if (type == 'next'
-												&& page == totolP
-												&& dataAnswer.length % 5 != 0) {
-											size = dataAnswer.length % 5;
-										} else if (type == 'next'
-												&& page == totolP
-												&& dataAnswer.length % 5 == 0) {
-											size = 5;
-										} else if (page == totolP
-												&& dataAnswer.length % 5 != 0) {
-											size = dataAnswer.length % 5;
-										} else if (page == totolP
-												&& dataAnswer.length % 5 == 0) {
-											size = 5;
-										} else if (type == 'last'
-												&& dataAnswer.length % 5 != 0) {
-											size = dataAnswer.length % 5;
-										} else if (type == 'last'
-												&& dataAnswer.length % 5 == 0) {
-											size = 5;
-										}
-										$('#list-content').html('');
-										for ( var i = 0; i < size; i++) {
-											$('#list-content')
-													.append(
-															'<tr><td>'
-																	+ dataAnswer[(page - 1)
-																			* 5
-																			+ i].answer_id
-																	+ '</td><td>'
-																	+ dataAnswer[(page - 1)
-																			* 5
-																			+ i].object_pnumber
-																	+ '</td><td>'
-																	+ dataAnswer[(page - 1)
-																			* 5
-																			+ i].topic_content
-																	+ '</td><td>'
-																	+ dataAnswer[(page - 1)
-																			* 5
-																			+ i].answer_content
-																	+ '</td></tr>');
-										}
-										$("#list-content,tr").click(
-												function() {
-													var answer_id = $(this)
-															.children(
-																	"td:eq(0)")
-															.text();
-													if (answer_id != "") {
-														$('#del_app_id').val(
-																answer_id);
-													}
-												});
+					.ajax({
+						url : basePath + "answer/find_all_answer.do",
+						type : "post",
+						data : {
+							search_txt : $('#search_txt').val()
+						},
+						success : function(data) {
+							var dataAnswer = eval(data);
+							totolP = parseInt(dataAnswer.length % 8 == 0 ? dataAnswer.length / 8
+									: dataAnswer.length / 8 + 1);
+							numP = dataAnswer.length / 8 < 1 ? dataAnswer.length % 8
+									: 8;
+							var options = {
+								currentPage : 1,
+								totalPages : totolP,
+								numberOfPages : numP,
+								itemTexts : function(type, page, current) {
+									switch (type) {
+									case "first":
+										return "首页";
+									case "prev":
+										return "上一页";
+									case "next":
+										return "下一页";
+									case "last":
+										return "尾页";
+									case "page":
+										return page;
 									}
-								};
-								bsize = dataAnswer.length < 5 ? dataAnswer.length
-										: 5;
-								$('#list-content').html('');
-								for ( var i = 0; i < bsize; i++) {
-									$('#list-content')
-											.append(
-													'<tr><td>'
-															+ dataAnswer[i].answer_id
-															+ '</td><td>'
-															+ dataAnswer[i].object_pnumber
-															+ '</td><td>'
-															+ dataAnswer[i].topic_content
-															+ '</td><td>'
-															+ dataAnswer[i].answer_content
-															+ '</td></tr>');
+								},
+								onPageClicked : function(event, originalEvent,
+										type, page) {
+									size = 8;
+									if (type == 'first'
+											&& dataAnswer.length < 8) {
+										size = dataAnswer.length;
+									} else if (type == 'next' && page == totolP
+											&& dataAnswer.length % 8 != 0) {
+										size = dataAnswer.length % 8;
+									} else if (type == 'next' && page == totolP
+											&& dataAnswer.length % 8 == 0) {
+										size = 8;
+									} else if (page == totolP
+											&& dataAnswer.length % 8 != 0) {
+										size = dataAnswer.length % 8;
+									} else if (page == totolP
+											&& dataAnswer.length % 8 == 0) {
+										size = 8;
+									} else if (type == 'last'
+											&& dataAnswer.length % 8 != 0) {
+										size = dataAnswer.length % 8;
+									} else if (type == 'last'
+											&& dataAnswer.length % 8 == 0) {
+										size = 8;
+									}
+									$('#list-content').html('');
+									for ( var i = 0; i < size; i++) {
+										$('#list-content')
+												.append(
+														'<tr><td>'
+																+ dataAnswer[(page - 1)
+																		* 8 + i].answer_id
+																+ '</td><td>'
+																+ dataAnswer[(page - 1)
+																		* 8 + i].pro_name
+																+ '</td><td>'
+																+ dataAnswer[(page - 1)
+																		* 8 + i].object_pnumber
+																+ '</td><td>'
+																+ dataAnswer[(page - 1)
+																		* 8 + i].topic_content
+																+ '</td><td>'
+																+ dataAnswer[(page - 1)
+																		* 8 + i].answer_content
+																+ '</td></tr>');
+									}
+									$("#list-content,tr").click(
+											function() {
+												var answer_id = $(this)
+														.children("td:eq(0)")
+														.text();
+												if (answer_id != "") {
+													$('#del_app_id').val(
+															answer_id);
+												}
+											});
 								}
-								$('#myPaginator').bootstrapPaginator(options);
-								$("#list-content,tr")
-										.click(
-												function() {
-													var answer_id = $(this)
-															.children(
-																	"td:eq(0)")
-															.text();
-													if (answer_id != "") {
-														$('#del_app_id').val(
-																answer_id);
-													}
-												});
-							});
+							};
+							bsize = dataAnswer.length < 8 ? dataAnswer.length
+									: 8;
+							$('#list-content').html('');
+							for ( var i = 0; i < bsize; i++) {
+								$('#list-content').append(
+										'<tr><td>' + dataAnswer[i].answer_id
+												+ '</td><td>'
+												+ dataAnswer[i].pro_name
+												+ '</td><td>'
+												+ dataAnswer[i].object_pnumber
+												+ '</td><td>'
+												+ dataAnswer[i].topic_content
+												+ '</td><td>'
+												+ dataAnswer[i].answer_content
+												+ '</td></tr>');
+							}
+							$('#myPaginator').bootstrapPaginator(options);
+							$("#list-content,tr").click(
+									function() {
+										var answer_id = $(this).children(
+												"td:eq(0)").text();
+										if (answer_id != "") {
+											$('#del_app_id').val(answer_id);
+										}
+									});
+						}
+					});
 		});
+		$('#search_bnt')
+				.click(
+						function() {
+							$
+									.ajax({
+										url : basePath
+												+ "answer/find_all_answer.do",
+										type : "post",
+										data : {
+											search_txt : $('#search_txt').val()
+										},
+										success : function(data) {
+											var dataAnswer = eval(data);
+											totolP = parseInt(dataAnswer.length % 8 == 0 ? dataAnswer.length / 8
+													: dataAnswer.length / 8 + 1);
+											numP = dataAnswer.length / 8 < 1 ? dataAnswer.length % 8
+													: 8;
+											var options = {
+												currentPage : 1,
+												totalPages : totolP,
+												numberOfPages : numP,
+												itemTexts : function(type,
+														page, current) {
+													switch (type) {
+													case "first":
+														return "首页";
+													case "prev":
+														return "上一页";
+													case "next":
+														return "下一页";
+													case "last":
+														return "尾页";
+													case "page":
+														return page;
+													}
+												},
+												onPageClicked : function(event,
+														originalEvent, type,
+														page) {
+													size = 8;
+													if (type == 'first'
+															&& dataAnswer.length < 8) {
+														size = dataAnswer.length;
+													} else if (type == 'next'
+															&& page == totolP
+															&& dataAnswer.length % 8 != 0) {
+														size = dataAnswer.length % 8;
+													} else if (type == 'next'
+															&& page == totolP
+															&& dataAnswer.length % 8 == 0) {
+														size = 8;
+													} else if (page == totolP
+															&& dataAnswer.length % 8 != 0) {
+														size = dataAnswer.length % 8;
+													} else if (page == totolP
+															&& dataAnswer.length % 8 == 0) {
+														size = 8;
+													} else if (type == 'last'
+															&& dataAnswer.length % 8 != 0) {
+														size = dataAnswer.length % 8;
+													} else if (type == 'last'
+															&& dataAnswer.length % 8 == 0) {
+														size = 8;
+													}
+													$('#list-content').html('');
+													for ( var i = 0; i < size; i++) {
+														$('#list-content')
+																.append(
+																		'<tr><td>'
+																				+ dataAnswer[(page - 1)
+																						* 8
+																						+ i].answer_id
+																				+ '</td><td>'
+																				+ dataAnswer[(page - 1)
+																						* 8
+																						+ i].pro_name
+																				+ '</td><td>'
+																				+ dataAnswer[(page - 1)
+																						* 8
+																						+ i].object_pnumber
+																				+ '</td><td>'
+																				+ dataAnswer[(page - 1)
+																						* 8
+																						+ i].topic_content
+																				+ '</td><td>'
+																				+ dataAnswer[(page - 1)
+																						* 8
+																						+ i].answer_content
+																				+ '</td></tr>');
+													}
+													$("#list-content,tr")
+															.click(
+																	function() {
+																		var answer_id = $(
+																				this)
+																				.children(
+																						"td:eq(0)")
+																				.text();
+																		if (answer_id != "") {
+																			$(
+																					'#del_app_id')
+																					.val(
+																							answer_id);
+																		}
+																	});
+												}
+											};
+											bsize = dataAnswer.length < 8 ? dataAnswer.length
+													: 8;
+											$('#list-content').html('');
+											for ( var i = 0; i < bsize; i++) {
+												$('#list-content')
+														.append(
+																'<tr><td>'
+																		+ dataAnswer[i].answer_id
+																		+ '</td><td>'
+																		+ dataAnswer[i].pro_name
+																		+ '</td><td>'
+																		+ dataAnswer[i].object_pnumber
+																		+ '</td><td>'
+																		+ dataAnswer[i].topic_content
+																		+ '</td><td>'
+																		+ dataAnswer[i].answer_content
+																		+ '</td></tr>');
+											}
+											$('#myPaginator')
+													.bootstrapPaginator(options);
+											$("#list-content,tr")
+													.click(
+															function() {
+																var answer_id = $(
+																		this)
+																		.children(
+																				"td:eq(0)")
+																		.text();
+																if (answer_id != "") {
+																	$(
+																			'#del_app_id')
+																			.val(
+																					answer_id);
+																}
+															});
+										}
+									});
+						});
 	</script>
 </body>
 </html>

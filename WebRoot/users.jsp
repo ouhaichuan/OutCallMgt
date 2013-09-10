@@ -25,6 +25,9 @@
 
 <script src="lib/jquery-1.7.2.min.js" type="text/javascript"></script>
 <script type="text/javascript" src="js/bootstrap-paginator.min.js"></script>
+<script src="artDialog4.1.7/artDialog.js?skin=twitter"></script>
+<script src="artDialog4.1.7/jquery.artDialog.js"></script>
+<script src="artDialog4.1.7/plugins/iframeTools.js"></script>
 
 <style type="text/css">
 #line-chart {
@@ -82,8 +85,11 @@
 					<button class="btn btn-primary" id='adduser_btn'>
 						<i class="icon-plus"></i> 添加员工
 					</button>
+					<button class="btn btn-info" id='import_btn'>
+						<i class="icon-circle-arrow-down"></i> 导入员工
+					</button>
 					<div style="float: right;">
-						<input type="text" placeholder='工号/姓名'
+						<input type="text" placeholder='姓名/工号/电话' id='search_txt'
 							class="input-medium search-query">
 						<button id='search_bnt' class="btn btn-primary">搜索</button>
 					</div>
@@ -132,186 +138,170 @@
 	<script src="lib/bootstrap/js/bootstrap.js"></script>
 	<script type="text/javascript">
 		$("[rel=tooltip]").tooltip();
+		var basePath = $('#basePathIn').val();
 		$(function() {
-			var basePath = $('#basePathIn').val();
-
 			$
-					.post(
-							basePath + "user/find_all_users.do",
-							function(data) {
-								var dataUser = eval(data);
-								totolP = parseInt(dataUser.length % 5 == 0 ? dataUser.length / 5
-										: dataUser.length / 5 + 1);
-								numP = dataUser.length / 5 < 1 ? dataUser.length % 5
-										: 5;
-								var options = {
-									currentPage : 1,
-									totalPages : totolP,
-									numberOfPages : numP,
-									itemTexts : function(type, page, current) {
-										switch (type) {
-										case "first":
-											return "首页";
-										case "prev":
-											return "上一页";
-										case "next":
-											return "下一页";
-										case "last":
-											return "尾页";
-										case "page":
-											return page;
-										}
-									},
-									onPageClicked : function(event,
-											originalEvent, type, page) {
-										size = 5;
-										if (type == 'first'
-												&& dataUser.length < 5) {
-											size = dataUser.length;
-										} else if (type == 'next'
-												&& page == totolP
-												&& dataUser.length % 5 != 0) {
-											size = dataUser.length % 5;
-										} else if (type == 'next'
-												&& page == totolP
-												&& dataUser.length % 5 == 0) {
-											size = 5;
-										} else if (page == totolP
-												&& dataUser.length % 5 != 0) {
-											size = dataUser.length % 5;
-										} else if (page == totolP
-												&& dataUser.length % 5 == 0) {
-											size = 5;
-										} else if (type == 'last'
-												&& dataUser.length % 5 != 0) {
-											size = dataUser.length % 5;
-										} else if (type == 'last'
-												&& dataUser.length % 5 == 0) {
-											size = 5;
-										}
-										$('#list-content').html('');
-										for ( var i = 0; i < size; i++) {
-											$('#list-content')
-													.append(
-															'<tr><td>'
-																	+ dataUser[(page - 1)
-																			* 5
-																			+ i].userID
-																	+ '</td><td>'
-																	+ dataUser[(page - 1)
-																			* 5
-																			+ i].userName
-																	+ '</td><td>'
-																	+ dataUser[(page - 1)
-																			* 5
-																			+ i].user_phone
-																	+ '</td><td>'
-																	+ dataUser[(page - 1)
-																			* 5
-																			+ i].user_channel
-																	+ '</td><td>'
-																	+ dataUser[(page - 1)
-																			* 5
-																			+ i].user_xm
-																	+ '</td><td>'
-																	+ dataUser[(page - 1)
-																			* 5
-																			+ i].role_name
-																	+ '</td><td>'
-																	+ "<a href='user.jsp?edit_type=2&user_id="
-																	+ dataUser[(page - 1)
-																			* 5
-																			+ i].userID
-																	+ '&user_name='
-																	+ dataUser[(page - 1)
-																			* 5
-																			+ i].userName
-																	+ '&user_pass='
-																	+ dataUser[(page - 1)
-																			* 5
-																			+ i].passWord
-																	+ '&role_id='
-																	+ dataUser[(page - 1)
-																			* 5
-																			+ i].role_id
-																	+ '&user_remark='
-																	+ dataUser[(page - 1)
-																			* 5
-																			+ i].remark
-																	+ '&user_phone='
-																	+ dataUser[(page - 1)
-																			* 5
-																			+ i].user_phone
-																	+ '&user_channel='
-																	+ dataUser[(page - 1)
-																			* 5
-																			+ i].user_channel
-																	+ '&user_xm='
-																	+ dataUser[(page - 1)
-																			* 5
-																			+ i].user_xm
-																	+ "'><i class='icon-pencil'></i> </a>&nbsp;&nbsp;<a href='#myModal' role='button' data-toggle='modal'><i class='icon-remove'></i> </a></td></tr>");
-										}
-										$("#list-content,tr").click(
-												function() {
-													var user_id = $(this)
-															.children(
-																	"td:eq(0)")
-															.text();
-													if (user_id != "") {
-														$('#del_app_id').val(
-																user_id);
-													}
-												});
+					.ajax({
+						url : basePath + "user/find_all_users.do",
+						type : "post",
+						data : {
+							search_txt : $('#search_txt').val()
+						},
+						success : function(data) {
+							var dataUser = eval(data);
+							totolP = parseInt(dataUser.length % 5 == 0 ? dataUser.length / 5
+									: dataUser.length / 5 + 1);
+							numP = dataUser.length / 5 < 1 ? dataUser.length % 5
+									: 5;
+							var options = {
+								currentPage : 1,
+								totalPages : totolP,
+								numberOfPages : numP,
+								itemTexts : function(type, page, current) {
+									switch (type) {
+									case "first":
+										return "首页";
+									case "prev":
+										return "上一页";
+									case "next":
+										return "下一页";
+									case "last":
+										return "尾页";
+									case "page":
+										return page;
 									}
-								};
-								bsize = dataUser.length < 5 ? dataUser.length
-										: 5;
-								$('#list-content').html('');
-								for ( var i = 0; i < bsize; i++) {
-									$('#list-content')
-											.append(
-													'<tr><td>'
-															+ dataUser[i].userID
-															+ '</td><td>'
-															+ dataUser[i].userName
-															+ '</td><td>'
-															+ dataUser[i].user_phone
-															+ '</td><td>'
-															+ dataUser[i].user_channel
-															+ '</td><td>'
-															+ dataUser[i].user_xm
-															+ '</td><td>'
-															+ dataUser[i].role_name
-															+ '</td><td>'
-															+ "<a href='user.jsp?edit_type=2&user_id="
-															+ dataUser[i].userID
-															+ '&user_name='
-															+ dataUser[i].userName
-															+ '&user_pass='
-															+ dataUser[i].passWord
-															+ '&role_id='
-															+ dataUser[i].role_id
-															+ '&user_remark='
-															+ dataUser[i].remark
-															+ '&user_channel='
-															+ dataUser[i].user_channel
-															+ '&user_phone='
-															+ dataUser[i].user_phone
-															+ '&user_xm='
-															+ dataUser[i].user_xm
-															+ "'><i class='icon-pencil'></i> </a>&nbsp;&nbsp;<a href='#myModal' role='button' data-toggle='modal'><i class='icon-remove'></i> </a></td></tr>");
+								},
+								onPageClicked : function(event, originalEvent,
+										type, page) {
+									size = 5;
+									if (type == 'first' && dataUser.length < 5) {
+										size = dataUser.length;
+									} else if (type == 'next' && page == totolP
+											&& dataUser.length % 5 != 0) {
+										size = dataUser.length % 5;
+									} else if (type == 'next' && page == totolP
+											&& dataUser.length % 5 == 0) {
+										size = 5;
+									} else if (page == totolP
+											&& dataUser.length % 5 != 0) {
+										size = dataUser.length % 5;
+									} else if (page == totolP
+											&& dataUser.length % 5 == 0) {
+										size = 5;
+									} else if (type == 'last'
+											&& dataUser.length % 5 != 0) {
+										size = dataUser.length % 5;
+									} else if (type == 'last'
+											&& dataUser.length % 5 == 0) {
+										size = 5;
+									}
+									$('#list-content').html('');
+									for ( var i = 0; i < size; i++) {
+										$('#list-content')
+												.append(
+														'<tr><td>'
+																+ dataUser[(page - 1)
+																		* 5 + i].userID
+																+ '</td><td>'
+																+ dataUser[(page - 1)
+																		* 5 + i].userName
+																+ '</td><td>'
+																+ dataUser[(page - 1)
+																		* 5 + i].user_phone
+																+ '</td><td>'
+																+ dataUser[(page - 1)
+																		* 5 + i].user_channel
+																+ '</td><td>'
+																+ dataUser[(page - 1)
+																		* 5 + i].user_xm
+																+ '</td><td>'
+																+ dataUser[(page - 1)
+																		* 5 + i].role_name
+																+ '</td><td>'
+																+ "<a href='user.jsp?edit_type=2&user_id="
+																+ dataUser[(page - 1)
+																		* 5 + i].userID
+																+ '&user_name='
+																+ dataUser[(page - 1)
+																		* 5 + i].userName
+																+ '&user_pass='
+																+ dataUser[(page - 1)
+																		* 5 + i].passWord
+																+ '&role_id='
+																+ dataUser[(page - 1)
+																		* 5 + i].role_id
+																+ '&user_remark='
+																+ dataUser[(page - 1)
+																		* 5 + i].remark
+																+ '&user_phone='
+																+ dataUser[(page - 1)
+																		* 5 + i].user_phone
+																+ '&user_channel='
+																+ dataUser[(page - 1)
+																		* 5 + i].user_channel
+																+ '&user_xm='
+																+ dataUser[(page - 1)
+																		* 5 + i].user_xm
+																+ "'><i class='icon-pencil'></i> </a>&nbsp;&nbsp;<a href='#myModal' role='button' data-toggle='modal'><i class='icon-remove'></i> </a></td></tr>");
+									}
+									$("#list-content,tr").click(
+											function() {
+												var user_id = $(this).children(
+														"td:eq(0)").text();
+												if (user_id != "") {
+													$('#del_app_id').val(
+															user_id);
+												}
+											});
 								}
-								$('#myPaginator').bootstrapPaginator(options);
-								$("#list-content,tr").click(
-										function() {
-											var user_id = $(this).children(
-													"td:eq(0)").text();
-											if (user_id != "") {
-												$('#del_app_id').val(user_id);
-											}
-										});
-							});
+							};
+							bsize = dataUser.length < 5 ? dataUser.length : 5;
+							$('#list-content').html('');
+							for ( var i = 0; i < bsize; i++) {
+								$('#list-content')
+										.append(
+												'<tr><td>'
+														+ dataUser[i].userID
+														+ '</td><td>'
+														+ dataUser[i].userName
+														+ '</td><td>'
+														+ dataUser[i].user_phone
+														+ '</td><td>'
+														+ dataUser[i].user_channel
+														+ '</td><td>'
+														+ dataUser[i].user_xm
+														+ '</td><td>'
+														+ dataUser[i].role_name
+														+ '</td><td>'
+														+ "<a href='user.jsp?edit_type=2&user_id="
+														+ dataUser[i].userID
+														+ '&user_name='
+														+ dataUser[i].userName
+														+ '&user_pass='
+														+ dataUser[i].passWord
+														+ '&role_id='
+														+ dataUser[i].role_id
+														+ '&user_remark='
+														+ dataUser[i].remark
+														+ '&user_channel='
+														+ dataUser[i].user_channel
+														+ '&user_phone='
+														+ dataUser[i].user_phone
+														+ '&user_xm='
+														+ dataUser[i].user_xm
+														+ "'><i class='icon-pencil'></i> </a>&nbsp;&nbsp;<a href='#myModal' role='button' data-toggle='modal'><i class='icon-remove'></i> </a></td></tr>");
+							}
+							$('#myPaginator').bootstrapPaginator(options);
+							$("#list-content,tr").click(
+									function() {
+										var user_id = $(this).children(
+												"td:eq(0)").text();
+										if (user_id != "") {
+											$('#del_app_id').val(user_id);
+										}
+									});
+						}
+					});
 
 			$('#adduser_btn').click(function() {
 				window.location.href = basePath + "user.jsp?edit_type=1";
@@ -322,7 +312,222 @@
 								+ "user/del_user.do?id="
 								+ $('#del_app_id').val();
 					});
+			$('#import_btn').click(function() {
+				art.dialog.open(basePath + "user_uploadfile.jsp", {
+					id : 'filechosseDialog',
+					width : 420,
+					height : 350,
+					title : '导入员工',
+					lock : true,
+					drag : false,
+					resize : false,
+					close : function() {
+						window.location.href = basePath + 'users.jsp';
+					}
+				});
+			});
 		});
+		$('#search_bnt')
+				.click(
+						function() {
+							$
+									.ajax({
+										url : basePath
+												+ "user/find_all_users.do",
+										type : "post",
+										data : {
+											search_txt : $('#search_txt').val()
+										},
+										success : function(data) {
+											var dataUser = eval(data);
+											totolP = parseInt(dataUser.length % 5 == 0 ? dataUser.length / 5
+													: dataUser.length / 5 + 1);
+											numP = dataUser.length / 5 < 1 ? dataUser.length % 5
+													: 5;
+											var options = {
+												currentPage : 1,
+												totalPages : totolP,
+												numberOfPages : numP,
+												itemTexts : function(type,
+														page, current) {
+													switch (type) {
+													case "first":
+														return "首页";
+													case "prev":
+														return "上一页";
+													case "next":
+														return "下一页";
+													case "last":
+														return "尾页";
+													case "page":
+														return page;
+													}
+												},
+												onPageClicked : function(event,
+														originalEvent, type,
+														page) {
+													size = 5;
+													if (type == 'first'
+															&& dataUser.length < 5) {
+														size = dataUser.length;
+													} else if (type == 'next'
+															&& page == totolP
+															&& dataUser.length % 5 != 0) {
+														size = dataUser.length % 5;
+													} else if (type == 'next'
+															&& page == totolP
+															&& dataUser.length % 5 == 0) {
+														size = 5;
+													} else if (page == totolP
+															&& dataUser.length % 5 != 0) {
+														size = dataUser.length % 5;
+													} else if (page == totolP
+															&& dataUser.length % 5 == 0) {
+														size = 5;
+													} else if (type == 'last'
+															&& dataUser.length % 5 != 0) {
+														size = dataUser.length % 5;
+													} else if (type == 'last'
+															&& dataUser.length % 5 == 0) {
+														size = 5;
+													}
+													$('#list-content').html('');
+													for ( var i = 0; i < size; i++) {
+														$('#list-content')
+																.append(
+																		'<tr><td>'
+																				+ dataUser[(page - 1)
+																						* 5
+																						+ i].userID
+																				+ '</td><td>'
+																				+ dataUser[(page - 1)
+																						* 5
+																						+ i].userName
+																				+ '</td><td>'
+																				+ dataUser[(page - 1)
+																						* 5
+																						+ i].user_phone
+																				+ '</td><td>'
+																				+ dataUser[(page - 1)
+																						* 5
+																						+ i].user_channel
+																				+ '</td><td>'
+																				+ dataUser[(page - 1)
+																						* 5
+																						+ i].user_xm
+																				+ '</td><td>'
+																				+ dataUser[(page - 1)
+																						* 5
+																						+ i].role_name
+																				+ '</td><td>'
+																				+ "<a href='user.jsp?edit_type=2&user_id="
+																				+ dataUser[(page - 1)
+																						* 5
+																						+ i].userID
+																				+ '&user_name='
+																				+ dataUser[(page - 1)
+																						* 5
+																						+ i].userName
+																				+ '&user_pass='
+																				+ dataUser[(page - 1)
+																						* 5
+																						+ i].passWord
+																				+ '&role_id='
+																				+ dataUser[(page - 1)
+																						* 5
+																						+ i].role_id
+																				+ '&user_remark='
+																				+ dataUser[(page - 1)
+																						* 5
+																						+ i].remark
+																				+ '&user_phone='
+																				+ dataUser[(page - 1)
+																						* 5
+																						+ i].user_phone
+																				+ '&user_channel='
+																				+ dataUser[(page - 1)
+																						* 5
+																						+ i].user_channel
+																				+ '&user_xm='
+																				+ dataUser[(page - 1)
+																						* 5
+																						+ i].user_xm
+																				+ "'><i class='icon-pencil'></i> </a>&nbsp;&nbsp;<a href='#myModal' role='button' data-toggle='modal'><i class='icon-remove'></i> </a></td></tr>");
+													}
+													$("#list-content,tr")
+															.click(
+																	function() {
+																		var user_id = $(
+																				this)
+																				.children(
+																						"td:eq(0)")
+																				.text();
+																		if (user_id != "") {
+																			$(
+																					'#del_app_id')
+																					.val(
+																							user_id);
+																		}
+																	});
+												}
+											};
+											bsize = dataUser.length < 5 ? dataUser.length
+													: 5;
+											$('#list-content').html('');
+											for ( var i = 0; i < bsize; i++) {
+												$('#list-content')
+														.append(
+																'<tr><td>'
+																		+ dataUser[i].userID
+																		+ '</td><td>'
+																		+ dataUser[i].userName
+																		+ '</td><td>'
+																		+ dataUser[i].user_phone
+																		+ '</td><td>'
+																		+ dataUser[i].user_channel
+																		+ '</td><td>'
+																		+ dataUser[i].user_xm
+																		+ '</td><td>'
+																		+ dataUser[i].role_name
+																		+ '</td><td>'
+																		+ "<a href='user.jsp?edit_type=2&user_id="
+																		+ dataUser[i].userID
+																		+ '&user_name='
+																		+ dataUser[i].userName
+																		+ '&user_pass='
+																		+ dataUser[i].passWord
+																		+ '&role_id='
+																		+ dataUser[i].role_id
+																		+ '&user_remark='
+																		+ dataUser[i].remark
+																		+ '&user_channel='
+																		+ dataUser[i].user_channel
+																		+ '&user_phone='
+																		+ dataUser[i].user_phone
+																		+ '&user_xm='
+																		+ dataUser[i].user_xm
+																		+ "'><i class='icon-pencil'></i> </a>&nbsp;&nbsp;<a href='#myModal' role='button' data-toggle='modal'><i class='icon-remove'></i> </a></td></tr>");
+											}
+											$('#myPaginator')
+													.bootstrapPaginator(options);
+											$("#list-content,tr")
+													.click(
+															function() {
+																var user_id = $(
+																		this)
+																		.children(
+																				"td:eq(0)")
+																		.text();
+																if (user_id != "") {
+																	$(
+																			'#del_app_id')
+																			.val(
+																					user_id);
+																}
+															});
+										}
+									});
+						});
 	</script>
 </body>
 </html>

@@ -22,8 +22,8 @@ public class SaleTelNumberDaoImpl extends
 	/**
 	 * ²éÑ¯ËùÓĞºÅÂë
 	 */
-	public List<SaleTelNumber> findAllNumbers(int pro_id) {
-		return this.getMapper().findAllNumbers(pro_id);
+	public List<SaleTelNumber> findAllNumbers(Map<String, Object> map) {
+		return this.getMapper().findAllNumbers(map);
 	}
 
 	/**
@@ -73,5 +73,12 @@ public class SaleTelNumberDaoImpl extends
 	 */
 	public void delNumByProId(int pro_id) {
 		this.getMapper().delNumByProId(pro_id);
+	}
+
+	/**
+	 * ¼ì²éºÅÂë×´Ì¬
+	 */
+	public String checkNumState(String saletelnum) {
+		return this.getMapper().checkNumState(saletelnum);
 	}
 }

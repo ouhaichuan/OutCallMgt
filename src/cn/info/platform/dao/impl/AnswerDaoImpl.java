@@ -27,7 +27,7 @@ public class AnswerDaoImpl extends BaseDaoImpl<Answer, AnswerMapper> implements
 	/**
 	 * 查询所有答案
 	 */
-	public List<Answer> findAllAnswer() {
-		return this.getMapper().findAllAnswer();
+	public List<Answer> findAllAnswer(String search_txt) {
+		return this.getMapper().findAllAnswer(search_txt);
 	}
 }

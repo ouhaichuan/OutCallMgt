@@ -1,6 +1,8 @@
 package cn.info.platform.service;
 
 import java.util.List;
+import java.util.Map;
+
 import cn.info.platform.entity.Topic;
 
 /**
@@ -42,7 +44,7 @@ public interface TopicService extends BaseService<Topic> {
 	 * 
 	 * @return
 	 */
-	List<Topic> findTopicByProId(int pro_id);
+	List<Topic> findTopicByProId(Map<String, Object> map);
 
 	/**
 	 * µº»Î

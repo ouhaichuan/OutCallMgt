@@ -3,36 +3,52 @@
     "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <!-- namespace名字必须与Mapper接口名一致 -->
 <mapper namespace="cn.info.platform.mapper.ProjectMapper">
-	<select id="findAllProject" resultMap="projectMap">
-		select *,(select
-		GROUP_CONCAT(user_xm separator ',')
-		from tab_user where user_name
+	<select id="findAllProject" resultMap="projectMap"
+		parameterType="String">
+		select *,(select count(*)
+		from tab_callobject where
+		pro_id=tab_project.pro_id)
+		outCallNums,(select
+		GROUP_CONCAT(user_xm
+		separator ',')
+		from tab_user
+		where user_name
 		in
 		(select user_name
 		from
 		tab_project_user where
 		pro_id=tab_project.pro_id)
-		group by tab_project.pro_id) pro_users from
+		group by
+		tab_project.pro_id) pro_users from
 		tab_project
 		where
 		pro_mark='0'
+		and
+		pro_name like '%' #{search_txt} '%'
+		order by pro_id DESC
 	</select>
-	<select id="staticsData" resultMap="projectMap">
+	<select id="staticsData" resultMap="projectMap" parameterType="map">
 		SELECT *,(select count(*)
-		from tab_callobject where pro_id=t.pro_id and object_state!='0')
-		calltotal,(select count(*) from tab_callobject where pro_id=t.pro_id
-		and object_state='2') callcomplete,(select count(*) from
+		from tab_callobject where pro_id=t.pro_id and
+		object_state!='0')
+		calltotal,(select count(*) from tab_callobject where
+		pro_id=t.pro_id
+		and object_state='2') callcomplete,(select count(*)
+		from
 		tab_callobject where pro_id=t.pro_id and object_state not in
-		('0','2')) callnotcomplete FROM tab_project t
+		('0','2')) callnotcomplete FROM tab_project t where
+		t.pro_date &gt;=
+		#{start_date} and t.pro_date &lt;= #{end_date} order by
+		pro_date
 	</select>
 	<select id="findAllProjectByUserName" resultMap="projectMap"
-		parameterType="string">
+		parameterType="map">
 		select * from tab_project
 		where pro_mark='0' and
 		pro_state='进行中' and pro_id
 		in (select pro_id from tab_project_user
 		where
-		user_name=#{user_name})
+		user_name=#{user_name}) and pro_name like '%' #{search_txt} '%'
 	</select>
 	<update id="save_pro" parameterType="project" flushCache="true">
 		update tab_project
@@ -77,17 +93,13 @@
 		</set>
 		where pro_id = #{pro_id,jdbcType=INTEGER}
 	</update>
-	<select id="staticsDataForSign" resultMap="projectMap" parameterType="String">
-		SELECT *,(select count(*)
-		from tab_callobject where pro_id=t.pro_id and
-		object_state!='0')
-		calltotal,(select count(*) from tab_callobject where
-		pro_id=t.pro_id
-		and object_state='2') callcomplete,(select count(*)
-		from
-		tab_callobject where pro_id=t.pro_id and object_state not in
-		('0','2')) callnotcomplete FROM tab_project t where t.pro_id in
-		(select pro_id from tab_project_user where
-		tab_project_user.user_name=#{userName})
+	<select id="checkPro" resultType="int" parameterType="int">
+		select
+		sum(AD.a) from (select
+		count(*) a from tab_callobject where
+		pro_id=#{pro_id} union
+		select count(*) a
+		from tab_topic where
+		pro_id=#{pro_id}) AD
 	</select>
 </mapper>

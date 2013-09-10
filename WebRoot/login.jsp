@@ -23,10 +23,10 @@
 <html lang="CN">
 <head>
 <base href="<%=basePath%>">
-<link rel="shortcut icon" href="<%=basePath%>images/favicon.ico" />
+<link rel="shortcut icon" href="images/favicon.ico" />
 <title>重庆移动外呼系统</title>
 <meta charset="utf-8">
-<meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible">
+<meta content="IE=6,chrome=1" http-equiv="X-UA-Compatible">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="description" content="">
 <meta name="author" content="">
@@ -63,6 +63,7 @@
 	font-weight: bold;
 }
 </style>
+
 <link rel="shortcut icon" href="../assets/ico/favicon.ico">
 <link rel="apple-touch-icon-precomposed" sizes="144x144"
 	href="../assets/ico/apple-touch-icon-144-precomposed.png">
@@ -80,8 +81,10 @@
 			<ul class="nav pull-right">
 
 			</ul>
-			<a class="brand" href="login.jsp"><span class="first">重庆移动城二公司</span> <span
-				class="second">外呼管理</span> </a>
+			<a class="brand" href="login.jsp" target="_parent"><img
+				src="images/title.png"
+				style="width: 26px;height: 26px;margin-bottom: 4px;">&nbsp;<span
+				class="second">重庆移动城二公司</span> <span class="second">外呼管理</span> </a>
 		</div>
 	</div>
 	<div class="row-fluid">

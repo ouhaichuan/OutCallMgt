@@ -77,9 +77,11 @@ public class FileUtil {
 	 * 解析Excel
 	 * 
 	 * @param fileName
+	 * @param cellLength
 	 * @return
 	 */
-	public ArrayList<ArrayList<String>> readExcel(String fileName) {
+	public ArrayList<ArrayList<String>> readExcel(String fileName,
+			int cellLength) {
 		ArrayList<ArrayList<String>> Row = new ArrayList<ArrayList<String>>();
 		FileInputStream fis = null;
 		try {
@@ -108,9 +110,10 @@ public class FileUtil {
 					}
 					// 循环列Cell
 					ArrayList<String> arrCell = new ArrayList<String>();
-					for (int cellNum = 0; cellNum <= row.getLastCellNum(); cellNum++) {
+					for (int cellNum = 0; cellNum < cellLength; cellNum++) {
 						Cell cell = row.getCell(cellNum);
 						if (cell == null) {
+							arrCell.add(" ");// 为空补空
 							continue;
 						}
 						arrCell.add(getValue(cell));

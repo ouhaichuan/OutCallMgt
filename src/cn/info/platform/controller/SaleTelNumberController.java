@@ -1,7 +1,10 @@
 package cn.info.platform.controller;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import net.sf.json.JSONArray;
@@ -34,8 +37,17 @@ public class SaleTelNumberController {
 			HttpServletResponse response) {
 		response.setContentType("text/html; charset=utf-8");
 
-		List<SaleTelNumber> list = saleTelNumberService.findAllNumbers(Integer
-				.valueOf(request.getParameter("pro_id")));
+		String search_txt = "";
+		if (null != request.getParameter("search_txt")) {
+			search_txt = request.getParameter("search_txt");
+		}
+		int pro_id = Integer.valueOf(request.getParameter("pro_id"));
+
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("search_txt", search_txt);
+		map.put("pro_id", pro_id);
+
+		List<SaleTelNumber> list = saleTelNumberService.findAllNumbers(map);
 		JSONArray jsonArray = JSONArray.fromObject(list);
 		try {
 			response.getWriter().write(jsonArray.toString());

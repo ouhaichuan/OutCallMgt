@@ -23,7 +23,9 @@ public interface AnswerDao extends BaseDao<Answer, AnswerMapper> {
 	/**
 	 * 查询所有答案
 	 * 
+	 * @param search_txt
+	 * 
 	 * @return
 	 */
-	List<Answer> findAllAnswer();
+	List<Answer> findAllAnswer(String search_txt);
 }

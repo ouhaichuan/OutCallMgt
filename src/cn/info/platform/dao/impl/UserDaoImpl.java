@@ -1,6 +1,7 @@
 package cn.info.platform.dao.impl;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.stereotype.Repository;
 import cn.info.platform.dao.UserDao;
@@ -37,8 +38,8 @@ public class UserDaoImpl extends BaseDaoImpl<User, UserMapper> implements
 	 * 
 	 * @return 用户列表
 	 */
-	public List<User> findAllUsers() {
-		return this.getMapper().findAllUsers();
+	public List<User> findAllUsers(String search_txt) {
+		return this.getMapper().findAllUsers(search_txt);
 	}
 
 	/**
@@ -85,8 +86,8 @@ public class UserDaoImpl extends BaseDaoImpl<User, UserMapper> implements
 	/**
 	 * 按员工统计外呼情况
 	 */
-	public List<User> staticsData() {
-		return this.getMapper().staticsData();
+	public List<User> staticsData(Map<String, Object> map) {
+		return this.getMapper().staticsData(map);
 	}
 
 	/**
@@ -94,5 +95,19 @@ public class UserDaoImpl extends BaseDaoImpl<User, UserMapper> implements
 	 */
 	public List<User> staticsDataForSign(String userName) {
 		return this.getMapper().staticsDataForSign(userName);
+	}
+
+	/**
+	 * 查询可以绑定的员工
+	 */
+	public List<User> findUserForPro() {
+		return this.getMapper().findUserForPro();
+	}
+
+	/**
+	 * 导入用户
+	 */
+	public void import_user(User user) {
+		this.getMapper().import_user(user);
 	}
 }

@@ -18,11 +18,11 @@ public interface SaleTelNumberDao extends
 	/**
 	 * ²éÑ¯ËùÓĞºÅÂë
 	 * 
-	 * @param pro_id
+	 * @param map
 	 * 
 	 * @return
 	 */
-	List<SaleTelNumber> findAllNumbers(int pro_id);
+	List<SaleTelNumber> findAllNumbers(Map<String, Object> map);
 
 	/**
 	 * Ìí¼ÓºÅÂë
@@ -73,4 +73,12 @@ public interface SaleTelNumberDao extends
 	 * @param pro_id
 	 */
 	void delNumByProId(int pro_id);
+
+	/**
+	 * ¼ì²éºÅÂë×´Ì¬
+	 * 
+	 * @param saletelnum
+	 * @return
+	 */
+	String checkNumState(String saletelnum);
 }
